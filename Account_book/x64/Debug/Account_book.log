@@ -1,0 +1,9 @@
+﻿  categoryManage.cpp
+C:\LearnCode\C++\2020_2_teamProject\Account_book\categoryManage.cpp(92,14): warning C4101: 'e' :참조되지 않은 지역 변수입니다.
+  checkData.cpp
+  fileManage.cpp
+  Main.cpp
+  recordManage.cpp
+  znyi(temp).cpp
+  코드를 생성하고 있습니다...
+C:\LearnCode\C++\2020_2_teamProject\Account_book\categoryManage.cpp(131): error C4716: 'deleteCategory': 값을 반환해야 합니다.
