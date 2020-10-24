@@ -2,6 +2,7 @@
 #include <iostream>
 #include <ctime>
 #include <list>
+#include <string>
 #include <conio.h>
 
 using namespace std;
