@@ -59,7 +59,7 @@ void addRecord() {
 
 	istringstream iss_date(date_date);
 
-	while (getline(iss_date, token, '/')) { // 날짜를 각각 년, 월, 일로 나눔
+	while (getline(iss_date, token, '/')) { // 날짜를 '/'를 기준으로 각각 년, 월, 일로 나눔
 		if (classify_date_date == 0) {
 			date_year = token;
 			classify_date_date++;
@@ -76,7 +76,7 @@ void addRecord() {
 
 	istringstream iss_time(date_time);
 
-	while (getline(iss_time, token, ':')) { // 시간을 시,분으로 나눔
+	while (getline(iss_time, token, ':')) { // 시간을 ':'를 기준으로 시,분으로 나눔
 		if (classify_time == 0) {
 			date_hour = token;
 			classify_time++;
@@ -93,9 +93,7 @@ void addRecord() {
 	date_arr[3] = stoi(date_hour);
 	date_arr[4] = stoi(date_min);
 
-	cout << sizeof(date_arr) << endl;
-
-	if (flag) {
+	if (flag) {	// 입력 값이 5개가 입력이 되면 문법 검사 및 오류검사 진행
 		if (checkDate(date_arr) && checkMoney(money) && checkAmount(stoi(amount)) && checkMemo(memo) && checkCategoryNumber(stoi(category_num) == 0)) {
 			recordList.push_back(input);
 		}
