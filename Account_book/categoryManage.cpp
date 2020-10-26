@@ -80,7 +80,11 @@ bool modifyCategory(list <string> *category_table) {
 	list<string>::iterator selector = category_table->begin();
 	advance(selector, selected_num-1);
 	cout << "\n Category selected: " << *selector << endl;
+	////////temp///
+	return false;
 }
 bool deleteCategory(list <string>, list <class Record>) {
 
+	/////temp///
+	return false;
 }
