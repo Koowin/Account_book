@@ -32,6 +32,12 @@ using namespace std::chrono;
 * not using gotoxy(), thus reprint everything (menu) after getting invalid input
 * # 7.5.1
 * 
+* assumption 4:
+* recordList is already sorted by date and time
+* 
+* assumption 5:
+* Record의 멤버 변수 category_number의 범위는 [1,category_table.size()-1]이다.
+* 
 * opinions:
 * : struct tm의 멤버 변수를 가지고 시간 클래스를 따로 만들면 연산자 오버로딩으로 시간 선후비교 가능
 * : record 클래스도 연산자 오버로딩으로 시간 순으로 정렬 가능 
@@ -124,7 +130,7 @@ void searchRecord(vector <Record> & records, list <string> & category_table) { /
 						int action = stoi(action_input);
 						if (action == 1) break; // break from this infinity loop and continue with the outer loop 
 						else if (action == 2){ // get search result
-							(period, transaction_type, memo, category, category_table);
+							searchResult(records, period, transaction_type, memo, category, category_table);
 						}
 					}
 					catch (const invalid_argument& excp) { // cant parse to int
@@ -136,6 +142,46 @@ void searchRecord(vector <Record> & records, list <string> & category_table) { /
 
 	} while (menu_choice != -1);
 	return; // return to main menu if menu_choice == -1
+}
+vector<int> searchResult(vector <Record>& records, struct tm* period, string* transaction_type, string* memo, int* category, list<string>& category_table) {
+	vector<int>vec;
+	vector<Record>::iterator record_it;
+	int idx;
+	for (record_it = records.begin(), idx = 0; record_it != records.end(); record_it++, idx++) {
+		//1check time range
+		struct tm start = (period == nullptr) ? records.begin()->date : period[0]; //if null, earliest date
+		struct tm end = (period == nullptr) ? records.end()->date : period[1]; // if null, latest date
+		if (compareTime(start, record_it->date) >= 0 && compareTime(record_it->date, end) >= 0) {
+			//2. check type of transaction
+			bool isFindingIncome = (*transaction_type == "Income") ? true : false;
+			if (transaction_type == nullptr || isFindingIncome == record_it->is_income) {
+				//3. check memo - 5.3
+				/*검색어와 메모 모두 내부의 공백들을 전부 없앤 상태로
+				* 알파벳 대/소문자를 구분하지 않으면서
+				* 검색어가 메모의 부분 문자열이면 매치된 것이다*/
+				string find_memo; 
+				string original_memo;
+				if (memo != nullptr) {
+					//keyword 
+					find_memo = *memo;
+					find_memo.erase(remove_if(find_memo.begin(), find_memo.end(), isspace), find_memo.end()); // remove all space from the string
+					for_each(find_memo.begin(), find_memo.end(), [](char& c) { c = tolower(c); }); // to lower case 
+					//original memo
+					original_memo = record_it->memo;
+					original_memo.erase(remove(original_memo.begin(), original_memo.end(), isspace), original_memo.end()); // remove all space
+					for_each(original_memo.begin(), original_memo.end(), [](char& c) {c = tolower(c); }); // to lower case 
+				}
+				if (memo == nullptr || original_memo.find(find_memo) != original_memo.npos) { // memo default || find_memo is a substring of original_memo
+					//4. check category
+					if (category == nullptr || *category == record_it->category_number) { // default category || record with the same category is found
+						vec.push_back(idx);
+					}
+				}
+				
+			}
+		}
+	}
+	return vec;
 }
 void printCurrent(struct tm* period, string* transaction_type, string* memo, int* category, list<string> & category_table) {
 	cout << "@ Current condition @" << endl;
