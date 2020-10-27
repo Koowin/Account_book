@@ -1,4 +1,8 @@
-//나중에 신이님 결과물 합쳐서 넣을 예정
-//찬종님이 기록 수정, 삭제 구현해주세요~
-
 #include "header.hpp"
+
+list <Record>::iterator RecordManage::get_first(){
+	return record_list.begin();
+}
+list <Record>::iterator RecordManage::get_end() {
+	return record_list.end();
+}

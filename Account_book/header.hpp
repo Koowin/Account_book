@@ -1,37 +1,99 @@
-#pragma once
-#include <iostream>
-#include <ctime>
-#include <list>
+#include<iostream>
+#include<ctime>
+#include<list>
+#include<conio.h>
+#include<fstream>
+#include<vector>
+#include<string>
 using namespace std;
 
 class Record {
-public:
+private:
 	struct tm date;
 	bool is_income;
 	unsigned int amount;
 	string memo;
-	short category_number;		//ÇÊ¿ä¿¡ µû¶ó char, short, int ¼±ÅÃ (º¯°æ ½Ã Çì´õÆÄÀÏ ¾Æ·¡ ÇÔ¼ö ¼±¾ğ ¹× cpp¿¡¼­µµ º¯°æÇØÁÖ¼¼¿ä)
+	int category_number;
+
+public:
+	Record(struct tm, bool, unsigned int, string, int);
+	/* getter */
+	struct tm  get_date();
+	bool get_isincome();
+	unsigned int get_amount();
+	string get_memo();
+	int get_category_number();
+
+	/* setter */
+	void set_date(struct tm);
+	void set_isIncome(bool);
+	void set_amount(unsigned int);
+	void set_memo(string);
+	void set_category_number(int);
 };
 
-/* file manage ÇÔ¼ö */
-bool initFiles(void);		//return: ¼º°ø/½ÇÆĞ
-bool saveFiles(void);		//return: ¼º°ø/½ÇÆĞ
+class RecordManage {
+private:
+	list <Record> record_list;
+public:
+	/* ê¸°ë³¸ ê¸°ëŠ¥ */
+	void printAllRecordList(CategoryManage &);
+	bool addRecord(int);
+	//ì—¬ê¸°ì— ì‹ ì´ë‹˜ í•¨ìˆ˜ ì¶”ê°€
+	bool searchRecords(CategoryManage &);
+	bool modifyRecordList(int);
+	bool deleteRecordList(int);
 
-/* string->other ÆÄ½Ì ¹× °Ë»ç ÇÔ¼ö */
-struct tm checkDate(string);		//return: ¼º°ø ½Ã string -> tm°ª / ½ÇÆĞ ½Ã Á¤ÇØÁÖ¼¼¿ä
-unsigned int checkAmount(string);	//return: ¼º°ø ½Ã string -> unsigned int°ª / ½ÇÆĞ ½Ã Á¤ÇØÁÖ¼¼¿ä (ÇÊ¿ä¿¡ µû¶ó ±âÈ¹¼­ ¼öÁ¤ °¡´É)
-string checkMemo(string);			//return: ¼º°ø ½Ã ±×´ë·Î / ½ÇÆĞ ½Ã Á¤ÇØÁÖ¼¼¿ä.
-short checkCategoryNumber(string);	//return: string->short / ½ÇÆĞ ½Ã Á¤ÇØÁÖ¼¼¿ä.
+	// record_listì˜ ì²˜ìŒê³¼ ë ë°˜ë³µìë¥¼ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
+	list <Record>::iterator get_first();
+	list <Record>::iterator get_end();
+};
 
-/* recordManage ÇÔ¼ö */
-void addRecord(void);			//ÇÊ¿ä¿¡ µû¶ó ÀÔÃâ·Â ÀÚ·áÇü º¯°æ
-void printAllRecord(void);		//ÇÊ¿ä¿¡ µû¶ó ÀÔÃâ·Â ÀÚ·áÇü º¯°æ
-//±â·Ï °Ë»ö ºÎºĞÀº ½ÅÀÌ´ÔÀÌ ¸¸µå½Å´ë·Î ¿©±â¿¡ Ãß°¡ÇØÁÖ¼¼¿ä
-void modifyRecord(void);		//ÇÊ¿ä¿¡ µû¶ó ÀÔÃâ·Â ÀÚ·áÇü º¯°æ
-void deleteRecord(void);		//ÇÊ¿ä¿¡ µû¶ó ÀÔÃâ·Â ÀÚ·áÇü º¯°æ
+class Category {
+private:
+	string c_name;
 
-/* categoryManage ÇÔ¼ö */
-void printCategoryList(list <string>);
-bool addCategoryList(list <string>);			//½ÇÆĞ ½Ã True ¹İÈ¯
-bool modifyCategory(list <string>);				//½ÇÆĞ ½Ã True ¹İÈ¯
-bool deleteCategory(list <string>,list <class Record>);		//½ÇÆĞ ½Ã True ¹İÈ¯
+public:
+	Category(string);
+
+	/* getter */
+	string get_cname();
+
+	/* setter */
+	void set_cname(string);
+};
+
+class CategoryManage {
+private:
+	list<Category> category;
+
+public:
+	void categoryMenu(RecordManage &);
+	void printCategoryList();
+	bool addCategory();
+	bool modifyCategory();
+	bool deleteCategory(RecordManage &);
+	int getCategorySize();
+};
+
+class FileManage {
+private:
+
+public:
+	bool initFile();
+	bool saveFile();
+};
+
+class CheckerParser {
+private:
+
+public:
+	bool checkDate(string);
+	bool checkAmount(string);
+	bool checkMemo(string);
+	bool checkCategoryNumber(string, int);
+	bool checkCategoryName(string);
+
+	struct tm parseDate(string);
+	unsigned int parseAmount(string);
+};
