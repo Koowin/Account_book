@@ -9,6 +9,17 @@ class ConsoleView{
 
 private:
 
-	int data;
+	char input = '0';
+	int page = 0;
 
+
+public:
+	void showUI();
+	int userUI0();
+	int userUI1();
+	
+	
+	void console_clear();
+	void line_clear();
+	void inputs();
 }

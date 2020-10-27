@@ -361,6 +361,11 @@ int searchTime(struct tm * period) {
 			tokens.push_back(sub);
 		}
 		if (tokens.size() == 2 && tokens[0].length() == 16 && tokens[1].length() == 16) {
+			CheckerParser cp;
+			//정상 입력
+			if (!cp.checkDate(tokens[0])) {
+				start = cp.parseDate(tokens[0]);
+			}
 			struct tm * start = checkDate(tokens[0]); //check validity of starting date and time
 			struct tm * end = checkDate(tokens[1]); // check validity of ending date and time
 			if (start != nullptr && end != nullptr) {
