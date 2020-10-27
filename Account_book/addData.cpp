@@ -1,6 +1,6 @@
 #include "header.hpp"
 
-void addRecord() {
+void addRecord(list <Record> *recordList) {
 	string input, token, date, money, amount, memo, category_num;
 	string date_date, date_year, date_month, date_day, date_time, date_hour, date_min;
 	bool flag = true;
@@ -95,7 +95,7 @@ void addRecord() {
 
 	if (flag) {	// 입력 값이 5개가 입력이 되면 문법 검사 및 오류검사 진행
 		if (checkDate(date_arr) && checkMoney(money) && checkAmount(stoi(amount)) && checkMemo(memo) && checkCategoryNumber(stoi(category_num) == 0)) {
-			recordList.push_back(input);
+			recordList->push_back(input);
 		}
 	}
 
