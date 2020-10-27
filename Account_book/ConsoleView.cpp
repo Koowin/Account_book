@@ -7,18 +7,13 @@ ConsoleView::ConsoleView() {
 }
 
 
-void ConsoleView::gotoxy(short x, short y) {
 
-	COORD Pos = { x,y };
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
-
-}
 
 void ConsoleView::showUI() { // 메뉴 사이클 담당
 	bool exit = false; // 프로그램 종료 여부
 	while (1) {
 		switch (page) {
-		case 0: // 초기화면 & 카테고리 선택 & 카트 삭제 & 결제
+		case 0: // 초기화면 
 			page = userUI0();
 			break;
 		case 1: // 수입지출 내역 입력
@@ -55,41 +50,44 @@ int ConsoleView::userUI0() {
 		cout << "  4. Manage category" << endl;
 		cout << "  5. Quit " << endl;
 
-		
-		border_above(); // 선 그리기
 
-		
-		gotoxy(101, 9); // 커서 이동
-		cout << "│" << endl;
 
 
 		inputs(); // 키보드 입력 받기
 
-		console_clear(); // 콘솔 비우기
+		
+	}
 
-	
 }
 
 
-	int ConsoleView::userUI1() {
-		while (1) {
-			console_clear();
-			
+int ConsoleView::userUI1() {
+	while (1) {
 
 
-			border_above(); // 선 그리기
+		cout << "  @ Add a transaction@" << endl;
 
 
-			gotoxy(101, 9); // 커서 이동
-			cout << "│" << endl;
+		inputs(); // 키보드 입력 받기
 
 
-			inputs(); // 키보드 입력 받기
 
-			console_clear(); // 콘솔 비우기
+	}
+}
+
+int ConsoleView::userUI2() {
+	while (1) {
 
 
-		}
+		cout << "  @ View all transaction@" << endl;
+
+
+		inputs(); // 키보드 입력 받기
+
+
+
+	}
+}
 
 void ConsoleView::line_clear() {
 	cout << "\33[2K";
@@ -99,23 +97,8 @@ void ConsoleView::console_clear() {
 	system("cls");
 }
 
-void ConsoleView::border_above() {
-	cout << "┌";
-	for (int i = 0; i < 100; i++)
-	{
-		cout << "─";
-	}
-	cout << "┐" << endl;
-}
 
-void ConsoleView::border_bottom() {
-	cout << "└";
-	for (int i = 0; i < 100; i++)
-	{
-		cout << "─";
-	}
-	cout << "┘" << endl;
-}
+
 
 void ConsoleView::inputs() {
 	cin >> input;
