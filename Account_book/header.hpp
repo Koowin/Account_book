@@ -22,12 +22,6 @@ public:
 bool initFiles(void);		//return: 성공/실패
 bool saveFiles(void);		//return: 성공/실패
 
-/* string->other 파싱 및 검사 함수 */
-struct tm checkDate(string);		//return: 성공 시 string -> tm값 / 실패 시 정해주세요
-unsigned int checkAmount(string);	//return: 성공 시 string -> unsigned int값 / 실패 시 정해주세요 (필요에 따라 기획서 수정 가능)
-string checkMemo(string);			//return: 성공 시 그대로 / 실패 시 정해주세요.
-short checkCategoryNumber(string);	//return: string->short / 실패 시 정해주세요.
-
 /* recordManage 함수 */
 void addRecord(void);			//필요에 따라 입출력 자료형 변경
 void printAllRecord(void);		//필요에 따라 입출력 자료형 변경

@@ -139,10 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="addData.cpp" />
     <ClCompile Include="categoryManage.cpp" />
     <ClCompile Include="checkData.cpp" />
     <ClCompile Include="fileManage.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="printAllRecord.cpp" />
     <ClCompile Include="recordManage.cpp" />
     <ClCompile Include="znyi(temp).cpp" />
   </ItemGroup>
