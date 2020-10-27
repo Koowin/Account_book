@@ -131,7 +131,12 @@ void searchRecord(vector <Record> & records, list <string> & category_table) { /
 						if (action == 1) break; // break from this infinity loop and continue with the outer loop 
 						else if (action == 2){ // get search result
 							vector<int> result = getSearchResult(records, period, transaction_type, memo, category, category_table);
-							
+							if (result.size() == 0) {
+								cout << "- None of the records satisfies the conditions given. -" << endl;
+								cout << endl;
+							} else {
+								//printSearchResult
+							}
 						}
 					}
 					catch (const invalid_argument& excp) { // cant parse to int
