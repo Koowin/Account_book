@@ -86,16 +86,16 @@ bool modifyCategory(list <string> *category_table) {
 		//숫자 이외의 입력 예외처리
 		try {
 			selected_num = stoi(input_string);
-			//0 ~ table size 이외의 입력 예외 처리
-			if (selected_num > category_table->size() || selected_num < 1) {
-				cout << "Number must be over 0 and under " << category_table->size() + 1 << endl;
-			}
-			else {
-				flag = false;
-			}
 		}
 		catch (const exception& expn) {
 			cout << "Input only number" << endl;
+		}
+		//0 ~ table size 이외의 입력 예외 처리
+		if (selected_num > category_table->size() || selected_num < 1) {
+			cout << "Number must be over 0 and under " << category_table->size() + 1 << endl;
+		}
+		else {
+			flag = false;
 		}
 	}
 
@@ -159,32 +159,35 @@ bool deleteCategory(list <string> *category_table, list <class Record> *record_l
 		//숫자 이외의 입력 예외처리
 		try {
 			selected_num = stoi(input_string);
-			//0 ~ table size 이외의 입력 예외 처리
-			if (selected_num > category_table->size() || selected_num < 1) {
-				cout << "Number must be over 0 and under " << category_table->size() + 1 << endl;
-			}
-			else {
-				//to do 예외처리: 해당 카테고리 번호가 존재하는 기록이 있으면 삭제 안되게
-				list <class Record>::iterator record_iter;
-				list <class Record>::iterator end_of_record_list = record_list->end();
-
-				for (record_iter = record_list->begin(); record_iter != end_of_record_list; record_iter++) {
-					if (record_iter->category_number == selected_num) {
-						duplicate_checker = true;
-						break;
-					}
-				}
-				//duplicate_checker == true면 겹치는 기록 존재
-				if (duplicate_checker){
-					cout << "Some record have that category number. " << endl;
-				}
-				else {
-					flag = false;
-				}
-			}
 		}
 		catch (const exception& expn) {
 			cout << "Input only number" << endl;
+		}
+
+		//0 ~ table size 이외의 입력 예외 처리
+		if (selected_num > category_table->size() || selected_num < 1) {
+			cout << "Number must be over 0 and under " << category_table->size() + 1 << endl;
+		}
+		else {
+			//to do 예외처리: 해당 카테고리 번호가 존재하는 기록이 있으면 삭제 안되게
+			list <class Record>::iterator record_iter;
+			list <class Record>::iterator end_of_record_list = record_list->end();
+
+			selected_num--;
+
+			for (record_iter = record_list->begin(); record_iter != end_of_record_list; record_iter++) {
+				if (record_iter->category_number == selected_num) {
+					duplicate_checker = true;
+					break;
+				}
+			}
+			//duplicate_checker == true면 겹치는 기록 존재
+			if (duplicate_checker) {
+				cout << "Some record have that category number. " << endl;
+			}
+			else {
+				flag = false;
+			}
 		}
 		
 		//삭제 확인
@@ -196,7 +199,7 @@ bool deleteCategory(list <string> *category_table, list <class Record> *record_l
 		else {
 			//삭제 작업
 			iter = category_table->begin();
-			advance(iter, selected_num - 1);
+			advance(iter, selected_num);
 			category_table->erase(iter);
 			return false;
 		}
