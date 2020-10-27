@@ -1,4 +1,4 @@
-#include"header.cpp"
+#include "header.hpp"
 
 void addRecord() {
 	string input, token, date, money, amount, memo, category_num;
