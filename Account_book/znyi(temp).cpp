@@ -321,9 +321,28 @@ string* searchType() {
 	}
 }
 int compareTime(struct tm start, struct tm end) { // 의미 규칙, check if end is after start
-	if (start.tm_year < end.tm_year || start.tm_mon < end.tm_mon || start.tm_mday < end.tm_mday || start.tm_hour < end.tm_hour || start.tm_min < end.tm_min) return 1;
-	if (start.tm_year == end.tm_year || start.tm_mon == end.tm_mon || start.tm_mday == end.tm_mday || start.tm_hour == end.tm_hour || start.tm_min == end.tm_min) return 0;
-	return -1;
+	//return positive value if start is earlier than end, negative if end is earlier than start, return zero if same date and time
+
+	//check year
+	if (start.tm_year < end.tm_year) return 1;
+	else if (start.tm_year > end.tm_year) return -1;
+	else { //if same year, check month
+		if (start.tm_mon < end.tm_mon) return 1;
+		else if (start.tm_mon > end.tm_mon) return -1;
+		else { //if same year and month, check day
+			if (start.tm_mday < end.tm_mday) return 1;
+			else if (start.tm_mday > end.tm_mday) return -1;
+			else { //if same year, month and day, check hour
+				if (start.tm_hour < end.tm_hour) return 1;
+				else if (start.tm_hour > end.tm_hour) return -1;
+				else { //if same year, month, day and hour, check minute
+					if (start.tm_min < end.tm_min) return 1; 
+					else if (start.tm_min > end.tm_min) return -1; 
+					else return 0; // same date and time, return 0
+				}
+			}
+		}
+	}
 }
 int searchTime(struct tm * period) {
 	while (true) { // take input until valid input or 'q' is received
