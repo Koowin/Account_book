@@ -1,43 +1,96 @@
-#pragma once
-#include <iostream>
-#include <ctime>
-#include <list>
-#include <string>
-#include <conio.h>
-#include <cstring>
-#include <sstream>
-
+#include<iostream>
+#include<ctime>
+#include<list>
+#include<conio.h>
+#include<fstream>
+#include<vector>
+#include<string>
 using namespace std;
 
 class Record {
-public:
+private:
 	struct tm date;
 	bool is_income;
 	unsigned int amount;
 	string memo;
-	short category_number;		//필요에 따라 char, short, int 선택 (변경 시 헤더파일 아래 함수 선언 및 cpp에서도 변경해주세요)
+	int category_number;
+
+public:
+	Record();
+	Record(struct tm, bool, unsigned int, string, int);
+	/* getter */
+	struct tm  get_date();
+	bool get_isincome();
+	unsigned int get_amount();
+	string get_memo();
+	int get_category_number();
+
+	/* setter */
+	void set_date(struct tm);
+	void set_isIncome(bool);
+	void set_amount(unsigned int);
+	void set_memo(string);
+	void set_category_number(int);
 };
 
-/* file manage 함수 */
-bool initFiles(void);		//return: 성공/실패
-bool saveFiles(void);		//return: 성공/실패
+class RecordManage {
+private:
+	list <Record> record_list;
+public:
+	/* 기본 기능 */
+	void printAllRecordList(class CategoryManage &);
+	bool addRecord(int);
+	//여기에 신이님 함수 추가
+	bool searchRecords(class CategoryManage &);
+	bool modifyRecordList(int);
+	bool deleteRecordList(int);
+};
 
-/* recordManage 함수 */
-void addRecord(void);			//필요에 따라 입출력 자료형 변경
-void printAllRecord(void);		//필요에 따라 입출력 자료형 변경
-//기록 검색 부분은 신이님이 만드신대로 여기에 추가해주세요
-void modifyRecord(void);		//필요에 따라 입출력 자료형 변경
-void deleteRecord(void);		//필요에 따라 입출력 자료형 변경
+class Category {
+private:
+	string c_name;
 
-/* categoryManage 함수 */
-void printCategoryList(list <string>);
-bool addCategoryList(list <string> *);			//실패 시 True 반환
-bool modifyCategory(list <string> *);				//실패 시 True 반환
-bool deleteCategory(list <string> *,list <class Record> *);		//실패 시 True 반환
+public:
+	Category();
+	Category(string);
 
-/* checkData 함수 */
-bool checkDate(int *date);		//실패시 True 반환
-bool checkMoney(string money);		//실패시 True 반환
-bool checkAmount(int amount);		//실패시 True 반환
-bool checkMemo(string memo);		//실패시 True 반환
-bool checkCategoryNumber(short CategoryNumber);		//실패시 True 반환
+	/* getter */
+	string get_cname();
+
+	/* setter */
+	void set_cname(string);
+};
+
+class CategoryManage {
+private:
+	list<Category> category;
+
+public:
+	void categoryMenu(class RecordManage &);
+	void printCategoryList();
+	bool addCategoryList(Category);
+	bool modifyCategoryList(Category);
+	bool deleteCategoryList(Category);
+	int getCategorySize();
+};
+
+class FileManage {
+private:
+
+public:
+	bool initFile();
+	bool saveFile();
+};
+
+class CheckerParser {
+private:
+
+public:
+	bool checkDate(string);
+	bool checkAmount(string);
+	bool checkMemo(string);
+	bool checkCategoryNumber(string, int);
+
+	struct tm parseDate(string);
+	bool parseAmount(string);
+};
