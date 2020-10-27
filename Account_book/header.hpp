@@ -4,6 +4,8 @@
 #include <list>
 #include <string>
 #include <conio.h>
+#include <cstring>
+#include <sstream>
 
 using namespace std;
 
@@ -13,28 +15,35 @@ public:
 	bool is_income;
 	unsigned int amount;
 	string memo;
-	short category_number;		//ÇÊ¿ä¿¡ µû¶ó char, short, int ¼±ÅÃ (º¯°æ ½Ã Çì´õÆÄÀÏ ¾Æ·¡ ÇÔ¼ö ¼±¾ğ ¹× cpp¿¡¼­µµ º¯°æÇØÁÖ¼¼¿ä)
+	short category_number;		//í•„ìš”ì— ë”°ë¼ char, short, int ì„ íƒ (ë³€ê²½ ì‹œ í—¤ë”íŒŒì¼ ì•„ë˜ í•¨ìˆ˜ ì„ ì–¸ ë° cppì—ì„œë„ ë³€ê²½í•´ì£¼ì„¸ìš”)
 };
 
-/* file manage ÇÔ¼ö */
-bool initFiles(void);		//return: ¼º°ø/½ÇÆĞ
-bool saveFiles(void);		//return: ¼º°ø/½ÇÆĞ
+/* file manage í•¨ìˆ˜ */
+bool initFiles(void);		//return: ì„±ê³µ/ì‹¤íŒ¨
+bool saveFiles(void);		//return: ì„±ê³µ/ì‹¤íŒ¨
 
-/* string->other ÆÄ½Ì ¹× °Ë»ç ÇÔ¼ö */
-struct tm checkDate(string);		//return: ¼º°ø ½Ã string -> tm°ª / ½ÇÆĞ ½Ã Á¤ÇØÁÖ¼¼¿ä
-unsigned int checkAmount(string);	//return: ¼º°ø ½Ã string -> unsigned int°ª / ½ÇÆĞ ½Ã Á¤ÇØÁÖ¼¼¿ä (ÇÊ¿ä¿¡ µû¶ó ±âÈ¹¼­ ¼öÁ¤ °¡´É)
-string checkMemo(string);			//return: ¼º°ø ½Ã ±×´ë·Î / ½ÇÆĞ ½Ã Á¤ÇØÁÖ¼¼¿ä.
-short checkCategoryNumber(string);	//return: string->short / ½ÇÆĞ ½Ã Á¤ÇØÁÖ¼¼¿ä.
+/* string->other íŒŒì‹± ë° ê²€ì‚¬ í•¨ìˆ˜ */
+struct tm checkDate(string);		//return: ì„±ê³µ ì‹œ string -> tmê°’ / ì‹¤íŒ¨ ì‹œ ì •í•´ì£¼ì„¸ìš”
+unsigned int checkAmount(string);	//return: ì„±ê³µ ì‹œ string -> unsigned intê°’ / ì‹¤íŒ¨ ì‹œ ì •í•´ì£¼ì„¸ìš” (í•„ìš”ì— ë”°ë¼ ê¸°íšì„œ ìˆ˜ì • ê°€ëŠ¥)
+string checkMemo(string);			//return: ì„±ê³µ ì‹œ ê·¸ëŒ€ë¡œ / ì‹¤íŒ¨ ì‹œ ì •í•´ì£¼ì„¸ìš”.
+short checkCategoryNumber(string);	//return: string->short / ì‹¤íŒ¨ ì‹œ ì •í•´ì£¼ì„¸ìš”.
 
-/* recordManage ÇÔ¼ö */
-void addRecord(void);			//ÇÊ¿ä¿¡ µû¶ó ÀÔÃâ·Â ÀÚ·áÇü º¯°æ
-void printAllRecord(void);		//ÇÊ¿ä¿¡ µû¶ó ÀÔÃâ·Â ÀÚ·áÇü º¯°æ
-//±â·Ï °Ë»ö ºÎºĞÀº ½ÅÀÌ´ÔÀÌ ¸¸µå½Å´ë·Î ¿©±â¿¡ Ãß°¡ÇØÁÖ¼¼¿ä
-void modifyRecord(void);		//ÇÊ¿ä¿¡ µû¶ó ÀÔÃâ·Â ÀÚ·áÇü º¯°æ
-void deleteRecord(void);		//ÇÊ¿ä¿¡ µû¶ó ÀÔÃâ·Â ÀÚ·áÇü º¯°æ
+/* recordManage í•¨ìˆ˜ */
+void addRecord(void);			//í•„ìš”ì— ë”°ë¼ ì…ì¶œë ¥ ìë£Œí˜• ë³€ê²½
+void printAllRecord(void);		//í•„ìš”ì— ë”°ë¼ ì…ì¶œë ¥ ìë£Œí˜• ë³€ê²½
+//ê¸°ë¡ ê²€ìƒ‰ ë¶€ë¶„ì€ ì‹ ì´ë‹˜ì´ ë§Œë“œì‹ ëŒ€ë¡œ ì—¬ê¸°ì— ì¶”ê°€í•´ì£¼ì„¸ìš”
+void modifyRecord(void);		//í•„ìš”ì— ë”°ë¼ ì…ì¶œë ¥ ìë£Œí˜• ë³€ê²½
+void deleteRecord(void);		//í•„ìš”ì— ë”°ë¼ ì…ì¶œë ¥ ìë£Œí˜• ë³€ê²½
 
-/* categoryManage ÇÔ¼ö */
+/* categoryManage í•¨ìˆ˜ */
 void printCategoryList(list <string>);
-bool addCategoryList(list <string> *);			//½ÇÆĞ ½Ã True ¹İÈ¯
-bool modifyCategory(list <string> *);				//½ÇÆĞ ½Ã True ¹İÈ¯
-bool deleteCategory(list <string> *,list <class Record> *);		//½ÇÆĞ ½Ã True ¹İÈ¯
+bool addCategoryList(list <string> *);			//ì‹¤íŒ¨ ì‹œ True ë°˜í™˜
+bool modifyCategory(list <string> *);				//ì‹¤íŒ¨ ì‹œ True ë°˜í™˜
+bool deleteCategory(list <string> *,list <class Record> *);		//ì‹¤íŒ¨ ì‹œ True ë°˜í™˜
+
+/* checkData í•¨ìˆ˜ */
+bool checkDate(int *date);		//ì‹¤íŒ¨ì‹œ True ë°˜í™˜
+bool checkMoney(string money);		//ì‹¤íŒ¨ì‹œ True ë°˜í™˜
+bool checkAmount(int amount);		//ì‹¤íŒ¨ì‹œ True ë°˜í™˜
+bool checkMemo(string memo);		//ì‹¤íŒ¨ì‹œ True ë°˜í™˜
+bool checkCategoryNumber(short CategoryNumber);		//ì‹¤íŒ¨ì‹œ True ë°˜í™˜
