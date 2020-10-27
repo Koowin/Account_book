@@ -136,6 +136,7 @@ void searchRecord(vector <Record> & records, list <string> & category_table) { /
 								cout << endl;
 							} else {
 								//printSearchResult
+								//print menu 1. edit 2. delete
 							}
 						}
 					}
