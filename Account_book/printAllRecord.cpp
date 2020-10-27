@@ -1,4 +1,4 @@
-#include"header.cpp"
+#include "header.hpp"
 
 string printAllRecord(list <string> *recordList) {
 	list <string>::iterator iter;
