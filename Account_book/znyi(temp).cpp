@@ -130,7 +130,8 @@ void searchRecord(vector <Record> & records, list <string> & category_table) { /
 						int action = stoi(action_input);
 						if (action == 1) break; // break from this infinity loop and continue with the outer loop 
 						else if (action == 2){ // get search result
-							searchResult(records, period, transaction_type, memo, category, category_table);
+							vector<int> result = getSearchResult(records, period, transaction_type, memo, category, category_table);
+							
 						}
 					}
 					catch (const invalid_argument& excp) { // cant parse to int
@@ -143,7 +144,7 @@ void searchRecord(vector <Record> & records, list <string> & category_table) { /
 	} while (menu_choice != -1);
 	return; // return to main menu if menu_choice == -1
 }
-vector<int> searchResult(vector <Record>& records, struct tm* period, string* transaction_type, string* memo, int* category, list<string>& category_table) {
+vector<int> getSearchResult(vector <Record>& records, struct tm* period, string* transaction_type, string* memo, int* category, list<string>& category_table) {
 	vector<int>vec;
 	vector<Record>::iterator record_it;
 	int idx;
