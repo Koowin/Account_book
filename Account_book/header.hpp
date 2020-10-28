@@ -41,18 +41,17 @@ public:
 	void printAllRecordList(CategoryManage &);
 	bool addRecord(int);
 	//여기에 신이님 함수 추가
-	bool searchRecord(CategoryManage &);
 	bool modifyRecordList(int);
 	bool deleteRecordList(int);
 	void makeSelectedList(vector<int>&);
 	void printSelectedList();
 	
 	//검색 함수들
-	void searchRecord(list <Record>&, list <string>&);
+	void searchRecord(CategoryManage&);
 	vector<int> getSearchResult(list <Record>&, struct tm*, string*, string*, int*, list<string>&);
 	void printCurrent(struct tm*, string*, string*, int*, list<string>&);
 	int resetFieldMenu();
-	int* searchCategory(list<string>&);
+	int* searchCategory(CategoryManage&);
 	string* searchMemo();
 	string* searchType();
 	int compareTime(struct tm, struct tm);
@@ -89,6 +88,9 @@ public:
 	bool modifyCategory();
 	bool deleteCategory(RecordManage &);
 	int getCategorySize();
+
+	list <Category>::iterator get_first();
+	list <Category>::iterator get_end();
 };
 
 class FileManage {

@@ -22,7 +22,7 @@ using namespace std::chrono;
 * : check : transaction/category limit, as in ±‚»πº≠
 */
 
-void RecordManage::searchRecord(list <Record> & record_list, list <string> & category_list) { // main menu 3
+void RecordManage::searchRecord(CategoryManage & category_manager) { // main menu 3
 
 	struct tm* period = nullptr; // to store array for start and end time, default : from earliest date to latest date
 
@@ -53,7 +53,7 @@ void RecordManage::searchRecord(list <Record> & record_list, list <string> & cat
 		}
 		case 4: // search by category
 		{
-			category = searchCategory(category_list); // return int * if valid, return pointer to -1 to main menu
+			category = searchCategory(category_manager); // return int * if valid, return pointer to -1 to main menu
 			if (*category == -1) menu_choice = -1;
 			break;
 		} 
@@ -214,14 +214,14 @@ int RecordManage::resetFieldMenu() {
 		cout << "Please enter a valid value." << endl; //error message
 	}
 }
-int* RecordManage::searchCategory(list<string>&category_list) {
+int* RecordManage::searchCategory(CategoryManage& category_manager) {
 	while (true) { // take input until valid input or 'q' is received
 		int i = 1;
-		list <string>::iterator category_it;
+		list <Category>::iterator category_it;
 
 		cout << "@ Category @" << endl;
-		for (category_it = category_list.begin(); category_it != category_list.end(); category_it++) {
-			cout << i << ". " << *category_it << endl;
+		for (category_it = category_manager.get_first(); category_it != category_manager.get_end(); category_it++) {
+			cout << i << ". " << category_it->get_cname() << endl;
 			i++;
 		}
 		cout << endl;
