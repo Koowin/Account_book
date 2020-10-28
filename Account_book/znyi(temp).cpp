@@ -9,19 +9,16 @@
 
 using namespace std::chrono;
 
-/* note
-* : havent run the codes yet, need debugging afterwards
-* 
+/*
 * assumptions:
 * not using gotoxy(), thus reprint everything (menu) after getting invalid input
 * # 7.5.1
 * Record의 멤버 변수 category_number의 범위는 [1,category_table.size()-1]이다.
 * 
 * opinions:
-* : struct tm의 멤버 변수를 가지고 시간 클래스를 따로 만들면 연산자 오버로딩으로 시간 선후비교 가능
-* : record 클래스도 연산자 오버로딩으로 시간 순으로 정렬 가능 
+* : 시간 선후비교 in CheckerParser?
 * : add data, check data, etc. : 날짜 및 시간 의미검사 있는지 확인할 것 (현재보다 미래인 시간 x)
-* : please refer 기획서, and refer mockup for UI
+* :refer 기획서 mockup for UI
 * : check : transaction/category limit, as in 기획서
 */
 
