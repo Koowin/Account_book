@@ -41,7 +41,7 @@ public:
 	void printAllRecordList(CategoryManage &);
 	bool addRecord(int);
 	//여기에 신이님 함수 추가
-	bool searchRecords(CategoryManage &);
+	bool searchRecord(CategoryManage &);
 	bool modifyRecordList(int);
 	bool deleteRecordList(int);
 
