@@ -24,28 +24,19 @@
     <ClCompile Include="categoryManage.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="checkData.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="fileManage.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="addData.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="printAllRecord.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="modifyRecord.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="category.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="record.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="checkerParser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

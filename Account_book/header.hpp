@@ -48,8 +48,8 @@ public:
 	
 	//검색 함수들
 	void searchRecord(CategoryManage&);
-	vector<int> getSearchResult(list <Record>&, struct tm*, string*, string*, int*, list<string>&);
-	void printCurrent(struct tm*, string*, string*, int*, list<string>&);
+	vector<int> getSearchResult(struct tm*, string*, string*, int*, CategoryManage &);
+	void printCurrent(struct tm*, string*, string*, int*, CategoryManage &);
 	int resetFieldMenu();
 	int* searchCategory(CategoryManage&);
 	string* searchMemo();

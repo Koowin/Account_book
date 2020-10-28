@@ -83,7 +83,7 @@ void RecordManage::searchRecord(CategoryManage & category_manager) { // main men
 		//current state - choose action
 		if (menu_choice != -1) {
 			while (true) {
-				printCurrent(period, transaction_type, memo, category, category_list);
+				printCurrent(period, transaction_type, memo, category, category_manager);
 				cout << "1. Add another condition" << endl;
 				cout << "2. Print search result" << endl;
 				cout << endl;
@@ -101,7 +101,7 @@ void RecordManage::searchRecord(CategoryManage & category_manager) { // main men
 						int action = stoi(action_input);
 						if (action == 1) break; // break from this infinity loop and continue with the outer loop 
 						else if (action == 2){ // get search result
-							vector<int> result = getSearchResult(record_list, period, transaction_type, memo, category, category_list);
+							vector<int> result = getSearchResult(period, transaction_type, memo, category, category_manager);
 							if (result.size() == 0) {
 								cout << "- None of the records satisfies the conditions given. -" << endl;
 								cout << endl;
@@ -124,7 +124,7 @@ void RecordManage::searchRecord(CategoryManage & category_manager) { // main men
 	} while (menu_choice != -1);
 	return; // return to main menu if menu_choice == -1
 }
-vector<int> RecordManage::getSearchResult(list <Record>& record_list, struct tm* period, string* transaction_type, string* memo, int* category, list<string>& category_list) {
+vector<int> RecordManage::getSearchResult(struct tm* period, string* transaction_type, string* memo, int* category, CategoryManage& category_manager) {
 	vector<int>vec;
 	list<Record>::iterator record_it;
 	int idx;
@@ -163,7 +163,7 @@ vector<int> RecordManage::getSearchResult(list <Record>& record_list, struct tm*
 	}
 	return vec;
 }
-void RecordManage::printCurrent(struct tm* period, string* transaction_type, string* memo, int* category, list<string> & category_list) {
+void RecordManage::printCurrent(struct tm* period, string* transaction_type, string* memo, int* category, CategoryManage & category_manager) {
 	cout << "@ Current condition @" << endl;
 	if (period != nullptr) {
 		cout << "Time period : ";
@@ -178,9 +178,9 @@ void RecordManage::printCurrent(struct tm* period, string* transaction_type, str
 	if (memo != nullptr)
 		cout << "Memo : " << *memo << endl;;
 	if (category != nullptr) {
-		list<string>::iterator category_it = find(category_list.begin(), category_list.end(), *category);
-		if (category_it != category_list.end())
-			cout << "Category : " << *category_it << endl;
+		list<Category>::iterator category_it = find(category_manager.get_first(), category_manager.get_end(), *category);
+		if (category_it != category_manager.get_end())
+			cout << "Category : " << category_it->get_cname() << endl;
 	}
 	if (period == nullptr && transaction_type == nullptr && memo == nullptr && category == nullptr)
 		cout << "- No condition set -" << endl;
@@ -240,7 +240,7 @@ int* RecordManage::searchCategory(CategoryManage& category_manager) {
 		}
 		try {
 			int category = stoi(category_input);
-			if (category < 1 || category > category_list.size()) {} // out of range [1,tablesize]
+			if (category < 1 || category > category_manager.getCategorySize()) {} // out of range [1,tablesize]
 			else return &category;
 		}
 		catch (const invalid_argument& excp) { // can't parse string
