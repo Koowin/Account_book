@@ -47,7 +47,7 @@ using namespace std::chrono;
 * : check : transaction/category limit, as in 기획서
 */
 
-void searchRecord(vector <Record> & records, list <string> & category_table) { // main menu 3
+void searchRecord(list <Record> & records, list <string> & category_table) { // main menu 3
 
 	struct tm* period = nullptr; // to store array for start and end time 
 	// default : from earliest date to latest date
@@ -150,18 +150,18 @@ void searchRecord(vector <Record> & records, list <string> & category_table) { /
 	} while (menu_choice != -1);
 	return; // return to main menu if menu_choice == -1
 }
-vector<int> getSearchResult(vector <Record>& records, struct tm* period, string* transaction_type, string* memo, int* category, list<string>& category_table) {
+vector<int> getSearchResult(list <Record>& records, struct tm* period, string* transaction_type, string* memo, int* category, list<string>& category_table) {
 	vector<int>vec;
-	vector<Record>::iterator record_it;
+	list<Record>::iterator record_it;
 	int idx;
 	for (record_it = records.begin(), idx = 0; record_it != records.end(); record_it++, idx++) {
 		//1check time range
-		struct tm start = (period == nullptr) ? records.begin()->date : period[0]; //if null, earliest date
-		struct tm end = (period == nullptr) ? records.end()->date : period[1]; // if null, latest date
-		if (compareTime(start, record_it->date) >= 0 && compareTime(record_it->date, end) >= 0) {
+		struct tm start = (period == nullptr) ? records.begin()->get_date() : period[0]; //if null, earliest date
+		struct tm end = (period == nullptr) ? records.end()->get_date() : period[1]; // if null, latest date
+		if (compareTime(start, record_it->get_date()) >= 0 && compareTime(record_it->get_date(), end) >= 0) {
 			//2. check type of transaction
 			bool isFindingIncome = (*transaction_type == "Income") ? true : false;
-			if (transaction_type == nullptr || isFindingIncome == record_it->is_income) {
+			if (transaction_type == nullptr || isFindingIncome == record_it->get_isincome()) {
 				//3. check memo - 5.3
 				/*검색어와 메모 모두 내부의 공백들을 전부 없앤 상태로
 				* 알파벳 대/소문자를 구분하지 않으면서
@@ -174,13 +174,13 @@ vector<int> getSearchResult(vector <Record>& records, struct tm* period, string*
 					find_memo.erase(remove_if(find_memo.begin(), find_memo.end(), isspace), find_memo.end()); // remove all space from the string
 					for_each(find_memo.begin(), find_memo.end(), [](char& c) { c = tolower(c); }); // to lower case 
 					//original memo
-					original_memo = record_it->memo;
+					original_memo = record_it->get_memo();
 					original_memo.erase(remove(original_memo.begin(), original_memo.end(), isspace), original_memo.end()); // remove all space
 					for_each(original_memo.begin(), original_memo.end(), [](char& c) {c = tolower(c); }); // to lower case 
 				}
 				if (memo == nullptr || original_memo.find(find_memo) != original_memo.npos) { // memo default || find_memo is a substring of original_memo
 					//4. check category
-					if (category == nullptr || *category == record_it->category_number) { // default category || record with the same category is found
+					if (category == nullptr || *category == record_it->get_category_number()) { // default category || record with the same category is found
 						vec.push_back(idx);
 					}
 				}
@@ -210,7 +210,7 @@ void printCurrent(struct tm* period, string* transaction_type, string* memo, int
 			cout << "Category : " << *category_it << endl;
 	}
 	if (period == nullptr && transaction_type == nullptr && memo == nullptr && category == nullptr)
-		cout << "- None -" << endl;
+		cout << "- No condition set -" << endl;
 	cout << endl;
 }
 int resetFieldMenu() {
@@ -244,11 +244,11 @@ int resetFieldMenu() {
 int* searchCategory(list<string>&category_table) {
 	while (true) { // take input until valid input or 'q' is received
 		int i = 1;
-		list <string>::iterator iter;
+		list <string>::iterator category_it;
 
 		cout << "@ Category @" << endl;
-		for (iter = category_table.begin(); iter != category_table.end(); iter++) {
-			cout << i << ". " << *iter << endl;
+		for (category_it = category_table.begin(); category_it != category_table.end(); category_it++) {
+			cout << i << ". " << *category_it << endl;
 			i++;
 		}
 		cout << endl;
@@ -267,16 +267,12 @@ int* searchCategory(list<string>&category_table) {
 		}
 		try {
 			int category = stoi(category_input);
-			if (category < 1 || category > category_table.size()) { // out of range [1,tablesize]
-				cout << "Please enter a valid value." << endl;
-				continue;
-			}
-			return &category;
+			if (category < 1 || category > category_table.size()) {} // out of range [1,tablesize]
+			else return &category;
 		}
 		catch (const invalid_argument& excp) { // can't parse string
-			cout << "Please enter a valid value." << endl;
-			continue;
 		}
+		cout << "Please enter a valid value." << endl;
 	}
 }
 
