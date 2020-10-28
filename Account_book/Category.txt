@@ -2,7 +2,4 @@ Bills
 Entertainment
 Food
 House Rent
-Food
-Test1
-Test2
-Test3
+Transpoertation

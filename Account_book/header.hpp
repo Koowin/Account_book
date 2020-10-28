@@ -1,60 +1,138 @@
-#pragma once
-#include <iostream>
-#include <ctime>
-#include <list>
-#include <conio.h>
-#include <fstream>
-#include <vector>
-#include <string>
+#include<iostream>
+#include<ctime>
+#include<list>
+#include<conio.h>
+#include<fstream>
+#include<vector>
+#include<string>
+
 using namespace std;
 
-class Record {
+class Conditions {
+private:
+	bool on_period;
+	bool on_income;
+	bool on_memo;
+	bool on_category;
+
+	struct tm from_date;
+	struct tm to_date;
+	bool is_income;
+	string memo_keyword;
+	int category_number;
+
 public:
+	Conditions();			//초기값: on~~ 모두 false로
+
+	struct tm get_from_date();
+	struct tm get_to_date();
+	bool get_is_income();
+	string get_memo_keyword();
+	int get_category_number();
+
+	void set_period();
+	void set_income();
+	void set_memo();
+	void set_category();
+	void clear_conditions();
+};
+
+class CheckerParser {
+private:
+
+public:
+	bool checkDate(string);
+	bool checkAmount(string);
+	bool checkMemo(string);
+	bool checkCategoryNumber(string, int);
+	struct tm parseDate(string);
+	unsigned int parseAmount(string);
+};
+
+class Record {
+private:
 	struct tm date;
 	bool is_income;
 	unsigned int amount;
 	string memo;
-	short category_number;		//필요에 따라 char, short, int 선택 (변경 시 헤더파일 아래 함수 선언 및 cpp에서도 변경해주세요)
+	int category_number;
+
+public:
+	Record();
+	Record(struct tm, bool, unsigned int, string, int);
+	/* getter */
+	struct tm  get_date();
+	bool get_isIncome();
+	unsigned int get_amount();
+	string get_memo();
+	int get_category_number();
+
+	/* setter */
+	void set_date(struct tm);
+	void set_isIncome(bool);
+	void set_amount(unsigned int);
+	void set_memo(string);
+	void set_category_number(int);
 };
 
 class Category {
 private:
-	list<string> category;
+	string c_name;
 
 public:
 	Category();
-	Category(ifstream&);
-	void printAll();
+	Category(string);
+
+	/* getter */
+	string get_cname();
+
+	/* setter */
+	void set_cname(string);
 };
 
-/* file manage 함수 */
-void initFiles(void);		//return: 성공/실패
-bool saveFiles(list<Record>, Category);		//return: 성공/실패
+class CategoryManage {
+private:
+	list<Category> category;
 
-/* string->other 파싱 및 검사 함수 */
-struct tm checkDate(string);		//return: 성공 시 string -> tm값 / 실패 시 정해주세요
-unsigned int checkAmount(string);	//return: 성공 시 string -> unsigned int값 / 실패 시 정해주세요 (필요에 따라 기획서 수정 가능)
-string checkMemo(string);			//return: 성공 시 그대로 / 실패 시 정해주세요.
-short checkCategoryNumber(string);	//return: string->short / 실패 시 정해주세요.
+public:
+	void categoryMenu();
+	void printCategoryList();
+	bool addCategoryList(Category);
+	bool modifyCategoryList(Category);
+	bool deleteCategoryList(Category);
+	int getCategorySize();
+	void init_add(Category);
+	int listSize();
+	bool isDuplicate(string);
+	Category getCategory();
+};
 
-/* recordManage 함수 */
-void addRecord(void);			//필요에 따라 입출력 자료형 변경
-void printAllRecord(void);		//필요에 따라 입출력 자료형 변경
-//기록 검색 부분은 신이님이 만드신대로 여기에 추가해주세요
-void modifyRecord(void);		//필요에 따라 입출력 자료형 변경
-void deleteRecord(void);		//필요에 따라 입출력 자료형 변경
-
-/* categoryManage 함수 */
-void printCategoryList(list <string>);
-bool addCategoryList(list <string> *);			//실패 시 True 반환
-bool modifyCategory(list <string> *);				//실패 시 True 반환
-bool deleteCategory(list <string> *,list <class Record> *);		//실패 시 True 반환
-
-
-
-
+class RecordManage {
+private:
+	list<Record> record_list;
+public:
+	/* 기본 기능 */
+	void printAllRecordList(CategoryManage&);
+	bool addRecord(int);
+	bool searchRecords(CategoryManage&);
+	bool modifyRecordList(Record);
+	bool deleteRecordList(Record);
+	void init_add(Record);
+	int getRecordSize();
+	Record getRecord();
+};
 
 
-void setTime(Record& r, string tm);
+
+
+
+class FileManage {
+private:
+
+public:
+	bool initFile(RecordManage&, CategoryManage&);
+	bool saveFile(RecordManage&, CategoryManage&);
+};
+
 void Tokenize(const string&, vector<string>&, const string&);
-time_t MakeLocalTime_t(int YYYY, int MM, int DD, int hh, int mi, int ss);
+struct tm setTime(string);

@@ -1,87 +1,64 @@
 #include "header.hpp"
 
-
 int main() {
-	list <Record> record_list;
-	list <string> category_table;
-	initFiles();
-	/*
-	ifstream in_category("Category.txt");
-	if (!in_category.is_open()) {
-		//cout << "Category.txt not open" << endl;
-		ofstream out_category("Category.txt");
+	RecordManage record_manager;
+	CategoryManage category_manager;
+	string input_string;
+	int menu_selected;
+	bool flag;
 
-		string default_category[] = { "Bills", "Entertainment", "Food", "House Rent", "Transpoertation" };
+	//to do: 파일 읽기 및 데이터 저장 작업
 
-		for (auto s : default_category) {
-			out_category << s << endl;
-		}
+	FileManage file_manager;
 
-		cout << "Category.txt is created." << endl;
-		//cout << endl;
+	if (!file_manager.initFile(record_manager, category_manager)) {
+		return -1;
 	}
-	else {
-		// cout << "Category.txt is opened normally." << endl;
-		//cout << endl;
-	}
-	*/
 
-	int num = -1;
-	while (true) {
-		cout << "@ Main menu @" << endl;
-		cout << "1. Add a transaction" << endl;
-		cout << "2. View all transactions" << endl;
-		cout << "3. Search/Modify/Delete a transaction" << endl;
-		cout << "4. Manage category" << endl;
-		cout << "5. Quit" << endl;
-		cout << "Choice: ";
-		/*
-		// take input as string
-		string str;
-		getline(cin, str);
-		str.erase(str.begin(), find_if(str.begin(), str.end(), [](unsigned char ch) { //trim left
-			return !std::isspace(ch);
-			}));
-		str.erase(find_if(str.rbegin(), str.rend(), [](unsigned char ch) { //trim right
-			return !std::isspace(ch);
-			}).base(), str.end());
-		if (!str.empty() && find_if(str.begin(), str.end(), [](unsigned char c) { return !isdigit(c); }) == str.end()) //parse string to int
-			num = stoi(str);
-		if (str.find_first_not_of(' ') == str.npos) { //str.empty() // if string is empty or contains only spaces
-			cout << "empty or only spaces (' ' or '\t')" << endl;
+	file_manager.saveFile(record_manager, category_manager);
+
+	while (1) {
+		//to do: 메인메뉴 출력부
+		cout << "메인메뉴" << endl;
+
+		//숫자만 입력받을 때 까지 반복
+		flag = true;
+		while (flag) {
+			cin >> input_string;
+			try {
+				menu_selected = stoi(input_string);
+				flag = false;
+			}
+			catch (const exception & expn) {
+				cout << "숫자만 입력해 주세요" << endl;
+			}
 		}
-		if (num == -1) {
-			cout << "string can't be parsed to integer";
-			cout << "trimmed string: " << '#' << str << '#' << endl;
-		}
-		*/
 
-		//take input as integer, assuming only valid inputs are received
-		int choice;
-		cin >> choice;
-
-		switch (choice) {
+		switch (menu_selected) {
 		case 1:
-		{
-			cout << "Add a transaction" << endl;
+			//기록 1개 추가
+			record_manager.addRecord(category_manager.getCategorySize());
 			break;
-		}
 		case 2:
-			cout << "View all transactions" << endl;
+			//전체 목록 출력
+			record_manager.printAllRecordList(category_manager);
 			break;
 		case 3:
-			cout << "Search/Modify/Delete a transaction" << endl;
+			//검색,수정,삭제 메뉴
+			record_manager.searchRecords(category_manager);
 			break;
 		case 4:
-			cout << "Manage category" << endl;
+			//카테고리 관리 메뉴
+			category_manager.categoryMenu();
 			break;
 		case 5:
-			cout << "Goodbye" << endl;
-			return 0;
+			//저장 작업
+
+			return 0;		//프로그램 종료
+		default:
+			cout << "1~5사이의 숫자만 입력해주세요." << endl;
+			break;
 		}
-
-		cout << endl;
 	}
-
-	return 0;
 }
+
