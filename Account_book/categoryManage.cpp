@@ -285,3 +285,12 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 int CategoryManage::getCategorySize() {
 	return category.size();
 }
+
+list <Category>::iterator CategoryManage::get_first() {
+	list <Category>::iterator iter = category.begin();
+	return iter;
+}
+list <Category>::iterator CategoryManage::get_end() {
+	list <Category>::iterator iter = category.end();
+	return iter;
+}

@@ -157,7 +157,7 @@ bool RecordManage::deleteRecordList() {
 		}
 		else {
 			  
-			if (input_string.size() > =1) {
+			if (input_string.size() >= 1) {
 				cout << "please enter a valid value" << endl;			
 			}
 			else {
