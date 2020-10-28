@@ -22,7 +22,7 @@ using namespace std::chrono;
 * : check : transaction/category limit, as in 기획서
 */
 
-void searchRecord(list <Record> & record_list, list <string> & category_list) { // main menu 3
+void RecordManage::searchRecord(list <Record> & record_list, list <string> & category_list) { // main menu 3
 
 	struct tm* period = nullptr; // to store array for start and end time, default : from earliest date to latest date
 
@@ -124,7 +124,7 @@ void searchRecord(list <Record> & record_list, list <string> & category_list) { 
 	} while (menu_choice != -1);
 	return; // return to main menu if menu_choice == -1
 }
-vector<int> getSearchResult(list <Record>& record_list, struct tm* period, string* transaction_type, string* memo, int* category, list<string>& category_list) {
+vector<int> RecordManage::getSearchResult(list <Record>& record_list, struct tm* period, string* transaction_type, string* memo, int* category, list<string>& category_list) {
 	vector<int>vec;
 	list<Record>::iterator record_it;
 	int idx;
@@ -163,7 +163,7 @@ vector<int> getSearchResult(list <Record>& record_list, struct tm* period, strin
 	}
 	return vec;
 }
-void printCurrent(struct tm* period, string* transaction_type, string* memo, int* category, list<string> & category_list) {
+void RecordManage::printCurrent(struct tm* period, string* transaction_type, string* memo, int* category, list<string> & category_list) {
 	cout << "@ Current condition @" << endl;
 	if (period != nullptr) {
 		cout << "Time period : ";
@@ -186,7 +186,7 @@ void printCurrent(struct tm* period, string* transaction_type, string* memo, int
 		cout << "- No condition set -" << endl;
 	cout << endl;
 }
-int resetFieldMenu() {
+int RecordManage::resetFieldMenu() {
 	while (true) {
 		cout << "@ Reset Field @" << endl;
 		cout << "1. Date and Time" << endl;
@@ -214,7 +214,7 @@ int resetFieldMenu() {
 		cout << "Please enter a valid value." << endl; //error message
 	}
 }
-int* searchCategory(list<string>&category_list) {
+int* RecordManage::searchCategory(list<string>&category_list) {
 	while (true) { // take input until valid input or 'q' is received
 		int i = 1;
 		list <string>::iterator category_it;
@@ -249,7 +249,7 @@ int* searchCategory(list<string>&category_list) {
 	}
 }
 
-string* searchMemo() {
+string* RecordManage::searchMemo() {
 	while (true) { // take input until valid input or 'q' is received
 		cout << "@ Memo @" << endl;
 		cout << "Search transactions that contains the text..." << endl;
@@ -263,7 +263,7 @@ string* searchMemo() {
 		else { cout << "Invalid input, please try again." << endl; }
 	}
 }
-string* searchType() {
+string* RecordManage::searchType() {
 	while (true) { // take input until valid input or 'q' is received
 		cout << "@ Income/Expense @" << endl;
 		cout << "1. Income" << endl;
@@ -296,7 +296,7 @@ string* searchType() {
 		}
 	}
 }
-int compareTime(struct tm start, struct tm end) { // 의미 규칙, check if end is after start
+int RecordManage::compareTime(struct tm start, struct tm end) { // 의미 규칙, check if end is after start
 	//return positive value if start is earlier than end, negative if end is earlier than start, return zero if same date and time
 
 	//check year
@@ -320,7 +320,7 @@ int compareTime(struct tm start, struct tm end) { // 의미 규칙, check if end is 
 		}
 	}
 }
-int searchTime(struct tm * period) {
+int RecordManage::searchTime(struct tm* period) {
 	while (true) { // take input until valid input or 'q' is received
 		cout << "@ Time period @" << endl;
 		cout << "Enter time period using format \"YYYY/MM/DD hh:mm~YYYY/MM/DD hh:mm\"" << endl;
@@ -357,7 +357,7 @@ int searchTime(struct tm * period) {
 		} 
 	}
 }
-int searchMenu() { 
+int RecordManage::searchMenu() { 
 	while (true) { 
 		cout << "@ Search a transaction @" << endl;
 		cout << "1. Date and Time" << endl;

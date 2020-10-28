@@ -44,6 +44,20 @@ public:
 	bool searchRecord(CategoryManage &);
 	bool modifyRecordList(int);
 	bool deleteRecordList(int);
+	void makeSelectedList(vector<int>&);
+	void printSelectedList();
+	
+	//검색 함수들
+	void searchRecord(list <Record>&, list <string>&);
+	vector<int> getSearchResult(list <Record>&, struct tm*, string*, string*, int*, list<string>&);
+	void printCurrent(struct tm*, string*, string*, int*, list<string>&);
+	int resetFieldMenu();
+	int* searchCategory(list<string>&);
+	string* searchMemo();
+	string* searchType();
+	int compareTime(struct tm, struct tm);
+	int searchTime(struct tm*);
+	int searchMenu();
 
 	// record_list의 처음과 끝 반복자를 반환하는 함수
 	list <Record>::iterator get_first();
