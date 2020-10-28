@@ -1,8 +1,139 @@
 #include "header.hpp"
 #include <iomanip>
 
+void RecordManage::printAllRecordList(CategoryManage&) {
 
-bool deleteRecordList() {
+}
+
+bool RecordManage::addRecord(int category_size) {
+	class CheckerParser cp;
+	string input_string;
+	bool flag = true;
+
+	struct tm date;
+	bool is_income;
+	unsigned int amount;
+	string memo;
+	int category_number;
+
+
+	//날짜 입력받는 부분
+	while (flag) {
+		cout << "날짜 입력" << endl;
+		cin >> input_string;
+
+		if (input_string == "q") {
+			return true;
+		}
+		//정상 입력 시
+		if (!cp.checkDate(input_string)) {
+			date = cp.parseDate(input_string);
+			flag = false;
+		}
+		//비정상 입력 시 오류 문구 출력 후 반복
+	}
+
+
+	//수입/지출 입력받는 부분
+	flag = true;
+	while (flag) {
+		cout << "수입/지출" << endl;
+		cin >> input_string;
+
+		if (input_string == "q") {
+			return true;
+		}
+		//정상 입력 시
+		else if (input_string == "1" || input_string == "2") {
+			if (input_string == "1") {
+				is_income = true;
+			}
+			else {
+				is_income = false;
+			}
+			flag == false;
+		}
+		//비정상 입력 시
+		else {
+			//to do : 오류 문구 영어로 바꾸기
+			cout << "오류 문구 출력" << endl;
+		}
+	}
+
+	//금액 입력 받는 부분
+	flag = true;
+	while (flag) {
+		cout << "금액 입력" << endl;
+		cin >> input_string;
+
+		if (input_string == "q") {
+			return true;
+		}
+
+		//정상 입력 시
+		if (!cp.checkAmount(input_string)) {
+			amount = cp.parseAmount(input_string);
+			flag = false;
+		}
+		//비정상 입력 시 오류 문구 출력하고 반복
+	}
+
+	//메모 입력 받는 부분
+	flag = true;
+	while (flag) {
+		cout << "메모 입력" << endl;
+		cin >> input_string;
+
+		if (input_string == "q") {
+			return true;
+		}
+
+		//정상 입력 시
+		if (!cp.checkMemo(input_string)) {
+			memo = input_string;
+		}
+		//비정상 입력 시 오류 문구 출력하고 반복
+	}
+
+	//카테고리 번호 입력 받는 부분
+	flag = true;
+	while (flag) {
+		cout << "카테고리 번호 입력" << endl;
+		cin >> input_string;
+
+		if (input_string == "q") {
+			return true;
+		}
+		try {
+			category_number = stoi(input_string);
+		}
+		catch (const exception& expn) {
+			cout << "숫자만 입력해주세요" << endl;
+		}
+
+		if (category_number > 0 && category_number <= category_size) {
+			flag = false;
+		}
+		else {
+			cout << "1 부터 " << category_size << " 사이의 숫자만 입력해주세요" << endl;
+		}
+	}
+
+	//저장 확인 물어보는 부분
+	cout << "저장하시겠습니까? (취소: No)" << endl;
+	cin >> input_string;
+
+	if (input_string == "No") {
+		return true;
+	}
+	else {
+		//to do : index 찾아서 넣기 혹은 넣고 정렬하기
+		record_list.push_back(Record(date, is_income, amount, memo, category_number));
+		return false;
+	}
+}
+
+bool RecordManage::deleteRecordList() {
 	bool flag = true;
 	int selected_num;
 	string input_string;
@@ -50,7 +181,7 @@ bool deleteRecordList() {
 };
 
 
-bool modifyRecordList() {
+bool RecordManage::modifyRecordList() {
 	bool flag = true;
 	int selected_num;
 	string input_string;
@@ -188,7 +319,7 @@ bool modifyRecordList() {
 전달 받은 인덱스가 담겨 있는 벡터 기반으로 레코드 리스트에서
 해당 인덱스 리코드 값 가져와 저장한다.
 */
-void makeselectedList(vector<int>& vec) {
+void RecordManage::makeSelectedList(vector<int>& vec) {
 	 list<Record> selectedList;   // main에 넣을 예정
 
 	for (int i = 0; i < vec.size(); i++) {
@@ -207,7 +338,7 @@ void makeselectedList(vector<int>& vec) {
 선택된 값들 프린트 하는 함수 
 */
 
-void printselectedList() {
+void RecordManage::printSelectedList() {
 	list<Record> selectedList;  // main에 넣을 예정 
 
 	list <Record>::iterator iter;
