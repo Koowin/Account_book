@@ -35,6 +35,7 @@ public:
 class RecordManage {
 private:
 	list <Record> record_list;
+	CheckerParser c_parser; //신이 추가 - 많이 쓰여서 기타 멤버 함수들이 접근하기 편하게 그냥 멤버로 만듦 // 생성자에서 객체 생성 필수
 public:
 	/* 기본 기능 */
 	void printAllRecordList(CategoryManage &);

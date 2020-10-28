@@ -10,32 +10,11 @@
 using namespace std::chrono;
 
 /* note
-* : i use vector for record list, list for category list
 * : havent run the codes yet, need debugging afterwards
 * 
 * assumptions:
-* assumption 1:
-* all functions used to check validity return bool type : true if valid, false if invalid
-* struct tm * checkDate(string date_and_time) : return pointer to a tm object if valid, nullptr if invalid
-* bool checkMoney(string income_or_expense) // my assumption
-* unsigned int checkAmount(string amount) //not needed when searching
-* bool checkMemo(string memo) // used bool instead of string. is thr any reason to return a string?
-* bool checkCategoryNumber(int category_num) // how do we use this?
-* 
-* assumption 2:
-* no empty string
-* no spaces in front, back, or in between
-* no one is going to press \t, \n or other special key during input (only ascii 32~126)
-* one character only for menu inputs // e.g.: possible inputs in search menu consist of only { 'q', '1', '2', '3', '4', '5' }
-* 
-* assumption 3:
 * not using gotoxy(), thus reprint everything (menu) after getting invalid input
 * # 7.5.1
-* 
-* assumption 4:
-* recordList is already sorted by date and time
-* 
-* assumption 5:
 * Record의 멤버 변수 category_number의 범위는 [1,category_table.size()-1]이다.
 * 
 * opinions:
@@ -43,17 +22,12 @@ using namespace std::chrono;
 * : record 클래스도 연산자 오버로딩으로 시간 순으로 정렬 가능 
 * : add data, check data, etc. : 날짜 및 시간 의미검사 있는지 확인할 것 (현재보다 미래인 시간 x)
 * : please refer 기획서, and refer mockup for UI
-* : checkMemo, checkAmount, checkMoney, checkDate...: pls make sure to check all the details (spaces, characters, etc.)
 * : check : transaction/category limit, as in 기획서
 */
 
 void searchRecord(list <Record> & records, list <string> & category_table) { // main menu 3
 
-	struct tm* period = nullptr; // to store array for start and end time 
-	// default : from earliest date to latest date
-	//period = new struct tm[2];
-	//period[0] = records[0].date;
-	//period[1] = records[records.size() - 1].date; 
+	struct tm* period = nullptr; // to store array for start and end time, default : from earliest date to latest date
 
 	string* transaction_type = nullptr; // default : all types
 	string* memo = nullptr; // default: all memo 
@@ -134,19 +108,22 @@ void searchRecord(list <Record> & records, list <string> & category_table) { // 
 							if (result.size() == 0) {
 								cout << "- None of the records satisfies the conditions given. -" << endl;
 								cout << endl;
+								menu_choice = -1; //back to main menu
+								break; // break from inner loop, terminate the outer loop (menu_choice=-1), and go back to main menu
 							} else {
 								//printSearchResult
 								//print menu 1. edit 2. delete
 							}
-						}
+						} else cout << "Please enter a valid value." << endl; //input_action != 1 && input_action != 2
 					}
 					catch (const invalid_argument& excp) { // cant parse to int
+						cout << "Please enter a valid value." << endl; 
 					}
+				} else { //length of input != 1
+					cout << "Please enter a valid value." << endl;
 				}
-				cout << "Please enter a valid value." << endl; //error message
 			}
 		}
-
 	} while (menu_choice != -1);
 	return; // return to main menu if menu_choice == -1
 }
@@ -184,7 +161,6 @@ vector<int> getSearchResult(list <Record>& records, struct tm* period, string* t
 						vec.push_back(idx);
 					}
 				}
-				
 			}
 		}
 	}
@@ -232,10 +208,10 @@ int resetFieldMenu() {
 			}
 			try {
 				int field = stoi(field_input);
-				if (field > 4 || field < 1) {} // out of range
+				if (field > 4 || field < 1) {} // out of range, error message
 				else return field;// valid 
 			}
-			catch (const invalid_argument& excp) { // cant parse to int
+			catch (const invalid_argument& excp) { // cant parse to int, error message
 			}
 		}
 		cout << "Please enter a valid value." << endl; //error message
@@ -286,7 +262,7 @@ string* searchMemo() {
 		cout << endl;
 		getline(cin, memo_input);
 		if (memo_input.length() == 1 && memo_input == "q") return &memo_input; // back to main menu
-		if (checkMemo(memo_input)) return &memo_input; // I dont know why checkMemo return string... so i use bool instead
+		if (!c_parser.checkMemo(memo_input)) return &memo_input; //valid //멤버변수 c_parser로 checkMemo접근, 현재 파일 구조로 인식 잘 안 됨
 		else { cout << "Invalid input, please try again." << endl; }
 	}
 }
@@ -301,18 +277,24 @@ string* searchType() {
 		string type_input;
 		getline(cin, type_input);
 		cout << endl;
-		if (type_input.length() != 1) { cout << "Please enter a valid value." << endl; continue; } 
-		if (type_input == "q") return &type_input; // back to main menu
-		try {
-			int type_num = stoi(type_input);
-			if (type_num > 2 || type_num < 1) { cout << "Please enter a valid value." << endl; continue; } // number out of range
-			else {
-				string returnstr = (type_num == 1) ? "Income" : "Expense"; 
-				return &returnstr; // valid
+		if (type_input.length() == 1) {
+			if (type_input == "q") return &type_input; // back to main menu
+			try {
+				int type_num = stoi(type_input);
+				if (type_num == 2 || type_num == 1) { //valid menu number
+					string returnstr = (type_num == 1) ? "Income" : "Expense";
+					return &returnstr; // valid
+				} else { 
+					cout << "Please enter a valid value." << endl; 
+					continue; 
+				}
 			}
-		}
-		catch (const invalid_argument& excp) {
-			cout << "Please enter a valid value. " << endl;
+			catch (const invalid_argument& excp) { // cant parse to int
+				cout << "Please enter a valid value. " << endl;
+				continue;
+			}
+		} else { // length of input != 1
+			cout << "Please enter a valid value." << endl; 
 			continue;
 		}
 	}
@@ -358,24 +340,24 @@ int searchTime(struct tm * period) {
 			tokens.push_back(sub);
 		}
 		if (tokens.size() == 2 && tokens[0].length() == 16 && tokens[1].length() == 16) {
-			CheckerParser cp;
-			//정상 입력
-			if (!cp.checkDate(tokens[0])) {
-				start = cp.parseDate(tokens[0]);
-			}
-			struct tm * start = checkDate(tokens[0]); //check validity of starting date and time
-			struct tm * end = checkDate(tokens[1]); // check validity of ending date and time
-			if (start != nullptr && end != nullptr) {
-				if (compareTime(*start, *end) >= 0) { // end >= start
-					struct tm result[2] = { *start, *end };
-					period = result;
+			struct tm start;
+			struct tm  end;;
+			if (!c_parser.checkDate(tokens[0]) && !c_parser.checkDate(tokens[1])) { //멤버변수 c_parser로 
+				start = c_parser.parseDate(tokens[0]);
+				end = c_parser.parseDate(tokens[1]);
+				if (compareTime(start, end) >= 0) { // end >= start
+					struct tm result[2] = { start, end };
+					period = result; //assign pointer
 					return 1; //valid 
+				} else { // not following 의미규칙
+					cout << "Invalid date and time." << endl; continue; 
 				}
-				else { cout << "Invalid date and time." << endl; continue; }; // not following 의미규칙
+			} else { // not following 문법형식
+				cout << "Invalid date and time." << endl; continue; 
 			}
-			else { cout << "Invalid date and time." << endl; continue; }  // invalid date and time, im not checking which of them is wrong
-		}
-		else { cout << "Invalid date and time." << endl; continue; } // invalid input : not following YYYY/MM/DD hh:mm~YYYY/MM/DD hh:mm format (at '~')
+		} else { // invalid input : not following YYYY/MM/DD hh:mm~YYYY/MM/DD hh:mm format (at '~')
+			cout << "Invalid date and time." << endl; continue;
+		} 
 	}
 }
 int searchMenu() { 
