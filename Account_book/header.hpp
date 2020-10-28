@@ -16,7 +16,6 @@ private:
 	int category_number;
 
 public:
-	Record();
 	Record(struct tm, bool, unsigned int, string, int);
 	/* getter */
 	struct tm  get_date();
@@ -38,12 +37,16 @@ private:
 	list <Record> record_list;
 public:
 	/* 기본 기능 */
-	void printAllRecordList(class CategoryManage &);
+	void printAllRecordList(CategoryManage &);
 	bool addRecord(int);
 	//여기에 신이님 함수 추가
-	bool searchRecords(class CategoryManage &);
+	bool searchRecords(CategoryManage &);
 	bool modifyRecordList(int);
 	bool deleteRecordList(int);
+
+	// record_list의 처음과 끝 반복자를 반환하는 함수
+	list <Record>::iterator get_first();
+	list <Record>::iterator get_end();
 };
 
 class Category {
@@ -51,7 +54,6 @@ private:
 	string c_name;
 
 public:
-	Category();
 	Category(string);
 
 	/* getter */
@@ -66,11 +68,11 @@ private:
 	list<Category> category;
 
 public:
-	void categoryMenu(class RecordManage &);
+	void categoryMenu(RecordManage &);
 	void printCategoryList();
-	bool addCategoryList(Category);
-	bool modifyCategoryList(Category);
-	bool deleteCategoryList(Category);
+	bool addCategory();
+	bool modifyCategory();
+	bool deleteCategory(RecordManage &);
 	int getCategorySize();
 };
 
@@ -90,7 +92,8 @@ public:
 	bool checkAmount(string);
 	bool checkMemo(string);
 	bool checkCategoryNumber(string, int);
+	bool checkCategoryName(string);
 
 	struct tm parseDate(string);
-	bool parseAmount(string);
+	unsigned int parseAmount(string);
 };

@@ -27,7 +27,6 @@ int main() {
 			}
 		}
 
-
 		switch(menu_selected) {
 		case 1:
 			//기록 1개 추가
@@ -183,78 +182,8 @@ bool RecordManage::addRecord(int category_size) {
 		return true;
 	}
 	else {
+		//to do : index 찾아서 넣기 혹은 넣고 정렬하기
 		record_list.push_back(Record(date, is_income, amount, memo, category_number));
 		return false;
-	}
-}
-
-
-
-
-
-bool RecordManage::searchRecords(class CategoryManage & category_manager) {
-	bool flag = true;
-	string input_string;
-	int menu_selected;
-	class Conditions cd;
-
-	while (flag) {
-		cout << "검색 조건 추가" << endl;
-		cout << "1. 기간별 검색" << endl;
-		cout << "2. 수입/지출별 검색" << endl;
-		cout << "3. 메모 검색" << endl;
-		cout << "4. 카테고리별 검색" << endl;
-		cout << "5. 조건 초기화" << endl;
-
-		cin >> input_string;
-		if (input_string == "q") {
-			return true;
-		}
-
-		try {
-			menu_selected = stoi(input_string);
-		}
-		catch (const exception& expn) {
-			cout << "숫자만 입력해 주세요" << endl;
-		}
-		
-		switch (menu_selected) {
-			switch (menu_selected) {
-			case 1:
-				cd.set_period();
-				break;
-			case 2:
-				cd.set_income();
-				break;
-			case 3:
-				cd.set_memo();
-				break;
-			case 4:
-				cd.set_category();
-				break;
-			case 5:
-				cd.clear_conditions();
-				break;
-			default:
-				cout << "1부터 5 사이의 숫자만 입력해주세요" << endl;
-				break;
-			}
-		}
-
-		//출력 여부 물어보기
-		while (1) {
-			cout << "현재 조건대로 검색하시겠습니까? (1:조건 더 추가, 2:검색)" << endl;
-			cin >> input_string;
-			if (input_string == "q") {
-				return true;
-			}
-			else if (input_string == "1") {
-				break;
-			}
-			else if (input_string == "2") {
-				//현재 조건으로 출력
-				break;
-			}
-		}
 	}
 }

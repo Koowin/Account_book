@@ -1,6 +1,3 @@
-//³ªÁß¿¡ ½ÅÀÌ´Ô °á°ú¹° ÇÕÃÄ¼­ ³ÖÀ» ¿¹Á¤
-//ÂùÁ¾´ÔÀÌ ±â·Ï ¼öÁ¤, »èÁ¦ ±¸ÇöÇØÁÖ¼¼¿ä~
-
 #include "header.hpp"
 
 
@@ -10,7 +7,7 @@ bool deleteRecordList() {
 	int selected_num;
 	string input_string;
 	string confirm_string;
-	string to_main_menu;		//'q'¸¦ ÀúÀåÇÒ ¹®ÀÚ¿­
+	string to_main_menu;		//'q'ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½
 	to_main_menu.assign(1, 'q');
 	list <Record>::iterator iter;
 	iter = record_list.begin();
@@ -23,24 +20,24 @@ bool deleteRecordList() {
 		cout << "Enter transaction number  (q:return to main menu)" << endl << "> ";
 		cin >> input_string;
 
-		//ÀÔ·ÂÀÌ 'q'ÀÎÁö °Ë»ç
+		//ï¿½Ô·ï¿½ï¿½ï¿½ 'q'ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
 		if (input_string.compare("q") == 0) {
 			return true;
 		}
 		else {
-			  // ÀÎÇ² °ªÀÌ 1ÀÌ»óÀÎÁö È®ÀÎ 
+			  // ï¿½ï¿½Ç² ï¿½ï¿½ï¿½ï¿½ 1ï¿½Ì»ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ 
 			if (input_string.size() > =1) {
 				cout << "please enter a valid value" << endl;			
 			}
 			else {
-				//ÀúÀå±â·Ï »èÁ¦ È®ÀÎ 
+				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ 
 				cout << "Confirm deletion? (type 'No' to cancle)" << endl << "> ";
 				cin >> confirm_string;
 				if (confirm_string.compare("No") != 0) {
 					
-					advance(iter, stoi(input_string));      //  n¹øÂ° ÀÎµ¦½º·Î iter º¯°æ ÈÄ 
+					advance(iter, stoi(input_string));      //  nï¿½ï¿½Â° ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ iter ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
 
-					record_list.erase(iter);  // ±× ÀÎµ¦½º ³ëµå »èÁ¦ 
+					record_list.erase(iter);  // ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 					
 				}
 				flag = false;
@@ -58,7 +55,7 @@ bool modifyRecordList() {
 	int selected_num;
 	string input_string;
 	string confirm_string;
-	string to_main_menu;		//'q'¸¦ ÀúÀåÇÒ ¹®ÀÚ¿­
+	string to_main_menu;		//'q'ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½
 	to_main_menu.assign(1, 'q');
 	list <Record>::iterator iter;
 	iter = record_list.begin();
@@ -71,24 +68,24 @@ bool modifyRecordList() {
 		cout << "Enter transaction number  (q:return to main menu)" << endl << "> ";
 		cin >> input_string;
 
-		//ÀÔ·ÂÀÌ 'q'ÀÎÁö °Ë»ç
+		//ï¿½Ô·ï¿½ï¿½ï¿½ 'q'ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
 		if (input_string.compare("q") == 0) {
 			return true;
 		}
 		else {
-			// ÀÎÇ² °ªÀÌ 1ÀÌ»óÀÎÁö È®ÀÎ 
+			// ï¿½ï¿½Ç² ï¿½ï¿½ï¿½ï¿½ 1ï¿½Ì»ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ 
 			if (input_string.size() > = 1) {
 				cout << "please enter a valid value" << endl;
 			}
 			else {
-				//ÀúÀå±â·Ï »èÁ¦ È®ÀÎ 
+				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ 
 				cout << "Confirm deletion? (type 'No' to cancle)" << endl << "> ";
 				cin >> confirm_string;
 				if (confirm_string.compare("No") != 0) {
 
-					advance(iter, stoi(input_string));      //  n¹øÂ° ÀÎµ¦½º·Î iter º¯°æ ÈÄ 
+					advance(iter, stoi(input_string));      //  nï¿½ï¿½Â° ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ iter ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
 
-					record_list.erase(iter);  // ±× ÀÎµ¦½º ³ëµå »èÁ¦ 
+					record_list.erase(iter);  // ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
 				}
 				flag = false;
@@ -99,3 +96,9 @@ bool modifyRecordList() {
 
 
 };
+list <Record>::iterator RecordManage::get_first(){
+	return record_list.begin();
+}
+list <Record>::iterator RecordManage::get_end() {
+	return record_list.end();
+}
