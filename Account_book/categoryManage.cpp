@@ -65,6 +65,7 @@ bool CategoryManage::addCategory() {
 	string confirm_string;
 	CheckerParser cp;
 
+
 	cout << "@ Add new category @" << endl;
 
 	while (flag) {
@@ -76,16 +77,37 @@ bool CategoryManage::addCategory() {
 			return true;
 		}
 		else {
-			//카테고리 문자열 길이 검사
-			if (!cp.checkCategoryName(input_string)) {
-				//카테고리 저장확인
-				cout << "Confirm new category? (type 'No' to cancle)" << endl << "> ";
-				cin >> confirm_string;
-				if (confirm_string != "No") {
-					//카테고리 저장
-					category.push_back(Category(input_string));
+			if (category.size() >= 64) {
+				cout << "Your number of categories has exceeded its maximum value (64 categories)." << endl;
+				cout << "Please delete some of your categories to continue." << endl;
+			}
+			else {
+				//카테고리 문자열 문법 검사
+				if (!cp.checkCategoryName(input_string)) {
+					//중복 검사
+					list <Category>::iterator iter;
+					list <Category>::iterator end_of_list = category.end();
+					bool duplicate = false;
+					for (iter = category.begin(); iter != end_of_list; iter++) {
+						if (input_string == iter->get_cname()) {
+							duplicate = true;
+							break;
+						}
+					}
+					if (duplicate) {
+						cout << "Duplicate category, please enter a new one." << endl;
+					}
+					else {
+						//카테고리 저장확인
+						cout << "Confirm new category? (type 'No' to cancle)" << endl << "> ";
+						cin >> confirm_string;
+						if (confirm_string != "No") {
+							//카테고리 저장
+							category.push_back(Category(input_string));
+						}
+						flag = false;
+					}
 				}
-				flag = false;
 			}
 		}
 	}
@@ -148,17 +170,30 @@ bool CategoryManage::modifyCategory() {
 		else {
 			//input_string check
 			if (!cp.checkCategoryName(input_string)) {
-				//수정 확인
-				cout << "Before modification : " << selector->get_cname() << endl;
-				cout << "After modification : " << input_string << endl;
-				cout << "Confirm modification? (type 'No' to cacel)" << endl << "> ";
-				cin >> confirm_string;
-				if (confirm_string == "No") {
-					return true;
+				bool duplicate = false;
+				iter = category.begin();
+				for (; iter != end_of_list; iter++) {
+					if (input_string == iter->get_cname()) {
+						duplicate = true;
+						break;
+					}
+				}
+				if (duplicate) {
+					cout << "Duplicate category, please enter a new one." << endl;
 				}
 				else {
-					selector->set_cname(input_string);
-					return false;
+					//수정 확인
+					cout << "Before modification : " << selector->get_cname() << endl;
+					cout << "After modification : " << input_string << endl;
+					cout << "Confirm modification? (type 'No' to cacel)" << endl << "> ";
+					cin >> confirm_string;
+					if (confirm_string == "No") {
+						return true;
+					}
+					else {
+						selector->set_cname(input_string);
+						return false;
+					}
 				}
 			}
 		}
