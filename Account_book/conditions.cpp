@@ -36,9 +36,15 @@ short Conditions::addPeriodCondition() {
 			}
 			from = cp.checkParseDate(f);
 			to = cp.checkParseDate(t);
+			
 			if (from.tm_year != -1 && to.tm_year != -1) {
-				on_period = true;
-				break;
+				if (compare(from, to)) {
+					on_period = true;
+					break;
+				}
+				else {
+					cout << "Right date must be larger than left date." << endl;
+				}
 			}
 		}
 	}
@@ -187,5 +193,47 @@ short Conditions::printCurrentConditions() {
 		else {
 			cout << "Please enter a valid value." << endl;
 		}
+	}
+}
+
+bool Conditions::compare(struct tm &left, struct tm &right) {
+	if (left.tm_year != right.tm_year) {
+		if (left.tm_year < right.tm_year) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	if (left.tm_mon != right.tm_mon) {
+		if (left.tm_mon < right.tm_mon) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	if (left.tm_mday != right.tm_mday) {
+		if (left.tm_mday < right.tm_mday) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	if (left.tm_hour != right.tm_hour) {
+		if (left.tm_hour < right.tm_hour) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	if (left.tm_min < right.tm_min) {
+		return true;
+	}
+	else {
+		return false;
 	}
 }

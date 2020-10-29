@@ -50,6 +50,8 @@ public:
 	short addCategoryCondition(CategoryManage&);
 	short resetConditions();
 	short printCurrentConditions();
+
+	bool compare(struct tm&, struct tm&);
 };
 
 class Record {
@@ -86,16 +88,19 @@ public:
 	void printAllRecordList(CategoryManage &);
 	void printSelectedRecordList(CategoryManage&, vector <int>);
 	bool addRecord(CategoryManage &);
-	bool modifyRecordList(int);
-	bool deleteRecordList(int);
+	bool modifyRecordList(vector <int>);
+	bool deleteRecordList(vector <int>);
 	int getRecordListSize();
 
 	/* search Part */
 	void searchMenu(CategoryManage&);
+	vector <int> searchRecords(Conditions&, CategoryManage&);
 
 	// record_list의 처음과 끝 반복자를 반환하는 함수
 	list <Record>::iterator get_first();
 	list <Record>::iterator get_end();
+	//0: 같음 1: 오른쪽이 큼 -1: 왼쪽이 큼
+	short compare(struct tm&, struct tm&);
 };
 
 class Category {
