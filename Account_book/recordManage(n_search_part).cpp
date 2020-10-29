@@ -157,7 +157,7 @@ bool RecordManage::addRecord(CategoryManage & category_manager) {
 		return true;
 	}
 	else {
-		//to do : index 찾아서 넣기 혹은 넣고 정렬하기
+		//index 찾아서 넣기
 		list <Record>::iterator iter = record_list.begin();
 		list <Record>::iterator end_of_list = record_list.end();
 

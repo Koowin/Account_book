@@ -341,11 +341,24 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage & catego
 			}
 			else {
 				//최종 수정 작업
-				iter->set_date(after_date);
-				iter->set_isIncome(after_is_income);
-				iter->set_amount(after_amount);
-				iter->set_memo(after_memo);
-				iter->set_category_number(after_category_number);
+				record_list.erase(iter);
+
+				list <Record>::iterator iter2 = record_list.begin();
+				list <Record>::iterator end_of_list = record_list.end();
+
+				for (; iter2 != end_of_list; iter2++) {
+					struct tm d = iter2->get_date();
+					if (compare(after_date, d) == 1) {
+						break;
+					}
+				}
+
+				if (iter2 == end_of_list) {
+					record_list.push_back(Record(after_date, after_is_income, after_amount, after_memo, after_category_number));
+				}
+				else {
+					record_list.push_back(Record(after_date, after_is_income, after_amount, after_memo, after_category_number));
+				}
 				return false;
 			}
 		}
