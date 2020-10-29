@@ -92,16 +92,17 @@ void RecordManage::searchRecord(CategoryManage & category_manager) { // main men
 						int action = stoi(action_input);
 						if (action == 1) break; // break from this infinity loop and continue with the outer loop 
 						else if (action == 2){ // get search result
-							//vector<int> result = getSearchResult(period, transaction_type, memo, category, category_manager);
-							//if (result.size() == 0) {
-							//	cout << "- None of the records satisfies the conditions given. -" << endl;
-							//	cout << endl;
-							//	menu_choice = -1; //back to main menu
-							//	break; // break from inner loop, terminate the outer loop (menu_choice=-1), and go back to main menu
-							//} else {
-							//	//printSearchResult
-							//	//print menu 1. edit 2. delete
-							//}
+							vector<int> result = getSearchResult(period, transaction_type, memo, category, category_manager);
+							if (result.size() == 0) {
+								cout << "- None of the records satisfies the conditions given. -" << endl;
+								cout << endl;
+								menu_choice = -1; //back to main menu
+								break; // break from inner loop, terminate the outer loop (menu_choice=-1), and go back to main menu
+							} else {
+								//printSearchResult
+								cout << "printed Search Result" << endl;
+								//print menu 1. edit 2. delete
+							}
 						} else cout << "Please enter a valid value." << endl; //input_action != 1 && input_action != 2
 					}
 					catch (const invalid_argument& excp) { // cant parse to int
@@ -120,45 +121,47 @@ void RecordManage::searchRecord(CategoryManage & category_manager) { // main men
 	if (category != nullptr) delete category;
 	return; 
 }
-//vector<int> RecordManage::getSearchResult(struct tm* period, string* transaction_type, string* memo, int* category, CategoryManage& category_manager) {
-//	vector<int>vec;
-//	list<Record>::iterator record_it;
-//	int idx;
-//	for (record_it = record_list.begin(), idx = 0; record_it != record_list.end(); record_it++, idx++) {
-//		//1check time range
-//		struct tm start = (period == nullptr) ? record_list.begin()->get_date() : period[0]; //if null, earliest date
-//		struct tm end = (period == nullptr) ? record_list.end()->get_date() : period[1]; // if null, latest date
-//		if (compareTime(start, record_it->get_date()) >= 0 && compareTime(record_it->get_date(), end) >= 0) {
-//			//2. check type of transaction
-//			bool isFindingIncome = (*transaction_type == "Income") ? true : false;
-//			if (transaction_type == nullptr || isFindingIncome == record_it->get_isincome()) {
-//				//3. check memo - 5.3
-//				/*검색어와 메모 모두 내부의 공백들을 전부 없앤 상태로
-//				* 알파벳 대/소문자를 구분하지 않으면서
-//				* 검색어가 메모의 부분 문자열이면 매치된 것이다*/
-//				string find_memo; 
-//				string original_memo;
-//				if (memo != nullptr) {
-//					//keyword 
-//					find_memo = *memo;
-//					find_memo.erase(remove_if(find_memo.begin(), find_memo.end(), isspace), find_memo.end()); // remove all space from the string
-//					for_each(find_memo.begin(), find_memo.end(), [](char& c) { c = tolower(c); }); // to lower case 
-//					//original memo
-//					original_memo = record_it->get_memo();
-//					original_memo.erase(remove(original_memo.begin(), original_memo.end(), isspace), original_memo.end()); // remove all space
-//					for_each(original_memo.begin(), original_memo.end(), [](char& c) {c = tolower(c); }); // to lower case 
-//				}
-//				if (memo == nullptr || original_memo.find(find_memo) != original_memo.npos) { // memo default || find_memo is a substring of original_memo
-//					//4. check category
-//					if (category == nullptr || *category == record_it->get_category_number()) { // default category || record with the same category is found
-//						vec.push_back(idx);
-//					}
-//				}
-//			}
-//		}
-//	}
-//	return vec;
-//}
+vector<int> RecordManage::getSearchResult(struct tm* period, string* transaction_type, string* memo, int* category, CategoryManage& category_manager) {
+	vector<int>vec;
+	list<Record>::iterator record_it;
+	int idx;
+	for (record_it = record_list.begin(), idx = 0; record_it != record_list.end(); record_it++, idx++) {
+		//1check time range
+		struct tm start = (period == nullptr) ? record_list.begin()->get_date() : period[0]; //if null, earliest date
+		struct tm end = (period == nullptr) ? record_list.end()->get_date() : period[1]; // if null, latest date
+		if (compareTime(start, record_it->get_date()) >= 0 && compareTime(record_it->get_date(), end) >= 0) {
+			//2. check type of transaction
+			bool isFindingIncome = (*transaction_type == "Income") ? true : false;
+			if (transaction_type == nullptr || isFindingIncome == record_it->get_isincome()) {
+				//3. check memo - 5.3
+				/*검색어와 메모 모두 내부의 공백들을 전부 없앤 상태로
+				* 알파벳 대/소문자를 구분하지 않으면서
+				* 검색어가 메모의 부분 문자열이면 매치된 것이다*/
+				string find_memo; 
+				string original_memo;
+				if (memo != nullptr) {
+					//keyword 
+					find_memo = *memo;
+					find_memo.erase(remove_if(find_memo.begin(), find_memo.end(), [](unsigned char ch) {return isspace(ch); }), find_memo.end());//
+					//find_memo.erase(remove_if(find_memo.begin(), find_memo.end(), isspace), find_memo.end()); // remove all space from the string
+					for_each(find_memo.begin(), find_memo.end(), [](char& c) { c = tolower(c); }); // to lower case 
+					//original memo
+					original_memo = record_it->get_memo();
+					original_memo.erase(remove_if(original_memo.begin(), original_memo.end(), [](unsigned char ch) {return isspace(ch); }), original_memo.end());//
+					//original_memo.erase(remove(original_memo.begin(), original_memo.end(), isspace), original_memo.end()); // remove all space
+					for_each(original_memo.begin(), original_memo.end(), [](char& c) {c = tolower(c); }); // to lower case 
+				}
+				if (memo == nullptr || original_memo.find(find_memo) != original_memo.npos) { // memo default || find_memo is a substring of original_memo
+					//4. check category
+					if (category == nullptr || *category == record_it->get_category_number()) { // default category || record with the same category is found
+						vec.push_back(idx);
+					}
+				}
+			}
+		}
+	}
+	return vec;
+}
 void RecordManage::printCurrent(struct tm* period, string* transaction_type, string* memo, int* category, CategoryManage & category_manager) {
 	cout << "@ Current condition @" << endl;
 	if (period != nullptr) {
