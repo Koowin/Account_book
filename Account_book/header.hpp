@@ -70,7 +70,7 @@ public:
 	string* searchMemo();
 	string* searchType();
 	int compareTime(struct tm, struct tm);
-	int searchTime(struct tm*);
+	int searchTime(struct tm* (&));
 	int searchMenu();
 
 	// record_list의 처음과 끝 반복자를 반환하는 함수
