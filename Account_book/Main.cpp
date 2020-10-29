@@ -7,9 +7,9 @@ int main() {
 	int menu_selected;
 	bool flag;
 
-	//to do: ÆÄÀÏ ÀĞ±â ¹× µ¥ÀÌÅÍ ÀúÀå ÀÛ¾÷
+	//to do: íŒŒì¼ ì½ê¸° ë° ë°ì´í„° ì €ì¥ ì‘ì—…
 	while (1) {
-		//¸ŞÀÎ¸Ş´º Ãâ·ÂºÎ
+		//ë©”ì¸ë©”ë‰´ ì¶œë ¥ë¶€
 		cout << "\n@ Main menu @" << endl;
 		cout << "1. Add a transaction" << endl;
 		cout << "2. View all transactions" << endl;
@@ -18,7 +18,7 @@ int main() {
 		cout << "5. Quit" << endl << endl;
 		cout << "Select menu" << endl << "> ";
 
-		//¼ıÀÚ¸¸ ÀÔ·Â¹ŞÀ» ¶§ ±îÁö ¹İº¹
+		//ìˆ«ìë§Œ ì…ë ¥ë°›ì„ ë•Œ ê¹Œì§€ ë°˜ë³µ
 		flag = true;
 		while (flag) {
 			getline(cin,input_string);
@@ -33,7 +33,7 @@ int main() {
 
 		switch(menu_selected) {
 		case 1:
-			//±â·Ï 1°³ Ãß°¡
+			//ê¸°ë¡ 1ê°œ ì¶”ê°€
 			if (record_manager.getRecordListSize() > 1023) {
 				cout << "Your number of transactions has exceeded its maximum value (1024 transactions)." << endl;
 				cout << "Please delete some of your transactions to continue." << endl;
@@ -43,21 +43,23 @@ int main() {
 			}
 			break;
 		case 2:
-			//ÀüÃ¼ ¸ñ·Ï Ãâ·Â
+			//ì „ì²´ ëª©ë¡ ì¶œë ¥
 			record_manager.printAllRecordList(category_manager);
 			break;
 		case 3:
-			//°Ë»ö,¼öÁ¤,»èÁ¦ ¸Ş´º
+			//ê²€ìƒ‰,ìˆ˜ì •,ì‚­ì œ ë©”ë‰´
+
 			record_manager.searchMenu(category_manager);
+
 			break;
 		case 4:
-			//Ä«Å×°í¸® °ü¸® ¸Ş´º
+			//ì¹´í…Œê³ ë¦¬ ê´€ë¦¬ ë©”ë‰´
 			category_manager.categoryMenu(record_manager);
 			break;
 		case 5:
-			//ÀúÀå ÀÛ¾÷
+			//ì €ì¥ ì‘ì—…
 			
-			return 0;		//ÇÁ·Î±×·¥ Á¾·á
+			return 0;		//í”„ë¡œê·¸ë¨ ì¢…ë£Œ
 		default:
 			cout << "Please enter a valid value." << endl;
 			break;
