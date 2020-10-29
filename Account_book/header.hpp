@@ -44,8 +44,6 @@ public:
 	//여기에 신이님 함수 추가
 	bool modifyRecordList(int);
 	bool deleteRecordList(int);
-	void makeSelectedList(vector<int>&);
-	void printSelectedList();
 	
 	//검색 함수들
 	void searchRecord(CategoryManage&);
@@ -89,6 +87,7 @@ public:
 	bool modifyCategory();
 	bool deleteCategory(RecordManage &);
 	int getCategorySize();
+	string getIndexedCategory(int);
 
 	list <Category>::iterator get_first();
 	list <Category>::iterator get_end();
@@ -106,12 +105,12 @@ class CheckerParser {
 private:
 
 public:
-	bool checkDate(string);
+	struct tm checkParseDate(string);
 	bool checkAmount(string);
 	bool checkMemo(string);
 	bool checkCategoryNumber(string, int);
 	bool checkCategoryName(string);
 
-	struct tm parseDate(string);
+	//struct tm parseDate(string);
 	unsigned int parseAmount(string);
 };

@@ -240,8 +240,13 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 			cout << "Number must be over 0 and under " << category.size() + 1 << endl;
 		}
 		else {
-			//to do 예외처리: 해당 카테고리 번호가 존재하는 기록이 있으면 삭제 안되게
+			//예외처리: 카테고리 개수가 1개면 삭제 안되게
+			if (category.size() < 2) {
+				cout << "There must be at least one category. Category is not deleted." << endl;
+				flag = false;
+			}
 
+			//예외처리: 해당 카테고리 번호가 존재하는 기록이 있으면 삭제 안되게
 			selected_num--;
 
 			for (record_iter = record_manager.get_first(); record_iter != end_of_record_list; record_iter++) {
@@ -253,6 +258,7 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 			//duplicate_checker == true면 겹치는 기록 존재
 			if (duplicate_checker) {
 				cout << "Some record have that category number. " << endl;
+				flag = false;
 			}
 			else {
 				flag = false;
@@ -280,6 +286,12 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 			return false;
 		}
 	}
+}
+
+string CategoryManage::getIndexedCategory(int index) {
+	list <Category>::iterator iter = category.begin();
+	advance(iter, index-1);
+	return iter->get_cname();
 }
 
 int CategoryManage::getCategorySize() {
