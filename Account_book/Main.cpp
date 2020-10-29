@@ -48,7 +48,7 @@ int main() {
 			break;
 		case 3:
 			//검색,수정,삭제 메뉴
-			//record_manager.searchRecord(category_manager);
+			record_manager.searchMenu(category_manager);
 			break;
 		case 4:
 			//카테고리 관리 메뉴
