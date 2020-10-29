@@ -5,7 +5,8 @@ void CategoryManage::categoryMenu(RecordManage& record_manager) {
 	string input_string;
 
 	while (1) {
-		cout << "\n@ Manage category @" << endl;
+		system("cls");
+		cout << "@ Manage category @" << endl;
 		cout << "1. View categories" << endl;
 		cout << "2. Add new category" << endl;
 		cout << "3. Edit category" << endl;
@@ -18,6 +19,7 @@ void CategoryManage::categoryMenu(RecordManage& record_manager) {
 			break;
 		}
 		else if (input_string == "1") {
+			system("cls");
 			cout << "@ View categories @" << endl;
 			printCategoryList();
 			cout << "\nPress any key to continue..." << endl;
@@ -65,8 +67,8 @@ bool CategoryManage::addCategory() {
 	string confirm_string;
 	CheckerParser cp;
 
-
-	cout << "\n@ Add new category @" << endl;
+	system("cls");
+	cout << "@ Add new category @" << endl;
 
 	while (flag) {
 		cout << "Enter new category (q:return to main menu)" << endl << "> ";
@@ -121,7 +123,8 @@ bool CategoryManage::modifyCategory() {
 	string confirm_string;
 	CheckerParser cp;
 
-	cout << "\n@ Edit category @" << endl;
+	system("cls");
+	cout << "@ Edit category @" << endl;
 	int i = 1;
 	list <Category>::iterator iter;
 	list <Category>::iterator end_of_list = category.end();
@@ -206,7 +209,8 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 	string input_string;
 	int selected_num;
 
-	cout << "\n@ Delete category @" << endl;
+	system("cls");
+	cout << "@ Delete category @" << endl;
 	int i = 1;
 	list <Category>::iterator iter;
 	list <Category>::iterator end_of_list = category.end();
