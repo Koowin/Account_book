@@ -10,7 +10,8 @@ int main() {
 	//to do: 파일 읽기 및 데이터 저장 작업
 	while (1) {
 		//메인메뉴 출력부
-		cout << "\n@ Main menu @" << endl;
+		system("cls");
+		cout << "@ Main menu @" << endl;
 		cout << "1. Add a transaction" << endl;
 		cout << "2. View all transactions" << endl;
 		cout << "3. Search/Edit/Delete a transaction" << endl;

@@ -88,7 +88,7 @@ public:
 	void printAllRecordList(CategoryManage &);
 	void printSelectedRecordList(CategoryManage&, vector <int>);
 	bool addRecord(CategoryManage &);
-	bool modifyRecordList(vector <int>);
+	bool modifyRecordList(vector <int>, CategoryManage&);
 	bool deleteRecordList(vector <int>);
 	int getRecordListSize();
 

@@ -3,6 +3,7 @@
 void RecordManage::printAllRecordList(CategoryManage& category_manager) {
 	list <Record>::iterator iter;
 	list <Record>::iterator end = record_list.end();
+	system("cls");
 	printf("Date\t\tTime\tIn\tAmount\t\tMemo\t\t\tCategory\n");
 	printf("--------------------------------------------------------------------------------------------\n");
 
@@ -11,6 +12,8 @@ void RecordManage::printAllRecordList(CategoryManage& category_manager) {
 		printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
 		printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
 	}
+	cout << "\nPress any key to continue...";
+	_getch();
 }
 
 void RecordManage::printSelectedRecordList(CategoryManage& category_manager, vector <int> selected_index) {
@@ -32,8 +35,9 @@ bool RecordManage::addRecord(CategoryManage & category_manager) {
 
 	//날짜 입력받는 부분
 	while (flag) {
-		cout << "\n@ Add a transaction @" << endl;
-		cout << "Enter the date and time (q:return to main menu)" << endl << "> ";
+		system("cls");
+		cout << "@ Add a transaction @" << endl;
+		cout << "Enter the date and time  format:YYYY/MM/DD hh:mm\n(q:return to main menu)" << endl << "> ";
 		getline(cin, input_string);
 
 		if (input_string == "q") {
@@ -154,7 +158,23 @@ bool RecordManage::addRecord(CategoryManage & category_manager) {
 	}
 	else {
 		//to do : index 찾아서 넣기 혹은 넣고 정렬하기
-		record_list.push_back(Record(date, is_income, amount, memo, category_number));
+		list <Record>::iterator iter = record_list.begin();
+		list <Record>::iterator end_of_list = record_list.end();
+
+		for (; iter != end_of_list; iter++) {
+			struct tm d = iter->get_date();
+			if (compare(date, d) == 1) {
+				break;
+			}
+		}
+		
+		if (iter == end_of_list) {
+			record_list.push_back(Record(date, is_income, amount, memo, category_number));
+		}
+		else {
+			record_list.insert(iter, Record(date, is_income, amount, memo, category_number));
+		}
+		
 		return false;
 	}
 }
