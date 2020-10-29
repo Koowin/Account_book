@@ -5,20 +5,23 @@ void CategoryManage::categoryMenu(RecordManage& record_manager) {
 	string input_string;
 
 	while (1) {
-		cout << "@ Manage category @" << endl;
+		cout << "\n@ Manage category @" << endl;
 		cout << "1. View categories" << endl;
 		cout << "2. Add new category" << endl;
 		cout << "3. Edit category" << endl;
 		cout << "4. Delete category\n" << endl;
 
 		cout << "Select menu (q:return to main menu)" << endl << "> ";
-		cin >> input_string;
+		getline(cin, input_string);
 
 		if (input_string == "q") {
 			break;
 		}
 		else if (input_string == "1") {
+			cout << "@ View categories @" << endl;
 			printCategoryList();
+			cout << "\nPress any key to continue..." << endl;
+			_getch();
 		}
 		else if (input_string == "2") {
 			addCategory();
@@ -45,13 +48,10 @@ void CategoryManage::printCategoryList() {
 	list <Category>::iterator iter;
 	list <Category>::iterator end_of_list = category.end();
 
-	cout << "@ View categories @" << endl;
 	for (iter = category.begin(); iter != end_of_list; iter++) {
 		cout << i << ". " << iter->get_cname() << endl;
 		i++;
 	}
-	cout << "\nPress any key to continue..." << endl;
-	_getch();
 }
 
 /*  input : list <string> category_table
@@ -65,7 +65,8 @@ bool CategoryManage::addCategory() {
 	string confirm_string;
 	CheckerParser cp;
 
-	cout << "@ Add new category @" << endl;
+
+	cout << "\n@ Add new category @" << endl;
 
 	while (flag) {
 		cout << "Enter new category (q:return to main menu)" << endl << "> ";
@@ -76,16 +77,37 @@ bool CategoryManage::addCategory() {
 			return true;
 		}
 		else {
-			//카테고리 문자열 길이 검사
-			if (!cp.checkCategoryName(input_string)) {
-				//카테고리 저장확인
-				cout << "Confirm new category? (type 'No' to cancle)" << endl << "> ";
-				cin >> confirm_string;
-				if (confirm_string != "No") {
-					//카테고리 저장
-					category.push_back(Category(input_string));
+			if (category.size() >= 64) {
+				cout << "Your number of categories has exceeded its maximum value (64 categories)." << endl;
+				cout << "Please delete some of your categories to continue." << endl;
+			}
+			else {
+				//카테고리 문자열 문법 검사
+				if (!cp.checkCategoryName(input_string)) {
+					//중복 검사
+					list <Category>::iterator iter;
+					list <Category>::iterator end_of_list = category.end();
+					bool duplicate = false;
+					for (iter = category.begin(); iter != end_of_list; iter++) {
+						if (input_string == iter->get_cname()) {
+							duplicate = true;
+							break;
+						}
+					}
+					if (duplicate) {
+						cout << "Duplicate category, please enter a new one." << endl;
+					}
+					else {
+						//카테고리 저장확인
+						cout << "Confirm new category? (type 'No' to cancle)" << endl << "> ";
+						cin >> confirm_string;
+						if (confirm_string != "No") {
+							//카테고리 저장
+							category.push_back(Category(input_string));
+						}
+						flag = false;
+					}
 				}
-				flag = false;
 			}
 		}
 	}
@@ -99,13 +121,12 @@ bool CategoryManage::modifyCategory() {
 	string confirm_string;
 	CheckerParser cp;
 
-	cout << "@ Edit category @" << endl;
+	cout << "\n@ Edit category @" << endl;
 	int i = 1;
 	list <Category>::iterator iter;
 	list <Category>::iterator end_of_list = category.end();
 
 	//카테고리 출력부
-	cout << "@ View categories @" << endl;
 	for (iter = category.begin(); iter != end_of_list; iter++) {
 		cout << i << ". " << iter->get_cname() << endl;
 		i++;
@@ -148,17 +169,30 @@ bool CategoryManage::modifyCategory() {
 		else {
 			//input_string check
 			if (!cp.checkCategoryName(input_string)) {
-				//수정 확인
-				cout << "Before modification : " << selector->get_cname() << endl;
-				cout << "After modification : " << input_string << endl;
-				cout << "Confirm modification? (type 'No' to cacel)" << endl << "> ";
-				cin >> confirm_string;
-				if (confirm_string == "No") {
-					return true;
+				bool duplicate = false;
+				iter = category.begin();
+				for (; iter != end_of_list; iter++) {
+					if (input_string == iter->get_cname()) {
+						duplicate = true;
+						break;
+					}
+				}
+				if (duplicate) {
+					cout << "Duplicate category, please enter a new one." << endl;
 				}
 				else {
-					selector->set_cname(input_string);
-					return false;
+					//수정 확인
+					cout << "Before modification : " << selector->get_cname() << endl;
+					cout << "After modification : " << input_string << endl;
+					cout << "Confirm modification? (type 'No' to cacel)" << endl << "> ";
+					cin >> confirm_string;
+					if (confirm_string == "No") {
+						return true;
+					}
+					else {
+						selector->set_cname(input_string);
+						return false;
+					}
 				}
 			}
 		}
@@ -172,7 +206,7 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 	string input_string;
 	int selected_num;
 
-	cout << "@ Delete category @" << endl;
+	cout << "\n@ Delete category @" << endl;
 	int i = 1;
 	list <Category>::iterator iter;
 	list <Category>::iterator end_of_list = category.end();
@@ -200,13 +234,17 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 		//0 ~ table size 이외의 입력 예외 처리
 		list <Record>::iterator record_iter;
 		list <Record>::iterator end_of_record_list = record_manager.get_end();
-
+		
+		//예외처리: 카테고리 개수가 1개면 삭제 안되게
+		if (category.size() < 2) {
+			cout << "There must be at least one category. Category is not deleted." << endl;
+			return true;
+		}
 		if (selected_num > category.size() || selected_num < 1) {
 			cout << "Number must be over 0 and under " << category.size() + 1 << endl;
 		}
 		else {
-			//to do 예외처리: 해당 카테고리 번호가 존재하는 기록이 있으면 삭제 안되게
-
+			//예외처리: 해당 카테고리 번호가 존재하는 기록이 있으면 삭제 안되게
 			selected_num--;
 
 			for (record_iter = record_manager.get_first(); record_iter != end_of_record_list; record_iter++) {
@@ -218,6 +256,7 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 			//duplicate_checker == true면 겹치는 기록 존재
 			if (duplicate_checker) {
 				cout << "Some record have that category number. " << endl;
+				flag = false;
 			}
 			else {
 				flag = false;
@@ -247,6 +286,21 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 	}
 }
 
+string CategoryManage::getIndexedCategory(int index) {
+	list <Category>::iterator iter = category.begin();
+	advance(iter, index-1);
+	return iter->get_cname();
+}
+
 int CategoryManage::getCategorySize() {
 	return category.size();
+}
+
+list <Category>::iterator CategoryManage::get_first() {
+	list <Category>::iterator iter = category.begin();
+	return iter;
+}
+list <Category>::iterator CategoryManage::get_end() {
+	list <Category>::iterator iter = category.end();
+	return iter;
 }

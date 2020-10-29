@@ -15,16 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="recordManage.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="znyi(temp).cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="categoryManage.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="checkData.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="fileManage.cpp">
@@ -33,10 +24,25 @@
     <ClCompile Include="Main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="addData.cpp">
+    <ClCompile Include="category.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="printAllRecord.cpp">
+    <ClCompile Include="record.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="checkerParser.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="recordManage%28n_search_part%29.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="recordManage%28search_part%29.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="recordManage.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="conditions.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
