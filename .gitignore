@@ -1,2 +1,8 @@
 Account_book/x64/
 x64/
+*.ipch
+*.db
+*.db-shm
+*.opendb
+.vs/Account_book/v16/.suo
+*.db-wal
