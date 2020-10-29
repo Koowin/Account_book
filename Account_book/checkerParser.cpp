@@ -129,7 +129,7 @@ bool CheckerParser::checkAmount(string input_string) {
 		}
 	}
 	if (error) {
-		cout << "금액 문법형식에 위배됩니다." << endl;
+		cout << "Invalid amount, please make sure the amount consists of only numbers with or without comma (range : 1 ~ 4,294,967,295)." << endl;
 	}
 	return error;
 }
@@ -155,7 +155,7 @@ bool CheckerParser::checkMemo(string input_string) {
 	}
 
 	if (error) {
-		cout << "Please enter valid category name." << endl;
+		cout << "Please enter valid memo name." << endl;
 	}
 	return error;
 }

@@ -8,6 +8,21 @@
 #include<sstream>
 using namespace std;
 
+class CategoryManage;
+class CheckerParser {
+private:
+
+public:
+	struct tm checkParseDate(string);
+	bool checkAmount(string);
+	bool checkMemo(string);
+	bool checkCategoryNumber(string, int);
+	bool checkCategoryName(string);
+
+	//struct tm parseDate(string);
+	unsigned int parseAmount(string);
+};
+
 class Record {
 private:
 	struct tm date;
@@ -38,14 +53,15 @@ private:
 	list <Record> record_list;
 	CheckerParser c_parser; //신이 추가 - 많이 쓰여서 기타 멤버 함수들이 접근하기 편하게 그냥 멤버로 만듦 // 생성자에서 객체 생성 필수
 public:
-	/* 기본 기능 */
+	/* non-search part */
 	void printAllRecordList(CategoryManage &);
-	bool addRecord(int);
-	//여기에 신이님 함수 추가
+	void printSelectedRecordList(CategoryManage&, vector <int>);
+	bool addRecord(CategoryManage &);
 	bool modifyRecordList(int);
 	bool deleteRecordList(int);
-	
-	//검색 함수들
+	int getRecordListSize();
+
+	/* search Part */
 	void searchRecord(CategoryManage&);
 	vector<int> getSearchResult(struct tm*, string*, string*, int*, CategoryManage &);
 	void printCurrent(struct tm*, string*, string*, int*, CategoryManage &);
@@ -101,16 +117,3 @@ public:
 	bool saveFile();
 };
 
-class CheckerParser {
-private:
-
-public:
-	struct tm checkParseDate(string);
-	bool checkAmount(string);
-	bool checkMemo(string);
-	bool checkCategoryNumber(string, int);
-	bool checkCategoryName(string);
-
-	//struct tm parseDate(string);
-	unsigned int parseAmount(string);
-};
