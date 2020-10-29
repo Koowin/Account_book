@@ -9,6 +9,7 @@
 using namespace std;
 
 class CategoryManage;
+
 class CheckerParser {
 private:
 
@@ -21,6 +22,34 @@ public:
 
 	//struct tm parseDate(string);
 	unsigned int parseAmount(string);
+};
+
+class Conditions {
+public:
+	bool on_period;
+	bool on_ie;
+	bool on_memo;
+	bool on_category;
+	
+	struct tm from;
+	struct tm to;
+	bool is_income;
+	string keyword;
+	int category_number;
+	string category_name;
+
+	Conditions();
+
+	/*조건 추가하는 함수
+	* return 1: 조건 더 추가(반복)
+	* return 0: 출력
+	* return -1: 메인메뉴로 이동 */
+	short addPeriodCondition();
+	short addIeCondition();
+	short addMemoCondition();
+	short addCategoryCondition(CategoryManage&);
+	short resetConditions();
+	short printCurrentConditions();
 };
 
 class Record {
@@ -62,16 +91,20 @@ public:
 	int getRecordListSize();
 
 	/* search Part */
-	void searchRecord(CategoryManage&);
-	vector<int> getSearchResult(struct tm*, string*, string*, int*, CategoryManage &);
-	void printCurrent(struct tm*, string*, string*, int*, CategoryManage &);
-	int resetFieldMenu();
-	int* searchCategory(CategoryManage&);
-	string* searchMemo();
-	string* searchType();
-	int compareTime(struct tm, struct tm);
-	int searchTime(struct tm* (&));
-	int searchMenu();
+
+	void searchMenu(CategoryManage&);
+
+	//void searchRecord(CategoryManage&);
+	//vector<int> getSearchResult(struct tm*, string*, string*, int*, CategoryManage &);
+	//void printCurrent(struct tm*, string*, string*, int*, CategoryManage &);
+	//int resetFieldMenu();
+	//int* searchCategory(CategoryManage&);
+	//string* searchMemo();
+	//string* searchType();
+	//int compareTime(struct tm, struct tm);
+	//int searchTime(struct tm* (&));
+	//int searchMenu();
+
 
 	// record_list의 처음과 끝 반복자를 반환하는 함수
 	list <Record>::iterator get_first();
