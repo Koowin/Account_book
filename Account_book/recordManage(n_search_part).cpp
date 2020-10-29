@@ -9,11 +9,16 @@ void RecordManage::printAllRecordList(CategoryManage& category_manager) {
 	for (iter = record_list.begin(); iter != end; iter++) {
 		printf("%04d/%02d/%02d\t%02d:%02d", iter->get_date().tm_year, iter->get_date().tm_mon, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
 		printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
-		printf("%-20s\n", category_manager.getIndexedCategory(iter->get_category_number()));
+		printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
 	}
 }
 
-bool RecordManage::addRecord(int category_size) {
+void RecordManage::printSelectedRecordList(CategoryManage& category_manager, vector <int> selected_index) {
+	int i = 0;
+
+}
+
+bool RecordManage::addRecord(CategoryManage & category_manager) {
 	class CheckerParser cp;
 	string input_string;
 	bool flag = true;
@@ -27,8 +32,9 @@ bool RecordManage::addRecord(int category_size) {
 
 	//날짜 입력받는 부분
 	while (flag) {
-		cout << "날짜 입력" << endl;
-		cin >> input_string;
+		cout << "\n@ Add a transaction @" << endl;
+		cout << "Enter the date and time (q:return to main menu)" << endl << "> ";
+		getline(cin, input_string);
 
 		if (input_string == "q") {
 			return true;
@@ -46,8 +52,12 @@ bool RecordManage::addRecord(int category_size) {
 	//수입/지출 입력받는 부분
 	flag = true;
 	while (flag) {
-		cout << "수입/지출" << endl;
-		cin >> input_string;
+		cout << "\n@ Add a transaction @" << endl;
+		cout << "1.Income" << endl;
+		cout << "2.Expense" << endl << endl;
+		cout << "Select type of transaction (q:return to main menu)" << endl << "> ";
+
+		getline(cin, input_string);
 
 		if (input_string == "q") {
 			return true;
@@ -60,20 +70,20 @@ bool RecordManage::addRecord(int category_size) {
 			else {
 				is_income = false;
 			}
-			flag == false;
+			flag = false;
 		}
 		//비정상 입력 시
 		else {
-			//to do : 오류 문구 영어로 바꾸기
-			cout << "오류 문구 출력" << endl;
+			cout << "Please enter a valid value." << endl;
 		}
 	}
 
 	//금액 입력 받는 부분
 	flag = true;
 	while (flag) {
-		cout << "금액 입력" << endl;
-		cin >> input_string;
+		cout << "\n@ Add a transaction @" << endl;
+		cout << "Enter the amount (q: return to main menu)" << endl << "> ";
+		getline(cin, input_string);
 
 		if (input_string == "q") {
 			return true;
@@ -90,8 +100,9 @@ bool RecordManage::addRecord(int category_size) {
 	//메모 입력 받는 부분
 	flag = true;
 	while (flag) {
-		cout << "메모 입력" << endl;
-		cin >> input_string;
+		cout << "\n@ Add a transaction @" << endl;
+		cout << "Enter the memo (q: return to main menu)" << endl << "> ";
+		getline(cin, input_string);
 
 		if (input_string == "q") {
 			return true;
@@ -100,6 +111,7 @@ bool RecordManage::addRecord(int category_size) {
 		//정상 입력 시
 		if (!cp.checkMemo(input_string)) {
 			memo = input_string;
+			flag = false;
 		}
 		//비정상 입력 시 오류 문구 출력하고 반복
 	}
@@ -107,30 +119,35 @@ bool RecordManage::addRecord(int category_size) {
 	//카테고리 번호 입력 받는 부분
 	flag = true;
 	while (flag) {
-		cout << "카테고리 번호 입력" << endl;
-		cin >> input_string;
+		cout << "\n@ Add a transaction @" << endl;
+		category_manager.printCategoryList();
+		cout << "\nSelect a category (q:return to main menu)" << endl << "> ";
+		getline(cin, input_string);
 
 		if (input_string == "q") {
 			return true;
 		}
-		try {
+		if (!cp.checkCategoryNumber(input_string, category_manager.getCategorySize())) {
 			category_number = stoi(input_string);
-		}
-		catch (const exception& expn) {
-			cout << "숫자만 입력해주세요" << endl;
-		}
-
-		if (category_number > 0 && category_number <= category_size) {
 			flag = false;
-		}
-		else {
-			cout << "1 부터 " << category_size << " 사이의 숫자만 입력해주세요" << endl;
 		}
 	}
 
 	//저장 확인 물어보는 부분
-	cout << "저장하시겠습니까? (취소: No)" << endl;
-	cin >> input_string;
+	cout << "\n@ Add a transaction @" << endl;
+	printf("- Date and Time: %04d/%02d/%02d %02d:%02d\n", date.tm_year, date.tm_mon, date.tm_mday, date.tm_hour, date.tm_min);
+	cout << "- Income/Expense: ";
+	if (is_income) {
+		cout << "Income" << endl;
+	}
+	else {
+		cout << "Expense" << endl;
+	}
+	cout << "- Amount: " << amount <<endl;
+	cout << "- Memo: " << memo << endl;
+	cout << "- Category: " << category_manager.getIndexedCategory(category_number) << endl;
+	cout << "\nConfirm new transaction? (type 'No' to cancel)\n> ";
+	getline(cin, input_string);
 
 	if (input_string == "No") {
 		return true;
@@ -142,6 +159,9 @@ bool RecordManage::addRecord(int category_size) {
 	}
 }
 
+int RecordManage::getRecordListSize() {
+	return record_list.size();
+}
 
 list <Record>::iterator RecordManage::get_first(){
 	return record_list.begin();

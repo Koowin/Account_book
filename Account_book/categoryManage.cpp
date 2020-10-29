@@ -5,20 +5,23 @@ void CategoryManage::categoryMenu(RecordManage& record_manager) {
 	string input_string;
 
 	while (1) {
-		cout << "@ Manage category @" << endl;
+		cout << "\n@ Manage category @" << endl;
 		cout << "1. View categories" << endl;
 		cout << "2. Add new category" << endl;
 		cout << "3. Edit category" << endl;
 		cout << "4. Delete category\n" << endl;
 
 		cout << "Select menu (q:return to main menu)" << endl << "> ";
-		cin >> input_string;
+		getline(cin, input_string);
 
 		if (input_string == "q") {
 			break;
 		}
 		else if (input_string == "1") {
+			cout << "@ View categories @" << endl;
 			printCategoryList();
+			cout << "\nPress any key to continue..." << endl;
+			_getch();
 		}
 		else if (input_string == "2") {
 			addCategory();
@@ -45,13 +48,10 @@ void CategoryManage::printCategoryList() {
 	list <Category>::iterator iter;
 	list <Category>::iterator end_of_list = category.end();
 
-	cout << "@ View categories @" << endl;
 	for (iter = category.begin(); iter != end_of_list; iter++) {
 		cout << i << ". " << iter->get_cname() << endl;
 		i++;
 	}
-	cout << "\nPress any key to continue..." << endl;
-	_getch();
 }
 
 /*  input : list <string> category_table
@@ -66,7 +66,7 @@ bool CategoryManage::addCategory() {
 	CheckerParser cp;
 
 
-	cout << "@ Add new category @" << endl;
+	cout << "\n@ Add new category @" << endl;
 
 	while (flag) {
 		cout << "Enter new category (q:return to main menu)" << endl << "> ";
@@ -121,13 +121,12 @@ bool CategoryManage::modifyCategory() {
 	string confirm_string;
 	CheckerParser cp;
 
-	cout << "@ Edit category @" << endl;
+	cout << "\n@ Edit category @" << endl;
 	int i = 1;
 	list <Category>::iterator iter;
 	list <Category>::iterator end_of_list = category.end();
 
 	//카테고리 출력부
-	cout << "@ View categories @" << endl;
 	for (iter = category.begin(); iter != end_of_list; iter++) {
 		cout << i << ". " << iter->get_cname() << endl;
 		i++;
@@ -207,7 +206,7 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 	string input_string;
 	int selected_num;
 
-	cout << "@ Delete category @" << endl;
+	cout << "\n@ Delete category @" << endl;
 	int i = 1;
 	list <Category>::iterator iter;
 	list <Category>::iterator end_of_list = category.end();
@@ -235,17 +234,16 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 		//0 ~ table size 이외의 입력 예외 처리
 		list <Record>::iterator record_iter;
 		list <Record>::iterator end_of_record_list = record_manager.get_end();
-
+		
+		//예외처리: 카테고리 개수가 1개면 삭제 안되게
+		if (category.size() < 2) {
+			cout << "There must be at least one category. Category is not deleted." << endl;
+			return true;
+		}
 		if (selected_num > category.size() || selected_num < 1) {
 			cout << "Number must be over 0 and under " << category.size() + 1 << endl;
 		}
 		else {
-			//예외처리: 카테고리 개수가 1개면 삭제 안되게
-			if (category.size() < 2) {
-				cout << "There must be at least one category. Category is not deleted." << endl;
-				flag = false;
-			}
-
 			//예외처리: 해당 카테고리 번호가 존재하는 기록이 있으면 삭제 안되게
 			selected_num--;
 
