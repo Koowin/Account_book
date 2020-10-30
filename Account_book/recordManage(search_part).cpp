@@ -309,7 +309,7 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 			system("cls");
 			cout << "@ Before modification @" << endl;
 			cout << "- Date and Time: ";
-			printf("%04d/%02d/%02d %02d:%02d\n", before_date.tm_year, before_date.tm_mon, before_date.tm_mday, before_date.tm_hour, before_date.tm_min);
+			printf("%04d/%02d/%02d %02d:%02d\n", before_date.tm_year+1900, before_date.tm_mon+1, before_date.tm_mday, before_date.tm_hour, before_date.tm_min);
 			cout << "- Income/Expense: ";
 			if (before_is_income) {
 				cout << "Income" << endl;
@@ -323,7 +323,7 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 
 			cout << "@ After modification @" << endl;
 			cout << "- Date and Time: ";
-			printf("%04d/%02d/%02d %02d:%02d\n", after_date.tm_year, after_date.tm_mon, after_date.tm_mday, after_date.tm_hour, after_date.tm_min);
+			printf("%04d/%02d/%02d %02d:%02d\n", after_date.tm_year+1900, after_date.tm_mon+1, after_date.tm_mday, after_date.tm_hour, after_date.tm_min);
 			cout << "- Income/Expense: ";
 			if (after_is_income) {
 				cout << "Income" << endl;
