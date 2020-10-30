@@ -6,11 +6,20 @@ int main() {
 	string input_string;
 	int menu_selected;
 	bool flag;
+	
+	/* 재혁 추가 */
+	FileManage file_manager;
+	
+	if (!file_manager.initFile(record_manager, category_manager)) {
+		cerr << "Error: File open error" << endl;
+		return -1;
+	}
 
 	//to do: 파일 읽기 및 데이터 저장 작업
 	while (1) {
 		//메인메뉴 출력부
-		cout << "\n@ Main menu @" << endl;
+		system("cls");
+		cout << "@ Main menu @" << endl;
 		cout << "1. Add a transaction" << endl;
 		cout << "2. View all transactions" << endl;
 		cout << "3. Search/Edit/Delete a transaction" << endl;
@@ -48,9 +57,7 @@ int main() {
 			break;
 		case 3:
 			//검색,수정,삭제 메뉴
-
 			record_manager.searchMenu(category_manager);
-
 			break;
 		case 4:
 			//카테고리 관리 메뉴

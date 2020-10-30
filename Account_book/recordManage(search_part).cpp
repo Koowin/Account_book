@@ -1,382 +1,449 @@
 #include "header.hpp"
-#include <string>
-#include <sstream>
-#include <vector>
-#include <chrono>
-#include <ctime>
-#include <list>
-#include <algorithm>
 
-using namespace std::chrono;
+void RecordManage::searchMenu(CategoryManage& category_manager) {
+	Conditions cd;
 
-void RecordManage::searchRecord(CategoryManage & category_manager) { // main menu 3
-
-	struct tm* period = nullptr; // to store array for start and end time, default : from earliest date to latest date
-
-	string* transaction_type = nullptr; // default : all types
-	string* memo = nullptr; // default: all memo 
-	int* category = nullptr; // default: all categories
-
-	int menu_choice;
-	do {
-		menu_choice = searchMenu();
-		switch (menu_choice) {
-		case 1: // search by period
-		{
-			menu_choice = searchTime(period); // -1 to main menu
-			break;
-		}
-		case 2: // search by type of transaction (Income, Expense)
-		{
-			transaction_type = searchType();
-			if (*transaction_type == "q") menu_choice = -1;
-			break;
-		}
-		case 3: // search by memo
-		{
-			memo = searchMemo(); // return string * if valid, return pointer to "q" to main menu
-			if (*memo == "q") menu_choice = -1;
-			break;
-		}
-		case 4: // search by category
-		{
-			category = searchCategory(category_manager); // return int * if valid, return pointer to -1 to main menu
-			if (*category == -1) menu_choice = -1;
-			break;
-		} 
-		case 5: // reset field
-		{
-			int field = resetFieldMenu();
-			if (field == -1) menu_choice = -1;
-			else {
-				switch (field) {
-				case 1:
-					if (period != nullptr) delete[] period;
-					period = nullptr;
-					break;
-				case 2:
-					if (transaction_type != nullptr) delete transaction_type;
-					transaction_type = nullptr;
-					break;
-				case 3:
-					if (memo != nullptr) delete memo;
-					memo = nullptr;
-					break;
-				case 4:
-					if (category != nullptr) delete category;
-					category = nullptr;
-					break;
-				}
-			}
-			break;
-		}
-		}
-		//current state - choose action
-		if (menu_choice != -1) {
-			while (true) {
-				printCurrent(period, transaction_type, memo, category, category_manager);
-				cout << "1. Add another condition" << endl;
-				cout << "2. Print search result" << endl;
-				cout << endl;
-				cout << "Select action (q:return to main menu)" << endl;
-				cout << "> "; 
-				string action_input;
-				getline(cin, action_input);
-				cout << endl;
-				if (action_input.length() == 1) {
-					if (action_input == "q") {
-						menu_choice = -1;
-						break;
-					}
-					try {
-						int action = stoi(action_input);
-						if (action == 1) break; // break from this infinity loop and continue with the outer loop 
-						else if (action == 2){ // get search result
-							//vector<int> result = getSearchResult(period, transaction_type, memo, category, category_manager);
-							//if (result.size() == 0) {
-							//	cout << "- None of the records satisfies the conditions given. -" << endl;
-							//	cout << endl;
-							//	menu_choice = -1; //back to main menu
-							//	break; // break from inner loop, terminate the outer loop (menu_choice=-1), and go back to main menu
-							//} else {
-							//	//printSearchResult
-							//	//print menu 1. edit 2. delete
-							//}
-						} else cout << "Please enter a valid value." << endl; //input_action != 1 && input_action != 2
-					}
-					catch (const invalid_argument& excp) { // cant parse to int
-						cout << "Please enter a valid value." << endl; 
-					}
-				} else { //length of input != 1
-					cout << "Please enter a valid value." << endl;
-				}
-			}
-		}
-	} while (menu_choice != -1);
-	//if menu_choice == -1 : free all allocated memory and return to main menu
-	if (period != nullptr) delete[] period;
-	if (transaction_type != nullptr) delete transaction_type;
-	if (memo != nullptr) delete memo;
-	if (category != nullptr) delete category;
-	return; 
-}
-//vector<int> RecordManage::getSearchResult(struct tm* period, string* transaction_type, string* memo, int* category, CategoryManage& category_manager) {
-//	vector<int>vec;
-//	list<Record>::iterator record_it;
-//	int idx;
-//	for (record_it = record_list.begin(), idx = 0; record_it != record_list.end(); record_it++, idx++) {
-//		//1check time range
-//		struct tm start = (period == nullptr) ? record_list.begin()->get_date() : period[0]; //if null, earliest date
-//		struct tm end = (period == nullptr) ? record_list.end()->get_date() : period[1]; // if null, latest date
-//		if (compareTime(start, record_it->get_date()) >= 0 && compareTime(record_it->get_date(), end) >= 0) {
-//			//2. check type of transaction
-//			bool isFindingIncome = (*transaction_type == "Income") ? true : false;
-//			if (transaction_type == nullptr || isFindingIncome == record_it->get_isincome()) {
-//				//3. check memo - 5.3
-//				/*°Ë»ö¾î¿Í ¸Þ¸ð ¸ðµÎ ³»ºÎÀÇ °ø¹éµéÀ» ÀüºÎ ¾ø¾Ø »óÅÂ·Î
-//				* ¾ËÆÄºª ´ë/¼Ò¹®ÀÚ¸¦ ±¸ºÐÇÏÁö ¾ÊÀ¸¸é¼­
-//				* °Ë»ö¾î°¡ ¸Þ¸ðÀÇ ºÎºÐ ¹®ÀÚ¿­ÀÌ¸é ¸ÅÄ¡µÈ °ÍÀÌ´Ù*/
-//				string find_memo; 
-//				string original_memo;
-//				if (memo != nullptr) {
-//					//keyword 
-//					find_memo = *memo;
-//					find_memo.erase(remove_if(find_memo.begin(), find_memo.end(), isspace), find_memo.end()); // remove all space from the string
-//					for_each(find_memo.begin(), find_memo.end(), [](char& c) { c = tolower(c); }); // to lower case 
-//					//original memo
-//					original_memo = record_it->get_memo();
-//					original_memo.erase(remove(original_memo.begin(), original_memo.end(), isspace), original_memo.end()); // remove all space
-//					for_each(original_memo.begin(), original_memo.end(), [](char& c) {c = tolower(c); }); // to lower case 
-//				}
-//				if (memo == nullptr || original_memo.find(find_memo) != original_memo.npos) { // memo default || find_memo is a substring of original_memo
-//					//4. check category
-//					if (category == nullptr || *category == record_it->get_category_number()) { // default category || record with the same category is found
-//						vec.push_back(idx);
-//					}
-//				}
-//			}
-//		}
-//	}
-//	return vec;
-//}
-void RecordManage::printCurrent(struct tm* period, string* transaction_type, string* memo, int* category, CategoryManage & category_manager) {
-	cout << "@ Current condition @" << endl;
-	if (period != nullptr) {
-		cout << "Time period : ";
-		printf("% 04d/%02d/%02d %02d:%02d ~ ", period[0].tm_year, period[0].tm_mon, period[0].tm_mday, period[0].tm_hour, period[0].tm_min);
-		printf("% 04d/%02d/%02d %02d:%02d\n", period[1].tm_year, period[1].tm_mon, period[1].tm_mday, period[1].tm_hour, period[1].tm_min);
-	}
-	if (transaction_type != nullptr)
-		cout << "Income/Expense : " << *transaction_type << endl;
-	if (memo != nullptr)
-		cout << "Memo : " << *memo << endl;;
-	if (category != nullptr) {
-		cout << "Category : " << category_manager.getIndexedCategory(*category) << endl;
-	}
-	if (period == nullptr && transaction_type == nullptr && memo == nullptr && category == nullptr)
-		cout << "- No condition set -" << endl;
-	cout << endl;
-}
-int RecordManage::resetFieldMenu() {
-	while (true) {
-		cout << "@ Reset Field @" << endl;
-		cout << "1. Date and Time" << endl;
-		cout << "2. Income/Expense" << endl;
-		cout << "3. Memo" << endl;
-		cout << "4. Category" << endl;
-		cout << endl;
-		cout << "Select field to reset (q:return to main menu)" << endl;
-		cout << "> ";
-		string field_input;
-		getline(cin, field_input);
-		cout << endl;
-		if (field_input.length() == 1) { 
-			if (field_input == "q") {
-				return -1;
-			}
-			try {
-				int field = stoi(field_input);
-				if (field > 4 || field < 1) {} // out of range, error message
-				else return field;// valid 
-			}
-			catch (const invalid_argument& excp) { // cant parse to int, error message
-			}
-		}
-		cout << "Please enter a valid value." << endl; //error message
-	}
-}
-int* RecordManage::searchCategory(CategoryManage& category_manager) {
-	while (true) { // take input until valid input or 'q' is received
-		int i = 1;
-		list <Category>::iterator category_it;
-
-		cout << "@ Category @" << endl;
-		for (category_it = category_manager.get_first(); category_it != category_manager.get_end(); category_it++) {
-			cout << i << ". " << category_it->get_cname() << endl;
-			i++;
-		}
-		cout << endl;
-		cout << "Select a category (q: return to main menu)" << endl;
-		cout << "> ";
-		string category_input;
-		getline(cin, category_input);
-		if (category_input.length() == 1 && category_input == "q") {
-			int * a = new int; // dynamic memory alloc
-			*a = -1;
-			return a; // back to main menu
-		}
-		//7.4.4 - 'ÀÎÀÚ°¡ ¾ø°Å³ª' ¹®¹ý Çü½Ä¿¡ À§¹èµÇ¸é, ¡®Please enter a valid value¡¯¶ó´Â ¿À·ù ¸Þ½ÃÁö¸¦ Ãâ·ÂÇÏ°í »ç¿ëÀÚ¿¡°Ô ÀçÀÔ·ÂÀ» ¿ä±¸ÇÕ´Ï´Ù.
-		if (category_input.find_first_not_of("\t\n ") == category_input.npos) { //str.empty() // if string is empty or contains only spaces
-			cout << "Please enter a valid value." << endl;
-			continue;
-		}
-		int* category = new int; // dynamic memory alloc
-		try {
-			*category = stoi(category_input);
-			if (*category < 1 || *category > category_manager.getCategorySize()) { } // out of range [1,tablesize]
-			else return category;
-		}
-		catch (const invalid_argument& excp) { // can't parse string
-		}
-		cout << "Please enter a valid value." << endl;
-		if(category != nullptr) delete category;
-	}
-}
-
-string* RecordManage::searchMemo() {
-	while (true) { // take input until valid input or 'q' is received
-		cout << "@ Memo @" << endl;
-		cout << "Search transactions that contains the text..." << endl;
-		cout << "(q: return to main menu)" << endl;
-		cout << "> ";
-		string *memo_input = new string; // dynamic memory alloc
-		getline(cin, *memo_input);
-		if (memo_input->length() == 1 && *memo_input == "q") return memo_input; // back to main menu
-		if (!c_parser.checkMemo(*memo_input)) return memo_input; //valid //¸â¹öº¯¼ö c_parser·Î checkMemoÁ¢±Ù, ÇöÀç ÆÄÀÏ ±¸Á¶·Î ÀÎ½Ä Àß ¾È µÊ
-		else { cout << "Invalid input, please try again." << endl; delete memo_input; }
-	}
-}
-string* RecordManage::searchType() {
-	while (true) { // take input until valid input or 'q' is received
-		cout << "@ Income/Expense @" << endl;
-		cout << "1. Income" << endl;
-		cout << "2. Expense" << endl;
-		cout << endl;
-		cout << "Select type of transaction (q: return to main menu)" << endl;
-		cout << "> ";
-		string type_input; 
-		getline(cin, type_input);
-		cout << endl;
-		if (type_input.length() == 1) {
-			if (type_input == "q") {
-				string* quit = new string; // dynamic memory alloc
-				*quit = type_input;
-				return quit; // back to main menu
-			}
-			try {
-				int type_num = stoi(type_input);
-				if (type_num == 2 || type_num == 1) { //valid menu number
-					string* returnstr = new string; // dynamic memory alloc
-						*returnstr = (type_num == 1) ? "Income" : "Expense";
-					return returnstr; // valid
-				} else { 
-					cout << "Please enter a valid value." << endl; 
-					continue; 
-				}
-			}
-			catch (const invalid_argument& excp) { // cant parse to int
-				cout << "Please enter a valid value. " << endl;
-				continue;
-			}
-		} else { // length of input != 1
-			cout << "Please enter a valid value." << endl; 
-			continue;
-		}
-	}
-}
-int RecordManage::compareTime(struct tm start, struct tm end) { // ÀÇ¹Ì ±ÔÄ¢, check if end is after start
-	//return positive value if start is earlier than end, negative if end is earlier than start, return zero if same date and time
-
-	//check year
-	if (start.tm_year < end.tm_year) return 1;
-	else if (start.tm_year > end.tm_year) return -1;
-	else { //if same year, check month
-		if (start.tm_mon < end.tm_mon) return 1;
-		else if (start.tm_mon > end.tm_mon) return -1;
-		else { //if same year and month, check day
-			if (start.tm_mday < end.tm_mday) return 1;
-			else if (start.tm_mday > end.tm_mday) return -1;
-			else { //if same year, month and day, check hour
-				if (start.tm_hour < end.tm_hour) return 1;
-				else if (start.tm_hour > end.tm_hour) return -1;
-				else { //if same year, month, day and hour, check minute
-					if (start.tm_min < end.tm_min) return 1; 
-					else if (start.tm_min > end.tm_min) return -1; 
-					else return 0; // same date and time, return 0
-				}
-			}
-		}
-	}
-}
-int RecordManage::searchTime(struct tm* (&period)) {
-	while (true) { // take input until valid input or 'q' is received
-		cout << "@ Time period @" << endl;
-		cout << "Enter time period using format \"YYYY/MM/DD hh:mm~YYYY/MM/DD hh:mm\"" << endl;
-		cout << "(q:return to main menu)" << endl;
-		cout << "> ";
-		string datetimeinput;
-		getline(cin, datetimeinput);
-		cout << endl;
-		if (datetimeinput.length() == 1 && datetimeinput == "q") return -1; // return to main menu
-		vector <string> tokens;
-		stringstream ss(datetimeinput);
-		string sub;
-		while (getline(ss, sub, '~')) {
-			tokens.push_back(sub);
-		}
-		if (tokens.size() == 2 && tokens[0].length() == 16 && tokens[1].length() == 16) {
-			struct tm start = c_parser.checkParseDate(tokens[0]);
-			struct tm  end = c_parser.checkParseDate(tokens[1]);
-			if (start.tm_year != -1 && end.tm_year != -1) {
-				if (compareTime(start, end) >= 0) { // end >= start
-					struct tm* result = new struct tm[2]; //dynamic memory alloc
-					result[0] = start;
-					result[1] = end;
-					period = result; //assign pointer
-					return 1; //valid 
-				}
-				else { // not following ÀÇ¹Ì±ÔÄ¢
-					cout << "Invalid date and time." << endl; continue;
-				}
-			}
-		} else { // invalid input : not following YYYY/MM/DD hh:mm~YYYY/MM/DD hh:mm format (at '~')
-			cout << "Invalid date and time." << endl; continue;
-		} 
-	}
-}
-int RecordManage::searchMenu() { 
-	while (true) { 
+	string input_string;
+	int selected_menu;
+	bool search_start = false;
+	while (1) {
+		system("cls");
 		cout << "@ Search a transaction @" << endl;
 		cout << "1. Date and Time" << endl;
 		cout << "2. Income/Expense" << endl;
 		cout << "3. Memo" << endl;
-		cout << "4. Category" << endl;
-		cout << "5. Reset condition (by field)" << endl;
-		cout << endl;
-		cout << "Select field (q:return to main menu)" << endl;
-		cout << "> ";
-		string choice;
-		getline(cin, choice);
-		cout << endl;
-		if (choice.length() != 1) continue; // 7.4 - ¹®¹ýÀûÀ¸·Î ¿Ã¹Ù¸¥ Å° ÀÔ·Â ¹®ÀÚ¿­Àº ±æÀÌ°¡ 1ÀÎ ¹®ÀÚ¿­ÀÔ´Ï´Ù.
-		if (choice == "q") return -1; // back to main menu
+		cout << "4. Category " << endl;
+		cout << "5. Reset conditions (by field)" << endl << endl;
+
+		cout << "Select field (q:return to main menu)\n> ";
+
+		bool flag = true;
+		while (flag) {
+			getline(cin, input_string);
+			try {
+				selected_menu = stoi(input_string);
+				flag = false;
+			}
+			catch (const exception & expn) {
+				cout << "Please enter a valid value." << endl;
+			}
+		}
+
+		if (input_string == "q") {
+			break;
+		}
+		if (selected_menu > 5 || selected_menu < 1) {
+			cout << "Please enter a valid value" << endl;
+		}
+		else {
+			short n;
+			switch (selected_menu) {
+			case 1:
+				//ê¸°ê°„ ì¡°ê±´ ì¶”ê°€
+				n = cd.addPeriodCondition();
+				if (n == -1) {
+					return;
+				}
+				else {
+					search_start = !n;
+				}
+				break;
+			case 2:
+				//ìˆ˜ìž…, ì§€ì¶œ ì¡°ê±´ ì¶”ê°€
+				n = cd.addIeCondition();
+				if (n == -1) {
+					return;
+				}
+				else {
+					search_start = !n;
+				}
+				break;
+			case 3:
+				//ë©”ëª¨ í‚¤ì›Œë“œ ì¡°ê±´ ì¶”ê°€
+				n = cd.addMemoCondition();
+				if (n == -1) {
+					return;
+				}
+				else {
+					search_start = !n;
+				}
+				break;
+			case 4:
+				//ì¹´í…Œê³ ë¦¬ ì¡°ê±´ ì¶”ê°€
+				n = cd.addCategoryCondition(category_manager);
+				if (n == -1) {
+					return;
+				}
+				else {
+					search_start = !n;
+				}
+				break;
+			case 5:
+				//ì¡°ê±´ ì´ˆê¸°í™”
+				n = cd.resetConditions();
+				if (n == -1) {
+					return;
+				}
+				else {
+					search_start = !n;
+				}
+				break;
+			}
+			if (search_start) {
+				//ì¡°ê±´ ë§žê²Œ ì¶œë ¥ ì‹œìž‘
+				vector <int> result = searchRecords(cd, category_manager);
+
+				while (1) {
+					//ìˆ˜ì • ì‚­ì œ ìž…ë ¥ë°›ê¸°
+					cout << "\n@ Manage transaction @" << endl;
+					cout << "1. Edit" << endl;
+					cout << "2. Remove\n" << endl;
+					cout << "Select action (q:return to main menu)\n> ";
+					getline(cin, input_string);
+					if (input_string == "q") {
+						return;
+					}
+					else if (input_string == "1") {
+						modifyRecordList(result, category_manager);
+						return;
+					}
+					else if (input_string == "2") {
+						deleteRecordList(result);
+						return;
+					}
+					else {
+						cout << "Please enter a valid value" << endl;
+					}
+				}
+			}
+		}
+	}
+}
+
+vector <int> RecordManage::searchRecords(Conditions& cd, CategoryManage& category_manager) {
+	vector <int> result;
+	// vector result ì±„ìš°ëŠ” part
+	list <Record>::iterator iter = record_list.begin();
+	list <Record>::iterator end_of_list = record_list.end();
+	bool check;
+	int i = 0;
+	for (; iter != end_of_list; iter++) {
+		check = true;
+
+		if (cd.on_period) {
+			//ê¸°ê°„ë²”ìœ„ ë°–ì´ë©´
+			struct tm d = iter->get_date();
+			if (compare(d, cd.from) == 1 || compare(cd.to, d) == 1) {
+				check = false;
+			}
+		}
+		if (cd.on_ie) {
+			if (iter->get_isincome() != cd.is_income) {
+				check = false;
+			}
+		}
+		if (cd.on_memo) {
+			if ((iter->get_memo()).find(cd.keyword) == string::npos) {
+				check = false;
+			}
+		}
+		if (cd.on_category) {
+			if (iter->get_category_number() != cd.category_number) {
+				check = false;
+			}
+		}
+
+		if (check) {
+			result.push_back(i);
+		}
+		i++;
+	}
+
+	//ì¶œë ¥ part
+	int end;
+	end = result.size();
+	iter = record_list.begin();
+	system("cls");
+	printf("\nNo\tDate\t\tTime\tIn\tAmount\t\tMemo\t\t\tCategory\n");
+	printf("-------------------------------------------------------------------------------------------------\n");
+	if (end > 0) {
+		advance(iter, result[0]);
+		printf("%-04d\t%04d/%02d/%02d\t%02d:%02d", 1, iter->get_date().tm_year+1900, iter->get_date().tm_mon+1, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
+		printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
+		printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
+		for (i = 1; i < end; i++) {
+			advance(iter, (result[i] - result[i - 1]));
+			printf("%-04d\t%04d/%02d/%02d\t%02d:%02d", i + 1, iter->get_date().tm_year+1900,iter->get_date().tm_mon+1, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
+			printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
+			printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
+		}
+	}
+	return result;
+}
+
+bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& category_manager) {
+	string input_string;
+	int selected;
+	while (1) {
+		cout << "\n@ Edit a transaction @" << endl;
+		cout << "Enter transaction number (q: return to main menu)\n> ";
+		getline(cin, input_string);
+		if (input_string == "q") {
+			return true;
+		}
+		selected = -1;
 		try {
-			int menu_choice = stoi(choice);
-			if (menu_choice > 5 || menu_choice < 1) continue; // number out of range // 7.4 - "ºñÁ¤»ó °á°ú: º°µµÀÇ ¿À·ù ¸Þ½ÃÁö´Â Ãâ·ÂµÇÁö ¾ÊÀ¸¸ç ´Ù½Ã ÀÔ·ÂÀ» ±â´Ù¸³´Ï´Ù."
-			else return menu_choice; // valid 
+			selected = stoi(input_string);
 		}
-		catch (const invalid_argument& excp) {
-			continue;
+		catch (exception & expn) {
+			cout << "Please enter a valid value." << endl;
 		}
+		if (selected < 1 || selected > result.size()) {
+			cout << "Please enter a valid value." << endl;
+		}
+		else {
+			//ì„ íƒëœ indexë¡œ ìˆ˜ì • ìž‘ì—…
+			list <Record>::iterator iter = record_list.begin();
+			advance(iter, result[selected - 1]);
+			struct tm before_date = iter->get_date();
+			struct tm after_date = before_date;
+			bool before_is_income = iter->get_isincome();
+			bool after_is_income = before_is_income;
+			unsigned int before_amount = iter->get_amount();
+			unsigned int after_amount = before_amount;
+			string before_memo = iter->get_memo();
+			string after_memo = before_memo;
+			int before_category_number = iter->get_category_number();
+			int after_category_number = before_category_number;
+			CheckerParser cp;
+
+			while (1) {
+				cout << "\n@ Edit a transaction @" << endl;
+				cout << "1. Date and Time" << endl;
+				cout << "2. Income/Expense" << endl;
+				cout << "3. Amount" << endl;
+				cout << "4. Memo" << endl;
+				cout << "5. Category\n" << endl;
+				cout << "Select field to edit (q: return to main menu)\n> ";
+				getline(cin, input_string);
+
+				if (input_string == "q") {
+					return true;
+				}
+				else if (input_string == "1") {
+					while (1) {
+						cout << "\n@ Edit Date and Time @" << endl;
+						cout << "Before modification: ";
+						printf("%04d/%02d/%02d %02d:%02d\n", before_date.tm_year, before_date.tm_mon, before_date.tm_mday, before_date.tm_hour, before_date.tm_min);
+						cout << "Enter date and time after modification (q:return to main menu)\n> ";
+						getline(cin, input_string);
+						if (input_string == "q") {
+							return true;
+						}
+						after_date = cp.checkParseDate(input_string);
+						if (after_date.tm_year != -1) {
+							break;
+						}
+					}
+					break;
+				}
+				else if (input_string == "2") {
+					after_is_income = !before_is_income;
+					break;
+				}
+				else if (input_string == "3") {
+					while (1) {
+						cout << "\n@ Edit Amount @" << endl;
+						cout << "Before modification: " << before_amount << endl;
+						cout << "Enter amount after modification (q:return to main menu)\n> ";
+						getline(cin, input_string);
+						if (input_string == "q") {
+							return true;
+						}
+						if (!cp.checkAmount(input_string)) {
+							after_memo = cp.parseAmount(input_string);
+							break;
+						}
+					}
+					break;
+				}
+				else if (input_string == "4") {
+					while (1) {
+						cout << "\n@ Edit Memo @" << endl;
+						cout << "Before modification: " << before_memo << endl;
+						cout << "Enter memo after modification (q:return to main menu)\n> ";
+						getline(cin, input_string);
+						if (input_string == "q") {
+							return true;
+						}
+						if (!cp.checkMemo(input_string)) {
+							after_memo = input_string;
+							break;
+						}
+					}
+					break;
+				}
+				else if (input_string == "5") {
+					while (1) {
+						cout << "\n@ Edit Category @" << endl;
+						cout << "Before modification: " << category_manager.getIndexedCategory(before_category_number) << endl;
+						cout << "\nAll categories:" << endl;
+						category_manager.printCategoryList();
+						cout << "\nSelect category after modification (q:return to main menu)\n> ";
+						getline(cin, input_string);
+						if (input_string == "q") {
+							return true;
+						}
+						if (!cp.checkCategoryNumber(input_string, category_manager.getCategorySize())) {
+							after_category_number = stoi(input_string);
+							break;
+						}
+					}
+					break;
+				}
+				else {
+					cout << "Please enter a valid value." << endl;
+				}
+			}
+			//ìˆ˜ì • í™•ì¸
+			system("cls");
+			cout << "@ Before modification @" << endl;
+			cout << "- Date and Time: ";
+			printf("%04d/%02d/%02d %02d:%02d\n", before_date.tm_year+1900, before_date.tm_mon+1, before_date.tm_mday, before_date.tm_hour, before_date.tm_min);
+			cout << "- Income/Expense: ";
+			if (before_is_income) {
+				cout << "Income" << endl;
+			}
+			else {
+				cout << "Expense" << endl;
+			}
+			cout << "- Amount: " << before_amount << endl;
+			cout << "- Memo: " << before_memo << endl;
+			cout << "- Category: " << category_manager.getIndexedCategory(before_category_number) << endl << endl;
+
+			cout << "@ After modification @" << endl;
+			cout << "- Date and Time: ";
+			printf("%04d/%02d/%02d %02d:%02d\n", after_date.tm_year+1900, after_date.tm_mon+1, after_date.tm_mday, after_date.tm_hour, after_date.tm_min);
+			cout << "- Income/Expense: ";
+			if (after_is_income) {
+				cout << "Income" << endl;
+			}
+			else {
+				cout << "Expense" << endl;
+			}
+			cout << "- Amount: " << after_amount << endl;
+			cout << "- Memo: " << after_memo << endl;
+			cout << "- Category: " << category_manager.getIndexedCategory(after_category_number) << endl << endl;
+			cout << "Confirm modification? (type 'No' to cancle)\n> ";
+			getline(cin, input_string);
+			if (input_string == "No") {
+				return true;
+			}
+			else {
+				//ìµœì¢… ìˆ˜ì • ìž‘ì—…
+				record_list.erase(iter);
+
+				list <Record>::iterator iter2 = record_list.begin();
+				list <Record>::iterator end_of_list = record_list.end();
+
+				for (; iter2 != end_of_list; iter2++) {
+					struct tm d = iter2->get_date();
+					if (compare(after_date, d) == 1) {
+						break;
+					}
+				}
+
+				if (iter2 == end_of_list) {
+					record_list.push_back(Record(after_date, after_is_income, after_amount, after_memo, after_category_number));
+				}
+				else {
+					record_list.push_back(Record(after_date, after_is_income, after_amount, after_memo, after_category_number));
+				}
+				return false;
+			}
+		}
+	}
+}
+
+bool RecordManage::deleteRecordList(vector <int> result) {
+	string input_string;
+	int selected;
+	while (1) {
+		cout << "\n@ Delete a transaction @" << endl;
+		cout << "Enter transaction number (q: return to main menu)\n> ";
+		getline(cin, input_string);
+		if (input_string == "q") {
+			return true;
+		}
+		selected = -1;
+		try {
+			selected = stoi(input_string);
+		}
+		catch (exception & expn) {
+			cout << "Please enter a valid value." << endl;
+		}
+		if (selected < 1 || selected > result.size()) {
+			cout << "Please enter a valid value." << endl;
+		}
+		else {
+			//ì„ íƒëœ indexë¡œ ì‚­ì œ ìž‘ì—…
+			cout << "\n@ Delete a transaction @" << endl;
+			cout << "Confirm deletion? (type 'No' to cancel)\n> ";
+			getline(cin, input_string);
+			if (input_string == "No") {
+				return true;
+			}
+			else {
+				list <Record>::iterator iter = record_list.begin();
+				advance(iter, result[selected - 1]);
+				record_list.erase(iter);
+				return false;
+			}
+		}
+	}
+}
+
+short RecordManage::compare(struct tm left, struct tm right) {
+	if (left.tm_year != right.tm_year) {
+		if (left.tm_year < right.tm_year) {
+			return 1;
+		}
+		else {
+			return -1;
+		}
+	}
+	if (left.tm_mon != right.tm_mon) {
+		if (left.tm_mon < right.tm_mon) {
+			return 1;
+		}
+		else {
+			return -1;
+		}
+	}
+	if (left.tm_mday != right.tm_mday) {
+		if (left.tm_mday < right.tm_mday) {
+			return 1;
+		}
+		else {
+			return -1;
+		}
+	}
+	if (left.tm_hour != right.tm_hour) {
+		if (left.tm_hour < right.tm_hour) {
+			return 1;
+		}
+		else {
+			return -1;
+		}
+	}
+
+	if (left.tm_min < right.tm_min) {
+		return 1;
+	}
+	else if (left.tm_min == right.tm_min) {
+		return 0;
+	}
+	else {
+		return -1;
 	}
 }

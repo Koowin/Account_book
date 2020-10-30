@@ -3,14 +3,17 @@
 void RecordManage::printAllRecordList(CategoryManage& category_manager) {
 	list <Record>::iterator iter;
 	list <Record>::iterator end = record_list.end();
+	system("cls");
 	printf("Date\t\tTime\tIn\tAmount\t\tMemo\t\t\tCategory\n");
 	printf("--------------------------------------------------------------------------------------------\n");
 
 	for (iter = record_list.begin(); iter != end; iter++) {
-		printf("%04d/%02d/%02d\t%02d:%02d", iter->get_date().tm_year, iter->get_date().tm_mon, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
+		printf("%04d/%02d/%02d\t%02d:%02d", iter->get_date().tm_year + 1900, iter->get_date().tm_mon + 1, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
 		printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
 		printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
 	}
+	cout << "\nPress any key to continue...";
+	_getch();
 }
 
 void RecordManage::printSelectedRecordList(CategoryManage& category_manager, vector <int> selected_index) {
@@ -18,7 +21,7 @@ void RecordManage::printSelectedRecordList(CategoryManage& category_manager, vec
 
 }
 
-bool RecordManage::addRecord(CategoryManage & category_manager) {
+bool RecordManage::addRecord(CategoryManage& category_manager) {
 	class CheckerParser cp;
 	string input_string;
 	bool flag = true;
@@ -32,14 +35,15 @@ bool RecordManage::addRecord(CategoryManage & category_manager) {
 
 	//날짜 입력받는 부분
 	while (flag) {
-		cout << "\n@ Add a transaction @" << endl;
-		cout << "Enter the date and time (q:return to main menu)" << endl << "> ";
+		system("cls");
+		cout << "@ Add a transaction @" << endl;
+		cout << "Enter the date and time  format:YYYY/MM/DD hh:mm\n(q:return to main menu)" << endl << "> ";
 		getline(cin, input_string);
 
 		if (input_string == "q") {
 			return true;
 		}
-		
+
 		date = cp.checkParseDate(input_string);
 		//정상 입력 시
 		if (date.tm_year != -1) {
@@ -47,7 +51,6 @@ bool RecordManage::addRecord(CategoryManage & category_manager) {
 		}
 		//비정상 입력 시 오류 문구 출력 후 반복
 	}
-
 
 	//수입/지출 입력받는 부분
 	flag = true;
@@ -143,7 +146,7 @@ bool RecordManage::addRecord(CategoryManage & category_manager) {
 	else {
 		cout << "Expense" << endl;
 	}
-	cout << "- Amount: " << amount <<endl;
+	cout << "- Amount: " << amount << endl;
 	cout << "- Memo: " << memo << endl;
 	cout << "- Category: " << category_manager.getIndexedCategory(category_number) << endl;
 	cout << "\nConfirm new transaction? (type 'No' to cancel)\n> ";
@@ -153,8 +156,24 @@ bool RecordManage::addRecord(CategoryManage & category_manager) {
 		return true;
 	}
 	else {
-		//to do : index 찾아서 넣기 혹은 넣고 정렬하기
-		record_list.push_back(Record(date, is_income, amount, memo, category_number));
+		//index 찾아서 넣기
+		list <Record>::iterator iter = record_list.begin();
+		list <Record>::iterator end_of_list = record_list.end();
+
+		for (; iter != end_of_list; iter++) {
+			struct tm d = iter->get_date();
+			if (compare(date, d) == 1) {
+				break;
+			}
+		}
+
+		if (iter == end_of_list) {
+			record_list.push_back(Record(date, is_income, amount, memo, category_number));
+		}
+		else {
+			record_list.insert(iter, Record(date, is_income, amount, memo, category_number));
+		}
+
 		return false;
 	}
 }
@@ -163,9 +182,19 @@ int RecordManage::getRecordListSize() {
 	return record_list.size();
 }
 
-list <Record>::iterator RecordManage::get_first(){
+list <Record>::iterator RecordManage::get_first() {
 	return record_list.begin();
 }
 list <Record>::iterator RecordManage::get_end() {
 	return record_list.end();
+}
+
+void RecordManage::init_add(Record r) {
+	record_list.push_back(r);
+}
+
+Record RecordManage::getRecord() {
+	Record r = record_list.front();
+	record_list.pop_front();
+	return r;
 }

@@ -148,7 +148,6 @@
     <ClCompile Include="record.cpp" />
     <ClCompile Include="recordManage%28n_search_part%29.cpp" />
     <ClCompile Include="recordManage%28search_part%29.cpp" />
-    <ClCompile Include="recordManage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header.hpp" />
