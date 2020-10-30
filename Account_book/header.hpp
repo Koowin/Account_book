@@ -103,7 +103,7 @@ public:
 	list <Record>::iterator get_first();
 	list <Record>::iterator get_end();
 	//0: 같음 1: 오른쪽이 큼 -1: 왼쪽이 큼
-	short compare(struct tm&, struct tm&);
+	short compare(struct tm, struct tm);
 };
 
 class Category {
