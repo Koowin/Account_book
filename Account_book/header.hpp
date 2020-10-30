@@ -5,48 +5,53 @@
 #include<fstream>
 #include<vector>
 #include<string>
-
+#include<sstream>
 using namespace std;
 
-class Conditions {
-private:
-	bool on_period;
-	bool on_income;
-	bool on_memo;
-	bool on_category;
-
-	struct tm from_date;
-	struct tm to_date;
-	bool is_income;
-	string memo_keyword;
-	int category_number;
-
-public:
-	Conditions();			//초기값: on~~ 모두 false로
-
-	struct tm get_from_date();
-	struct tm get_to_date();
-	bool get_is_income();
-	string get_memo_keyword();
-	int get_category_number();
-
-	void set_period();
-	void set_income();
-	void set_memo();
-	void set_category();
-	void clear_conditions();
-};
+class CategoryManage;
 
 class CheckerParser {
 private:
 
 public:
-	bool checkDate(string);
+	struct tm checkParseDate(string);
 	bool checkAmount(string);
 	bool checkMemo(string);
 	bool checkCategoryNumber(string, int);
-	struct tm parseDate(string);
+	bool checkCategoryName(string);
+
+	//struct tm parseDate(string);
 	unsigned int parseAmount(string);
+};
+
+class Conditions {
+public:
+	bool on_period;
+	bool on_ie;
+	bool on_memo;
+	bool on_category;
+
+	struct tm from;
+	struct tm to;
+	bool is_income;
+	string keyword;
+	int category_number;
+	string category_name;
+
+	Conditions();
+
+	/*조건 추가하는 함수
+	* return 1: 조건 더 추가(반복)
+	* return 0: 출력
+	* return -1: 메인메뉴로 이동 */
+	short addPeriodCondition();
+	short addIeCondition();
+	short addMemoCondition();
+	short addCategoryCondition(CategoryManage&);
+	short resetConditions();
+	short printCurrentConditions();
+
+	bool compare(struct tm&, struct tm&);
 };
 
 class Record {
@@ -58,11 +63,10 @@ private:
 	int category_number;
 
 public:
-	Record();
 	Record(struct tm, bool, unsigned int, string, int);
 	/* getter */
 	struct tm  get_date();
-	bool get_isIncome();
+	bool get_isincome();
 	unsigned int get_amount();
 	string get_memo();
 	int get_category_number();
@@ -75,12 +79,39 @@ public:
 	void set_category_number(int);
 };
 
+class RecordManage {
+private:
+	list <Record> record_list;
+	CheckerParser c_parser; //신이 추가 - 많이 쓰여서 기타 멤버 함수들이 접근하기 편하게 그냥 멤버로 만듦 // 생성자에서 객체 생성 필수
+public:
+	/* non-search part */
+	void printAllRecordList(CategoryManage&);
+	void printSelectedRecordList(CategoryManage&, vector <int>);
+	bool addRecord(CategoryManage&);
+	bool modifyRecordList(vector <int>, CategoryManage&);
+	bool modifyRecordList(vector <int>);
+	bool deleteRecordList(vector <int>);
+	int getRecordListSize();
+	/* 추가 영역 재혁 */
+	void init_add(Record);
+	Record getRecord();
+
+	/* search Part */
+	void searchMenu(CategoryManage&);
+	vector <int> searchRecords(Conditions&, CategoryManage&);
+
+	// record_list의 처음과 끝 반복자를 반환하는 함수
+	list <Record>::iterator get_first();
+	list <Record>::iterator get_end();
+	//0: 같음 1: 오른쪽이 큼 -1: 왼쪽이 큼
+	short compare(struct tm, struct tm);
+};
+
 class Category {
 private:
 	string c_name;
 
 public:
-	Category();
 	Category(string);
 
 	/* getter */
@@ -95,36 +126,21 @@ private:
 	list<Category> category;
 
 public:
-	void categoryMenu();
+	void categoryMenu(RecordManage&);
 	void printCategoryList();
-	bool addCategoryList(Category);
-	bool modifyCategoryList(Category);
-	bool deleteCategoryList(Category);
+	bool addCategory();
+	bool modifyCategory();
+	bool deleteCategory(RecordManage&);
 	int getCategorySize();
-	void init_add(Category);
-	int listSize();
+	string getIndexedCategory(int);
+	/* 추가 영역 재혁 */
 	bool isDuplicate(string);
+	void init_add(Category);
 	Category getCategory();
+	/////////////////
+	list <Category>::iterator get_first();
+	list <Category>::iterator get_end();
 };
-
-class RecordManage {
-private:
-	list<Record> record_list;
-public:
-	/* 기본 기능 */
-	void printAllRecordList(CategoryManage&);
-	bool addRecord(int);
-	bool searchRecords(CategoryManage&);
-	bool modifyRecordList(Record);
-	bool deleteRecordList(Record);
-	void init_add(Record);
-	int getRecordSize();
-	Record getRecord();
-};
-
-
-
-
 
 class FileManage {
 private:

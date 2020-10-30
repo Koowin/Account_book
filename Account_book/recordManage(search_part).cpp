@@ -1,5 +1,5 @@
 #include "header.hpp"
-/*
+
 void RecordManage::searchMenu(CategoryManage& category_manager) {
 	Conditions cd;
 
@@ -7,7 +7,8 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 	int selected_menu;
 	bool search_start = false;
 	while (1) {
-		cout << "\n@ Search a transaction @" << endl;
+		system("cls");
+		cout << "@ Search a transaction @" << endl;
 		cout << "1. Date and Time" << endl;
 		cout << "2. Income/Expense" << endl;
 		cout << "3. Memo" << endl;
@@ -90,7 +91,6 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 			}
 			if (search_start) {
 				//조건 맞게 출력 시작
-				cout << "조건에 맞는 목록 출력" << endl;
 				vector <int> result = searchRecords(cd, category_manager);
 
 				while (1) {
@@ -104,7 +104,7 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 						return;
 					}
 					else if (input_string == "1") {
-						modifyRecordList(result);
+						modifyRecordList(result, category_manager);
 						return;
 					}
 					else if (input_string == "2") {
@@ -163,17 +163,17 @@ vector <int> RecordManage::searchRecords(Conditions& cd, CategoryManage& categor
 	int end;
 	end = result.size();
 	iter = record_list.begin();
-
+	system("cls");
 	printf("\nNo\tDate\t\tTime\tIn\tAmount\t\tMemo\t\t\tCategory\n");
 	printf("-------------------------------------------------------------------------------------------------\n");
 	if (end > 0) {
 		advance(iter, result[0]);
-		printf("%-04d\t%04d/%02d/%02d\t%02d:%02d", 1, iter->get_date().tm_year, iter->get_date().tm_mon, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
+		printf("%-04d\t%04d/%02d/%02d\t%02d:%02d", 1, iter->get_date().tm_year+1900, iter->get_date().tm_mon+1, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
 		printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
 		printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
 		for (i = 1; i < end; i++) {
 			advance(iter, (result[i] - result[i - 1]));
-			printf("%-04d\t%04d/%02d/%02d\t%02d:%02d", i + 1, iter->get_date().tm_year, iter->get_date().tm_mon, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
+			printf("%-04d\t%04d/%02d/%02d\t%02d:%02d", i + 1, iter->get_date().tm_year+1900,iter->get_date().tm_mon+1, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
 			printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
 			printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
 		}
@@ -181,7 +181,7 @@ vector <int> RecordManage::searchRecords(Conditions& cd, CategoryManage& categor
 	return result;
 }
 
-bool RecordManage::modifyRecordList(vector <int> result) {
+bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& category_manager) {
 	string input_string;
 	int selected;
 	while (1) {
@@ -203,7 +203,164 @@ bool RecordManage::modifyRecordList(vector <int> result) {
 		}
 		else {
 			//선택된 index로 수정 작업
-			return true;
+			list <Record>::iterator iter = record_list.begin();
+			advance(iter, result[selected - 1]);
+			struct tm before_date = iter->get_date();
+			struct tm after_date = before_date;
+			bool before_is_income = iter->get_isincome();
+			bool after_is_income = before_is_income;
+			unsigned int before_amount = iter->get_amount();
+			unsigned int after_amount = before_amount;
+			string before_memo = iter->get_memo();
+			string after_memo = before_memo;
+			int before_category_number = iter->get_category_number();
+			int after_category_number = before_category_number;
+			CheckerParser cp;
+
+			while (1) {
+				cout << "\n@ Edit a transaction @" << endl;
+				cout << "1. Date and Time" << endl;
+				cout << "2. Income/Expense" << endl;
+				cout << "3. Amount" << endl;
+				cout << "4. Memo" << endl;
+				cout << "5. Category\n" << endl;
+				cout << "Select field to edit (q: return to main menu)\n> ";
+				getline(cin, input_string);
+
+				if (input_string == "q") {
+					return true;
+				}
+				else if (input_string == "1") {
+					while (1) {
+						cout << "\n@ Edit Date and Time @" << endl;
+						cout << "Before modification: ";
+						printf("%04d/%02d/%02d %02d:%02d\n", before_date.tm_year, before_date.tm_mon, before_date.tm_mday, before_date.tm_hour, before_date.tm_min);
+						cout << "Enter date and time after modification (q:return to main menu)\n> ";
+						getline(cin, input_string);
+						if (input_string == "q") {
+							return true;
+						}
+						after_date = cp.checkParseDate(input_string);
+						if (after_date.tm_year != -1) {
+							break;
+						}
+					}
+					break;
+				}
+				else if (input_string == "2") {
+					after_is_income = !before_is_income;
+					break;
+				}
+				else if (input_string == "3") {
+					while (1) {
+						cout << "\n@ Edit Amount @" << endl;
+						cout << "Before modification: " << before_amount << endl;
+						cout << "Enter amount after modification (q:return to main menu)\n> ";
+						getline(cin, input_string);
+						if (input_string == "q") {
+							return true;
+						}
+						if (!cp.checkAmount(input_string)) {
+							after_memo = cp.parseAmount(input_string);
+							break;
+						}
+					}
+					break;
+				}
+				else if (input_string == "4") {
+					while (1) {
+						cout << "\n@ Edit Memo @" << endl;
+						cout << "Before modification: " << before_memo << endl;
+						cout << "Enter memo after modification (q:return to main menu)\n> ";
+						getline(cin, input_string);
+						if (input_string == "q") {
+							return true;
+						}
+						if (!cp.checkMemo(input_string)) {
+							after_memo = input_string;
+							break;
+						}
+					}
+					break;
+				}
+				else if (input_string == "5") {
+					while (1) {
+						cout << "\n@ Edit Category @" << endl;
+						cout << "Before modification: " << category_manager.getIndexedCategory(before_category_number) << endl;
+						cout << "\nAll categories:" << endl;
+						category_manager.printCategoryList();
+						cout << "\nSelect category after modification (q:return to main menu)\n> ";
+						getline(cin, input_string);
+						if (input_string == "q") {
+							return true;
+						}
+						if (!cp.checkCategoryNumber(input_string, category_manager.getCategorySize())) {
+							after_category_number = stoi(input_string);
+							break;
+						}
+					}
+					break;
+				}
+				else {
+					cout << "Please enter a valid value." << endl;
+				}
+			}
+			//수정 확인
+			system("cls");
+			cout << "@ Before modification @" << endl;
+			cout << "- Date and Time: ";
+			printf("%04d/%02d/%02d %02d:%02d\n", before_date.tm_year, before_date.tm_mon, before_date.tm_mday, before_date.tm_hour, before_date.tm_min);
+			cout << "- Income/Expense: ";
+			if (before_is_income) {
+				cout << "Income" << endl;
+			}
+			else {
+				cout << "Expense" << endl;
+			}
+			cout << "- Amount: " << before_amount << endl;
+			cout << "- Memo: " << before_memo << endl;
+			cout << "- Category: " << category_manager.getIndexedCategory(before_category_number) << endl << endl;
+
+			cout << "@ After modification @" << endl;
+			cout << "- Date and Time: ";
+			printf("%04d/%02d/%02d %02d:%02d\n", after_date.tm_year, after_date.tm_mon, after_date.tm_mday, after_date.tm_hour, after_date.tm_min);
+			cout << "- Income/Expense: ";
+			if (after_is_income) {
+				cout << "Income" << endl;
+			}
+			else {
+				cout << "Expense" << endl;
+			}
+			cout << "- Amount: " << after_amount << endl;
+			cout << "- Memo: " << after_memo << endl;
+			cout << "- Category: " << category_manager.getIndexedCategory(after_category_number) << endl << endl;
+			cout << "Confirm modification? (type 'No' to cancle)\n> ";
+			getline(cin, input_string);
+			if (input_string == "No") {
+				return true;
+			}
+			else {
+				//최종 수정 작업
+				record_list.erase(iter);
+
+				list <Record>::iterator iter2 = record_list.begin();
+				list <Record>::iterator end_of_list = record_list.end();
+
+				for (; iter2 != end_of_list; iter2++) {
+					struct tm d = iter2->get_date();
+					if (compare(after_date, d) == 1) {
+						break;
+					}
+				}
+
+				if (iter2 == end_of_list) {
+					record_list.push_back(Record(after_date, after_is_income, after_amount, after_memo, after_category_number));
+				}
+				else {
+					record_list.push_back(Record(after_date, after_is_income, after_amount, after_memo, after_category_number));
+				}
+				return false;
+			}
 		}
 	}
 }
@@ -246,7 +403,7 @@ bool RecordManage::deleteRecordList(vector <int> result) {
 	}
 }
 
-short RecordManage::compare(struct tm& left, struct tm& right) {
+short RecordManage::compare(struct tm left, struct tm right) {
 	if (left.tm_year != right.tm_year) {
 		if (left.tm_year < right.tm_year) {
 			return 1;
@@ -290,4 +447,3 @@ short RecordManage::compare(struct tm& left, struct tm& right) {
 		return -1;
 	}
 }
-*/

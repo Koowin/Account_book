@@ -55,7 +55,7 @@ bool FileManage::initFile(RecordManage& record_manager,CategoryManage& category_
 			Record r = Record(t, isIncome, amount, memo, category_number);		// Record 생성
 			record_manager.init_add(r);		// RecordManage list에 추가
 
-			if (record_manager.getRecordSize() > 1024) {		// 레코드 개수가 1024개 이상일 시 false 반환
+			if (record_manager.getRecordListSize() > 1024) {		// 레코드 개수가 1024개 이상일 시 false 반환
 				cerr << "Error: Record size limit" << endl;
 				in_Account.close();
 				return false;
@@ -91,7 +91,7 @@ bool FileManage::initFile(RecordManage& record_manager,CategoryManage& category_
 			}
 			category_manager.init_add(c);
 
-			if (category_manager.listSize() > 64) {		// 카테고리 개수가 64개 이상일 시 false 반환
+			if (category_manager.getCategorySize() > 64) {		// 카테고리 개수가 64개 이상일 시 false 반환
 				cerr << "Error: Category size limit " << endl;
 				in_category.close();
 				return false;
@@ -119,7 +119,7 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 
 	ofstream out_Account("Account.txt");
 	
-	while (record_manager.getRecordSize()) {		// list size가 0이 될때까지
+	while (record_manager.getRecordListSize()) {		// list size가 0이 될때까지
 		string s = "";
 		string income = "income";
 		string expense = "expense";
@@ -139,7 +139,7 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 				to_string(tm.tm_hour) + ":" +
 				to_string(tm.tm_min) + '0' + "\t";
 
-		bool isIncome = r.get_isIncome();	// 수입/지출 입력
+		bool isIncome = r.get_isincome();	// 수입/지출 입력
 		if (isIncome == true) {		
 			s += income + "\t";
 		}
@@ -220,9 +220,4 @@ void Tokenize(const string& str, vector<string>& tokens, const string& delimiter
 		lastPos = str.find_first_not_of(delimiters, pos);
 		pos = str.find_first_of(delimiters, lastPos);
 	}
-}
-
-
-void RecordManage::init_add(Record r) {
-	this->record_list.push_back(r);
 }
