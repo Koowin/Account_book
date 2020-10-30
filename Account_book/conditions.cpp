@@ -36,7 +36,7 @@ short Conditions::addPeriodCondition() {
 			}
 			from = cp.checkParseDate(f);
 			to = cp.checkParseDate(t);
-			
+
 			if (from.tm_year != -1 && to.tm_year != -1) {
 				if (compare(from, to)) {
 					on_period = true;
@@ -48,7 +48,7 @@ short Conditions::addPeriodCondition() {
 			}
 		}
 	}
-	
+
 	return printCurrentConditions();
 }
 short Conditions::addIeCondition() {
@@ -155,10 +155,10 @@ short Conditions::resetConditions() {
 short Conditions::printCurrentConditions() {
 	string input_string;
 	cout << "\n@ Current condition @" << endl;
-	//조건 출력 part
+
 	if (on_period) {
 		cout << "Time period: ";
-		printf("%04d/%02d/%02d %02d:%02d~%04d/%02d/%02d %02d:%02d\n", from.tm_year, from.tm_mon, from.tm_mday, from.tm_hour, from.tm_min, to.tm_year, to.tm_mon, to.tm_mday, to.tm_hour, to.tm_min);
+		printf("%04d/%02d/%02d %02d:%02d~%04d/%02d/%02d %02d:%02d\n", from.tm_year+1900, from.tm_mon+1, from.tm_mday, from.tm_hour, from.tm_min, to.tm_year+1900, to.tm_mon+1, to.tm_mday, to.tm_hour, to.tm_min);
 	}
 	if (on_ie) {
 		cout << "Income/Expense: ";
@@ -177,7 +177,7 @@ short Conditions::printCurrentConditions() {
 	}
 	cout << "\n1.Add another condition" << endl;
 	cout << "2.Print search result\n" << endl;
-	
+
 	while (1) {
 		cout << "Select action (q: return to main menu)\n> ";
 		getline(cin, input_string);
@@ -196,7 +196,7 @@ short Conditions::printCurrentConditions() {
 	}
 }
 
-bool Conditions::compare(struct tm &left, struct tm &right) {
+bool Conditions::compare(struct tm& left, struct tm& right) {
 	if (left.tm_year != right.tm_year) {
 		if (left.tm_year < right.tm_year) {
 			return true;
