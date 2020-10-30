@@ -91,6 +91,9 @@ public:
 	bool modifyRecordList(vector <int>, CategoryManage&);
 	bool deleteRecordList(vector <int>);
 	int getRecordListSize();
+	
+	void init_add(Record);
+	Record getRecord();
 
 	/* search Part */
 	void searchMenu(CategoryManage&);
@@ -129,6 +132,10 @@ public:
 	bool deleteCategory(RecordManage &);
 	int getCategorySize();
 	string getIndexedCategory(int);
+	
+	bool isDuplicate(string);
+	void init_add(Category);
+	Category getCategory();
 
 	list <Category>::iterator get_first();
 	list <Category>::iterator get_end();
@@ -138,7 +145,9 @@ class FileManage {
 private:
 
 public:
-	bool initFile();
-	bool saveFile();
+	bool initFile(RecordManage&, CategoryManage&);
+	bool saveFile(RecordManage&, CategoryManage&);
 };
 
+void Tokenize(const string&, vector<string>&, const string&);
+struct tm setTime(string);
