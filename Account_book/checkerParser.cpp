@@ -1,8 +1,8 @@
 #include "header.hpp"
 
 
-/* checkparse µ¿½Ã¿¡ ÇÏ´Â ÇÔ¼ö.
-* ¿À·ù ¹ß»ý ½Ã tm_year°ªÀÌ -1 */
+/* checkparse ë™ì‹œì— í•˜ëŠ” í•¨ìˆ˜.
+* ì˜¤ë¥˜ ë°œìƒ ì‹œ tm_yearê°’ì´ -1 */
 struct tm CheckerParser::checkParseDate(string input_string) {
 	time_t now_time;
 	struct tm result;
@@ -44,7 +44,7 @@ struct tm CheckerParser::checkParseDate(string input_string) {
 		}
 	}
 
-	//¿©±âºÎÅÍ Á¤»ó °á°ú & ÆÄ½Ì
+	//ì—¬ê¸°ë¶€í„° ì •ìƒ ê²°ê³¼ & íŒŒì‹±
 	string year;
 	string mon;
 	string day;
@@ -69,20 +69,20 @@ struct tm CheckerParser::checkParseDate(string input_string) {
 	result.tm_min = stoi(min);
 	result.tm_sec = 0;
 	time_t t = mktime(&result);
-	//ÀÇ¹Ì±ÔÄ¢ °Ë»ç (±×·¹°í¸®·Â¿¡ ¸ÂÁö ¾ÊÀº ½Ã°£ÀÌ µé¾î¿À°Å³ª, ÇöÀç ½Ã°£º¸´Ù Å©´Ù¸é)
+	//ì˜ë¯¸ê·œì¹™ ê²€ì‚¬ (ê·¸ë ˆê³ ë¦¬ë ¥ì— ë§žì§€ ì•Šì€ ì‹œê°„ì´ ë“¤ì–´ì˜¤ê±°ë‚˜, í˜„ìž¬ ì‹œê°„ë³´ë‹¤ í¬ë‹¤ë©´)
 	if (t == -1 || t > now_time) {
 		result.tm_year = -1;
 		cout << "Invalid date and time, please check the value and try again." << endl;
 	}
 	else {
-		result.tm_year += 1900;
-		result.tm_mon += 1;
+		//result.tm_year += 1900;
+		//.tm_mon += 1;
 	}
 	return result;
 }
 
-/* »ç¿ëÀÚ·ÎºÎÅÍ ÀÔ·Â¹ÞÀº string¿¡ ¼ýÀÚ¿Í ÄÞ¸¶·Î¸¸ ±¸¼ºµÇ¾î ÀÖÀ¸¸ç,
-* ÄÞ¸¶ÀÇ À§Ä¡°¡ ÀûÀýÇÏ°Ô ¾²¿´´ÂÁö °Ë»çÇÏ¿© ¿À·ù°¡ ÀÖÀ¸¸é true¸¦ ¹ÝÈ¯ÇÏ´Â ÇÔ¼ö */
+/* ì‚¬ìš©ìžë¡œë¶€í„° ìž…ë ¥ë°›ì€ stringì— ìˆ«ìžì™€ ì½¤ë§ˆë¡œë§Œ êµ¬ì„±ë˜ì–´ ìžˆìœ¼ë©°,
+* ì½¤ë§ˆì˜ ìœ„ì¹˜ê°€ ì ì ˆí•˜ê²Œ ì“°ì˜€ëŠ”ì§€ ê²€ì‚¬í•˜ì—¬ ì˜¤ë¥˜ê°€ ìžˆìœ¼ë©´ trueë¥¼ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜ */
 bool CheckerParser::checkAmount(string input_string) {
 	bool error = false;
 	int i;
@@ -95,7 +95,7 @@ bool CheckerParser::checkAmount(string input_string) {
 		}
 	}
 
-	//ÄÞ¸¶°¡ ¾øÀ» °æ¿ì
+	//ì½¤ë§ˆê°€ ì—†ì„ ê²½ìš°
 	if (comma_location.empty()) {
 		for (i = 0; i < string_size; i++) {
 			if (input_string[i] < 48 || input_string[i] > 57) {
@@ -104,14 +104,14 @@ bool CheckerParser::checkAmount(string input_string) {
 			}
 		}
 	}
-	//ÄÞ¸¶°¡ ÀÖÀ» °æ¿ì
+	//ì½¤ë§ˆê°€ ìžˆì„ ê²½ìš°
 	else {
 		if (comma_location[0] == 0 || comma_location[0] > 3) {
 			error = true;
 		}
 		else {
 			int comma_count = comma_location.size();
-			for (i = 0; i < comma_count-1; i++) {
+			for (i = 0; i < comma_count - 1; i++) {
 				if (comma_location[i + 1] - comma_location[i] != 4) {
 					error = true;
 					break;
@@ -134,9 +134,9 @@ bool CheckerParser::checkAmount(string input_string) {
 	return error;
 }
 
-/* ±æÀÌ 20ÀÚ °Ë»ç, ¾ÕµÚ °ø¹é °Ë»ç, ÀÔ·Â°¡´É¹®ÀÚ·Î ±¸¼ºµÇ¾îÀÖ´ÂÁö °Ë»ç
-* !!!Áß¿ä!!!  »ç¿ëÀÚ·ÎºÎÅÍ ÀÔ·Â ¹ÞÀ» ¶§ getline(cin, str); ÇÔ¼ö¸¦ »ç¿ëÇØ¾ßÇÔ.
-* cin »ç¿ë ½Ã °³Çà¹®ÀÚ³ª ÅÇ¹®ÀÚ¸¦ Áö¿ö¹ö¸®°í ÀÔ·Â¹Þ´Â °æ¿ì°¡ ÀÖ¾î¼­ »ç¿ë ºÒ°¡ */
+/* ê¸¸ì´ 20ìž ê²€ì‚¬, ì•žë’¤ ê³µë°± ê²€ì‚¬, ìž…ë ¥ê°€ëŠ¥ë¬¸ìžë¡œ êµ¬ì„±ë˜ì–´ìžˆëŠ”ì§€ ê²€ì‚¬
+* !!!ì¤‘ìš”!!!  ì‚¬ìš©ìžë¡œë¶€í„° ìž…ë ¥ ë°›ì„ ë•Œ getline(cin, str); í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•´ì•¼í•¨.
+* cin ì‚¬ìš© ì‹œ ê°œí–‰ë¬¸ìžë‚˜ íƒ­ë¬¸ìžë¥¼ ì§€ì›Œë²„ë¦¬ê³  ìž…ë ¥ë°›ëŠ” ê²½ìš°ê°€ ìžˆì–´ì„œ ì‚¬ìš© ë¶ˆê°€ */
 bool CheckerParser::checkMemo(string input_string) {
 	int i;
 	int string_size = input_string.size();
@@ -165,18 +165,18 @@ bool CheckerParser::checkCategoryNumber(string input_string, int category_number
 	try {
 		n = stoi(input_string);
 	}
-	catch (exception& expn) {
+	catch (exception & expn) {
 		cout << "Please enter a valid value." << endl;
 		return true;
 	}
 	if (n > category_number) {
-		cout << "Please enter the number blow "<< category_number+1 << endl;
+		cout << "Please enter the number blow " << category_number + 1 << endl;
 		return true;
 	}
 	return false;
 }
 
-//checkMemo¿Í µ¿ÀÏ, ±×·¯³ª ´Ù¸¥°÷¿¡¼­ »ç¿ëÇÏ´Â °æ¿ì°¡ ÀÖ´Â °Í °°¾Æ ³öµÓ´Ï´Ù.
+//checkMemoì™€ ë™ì¼, ê·¸ëŸ¬ë‚˜ ë‹¤ë¥¸ê³³ì—ì„œ ì‚¬ìš©í•˜ëŠ” ê²½ìš°ê°€ ìžˆëŠ” ê²ƒ ê°™ì•„ ë†”ë‘¡ë‹ˆë‹¤.
 bool CheckerParser::checkCategoryName(string input_string) {
 	int i;
 	int string_size = input_string.size();
