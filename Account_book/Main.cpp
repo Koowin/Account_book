@@ -11,14 +11,15 @@ int main() {
 	FileManage file_manager;
 	
 	if (!file_manager.initFile(record_manager, category_manager)) {
-		cerr << "Error: File open error" << endl;
+		cerr << "Error: File initialization error" << endl; 
 		return -1;
 	}
 
 	//to do: 파일 읽기 및 데이터 저장 작업
 	while (1) {
 		//메인메뉴 출력부
-		system("cls");
+		system("pause");
+		system("cls"); //신이 추가
 		cout << "@ Main menu @" << endl;
 		cout << "1. Add a transaction" << endl;
 		cout << "2. View all transactions" << endl;

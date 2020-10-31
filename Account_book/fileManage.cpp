@@ -27,7 +27,19 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 
 		string s;
 		while (getline(in_category, s)) {
+
+			if (s.empty()) { //신이 추가: 빈 문자열 무시
+				// cout << "Empty line in Category.txt" << endl;
+				continue;
+			}
+
 			Category c = Category(s);
+
+			if(checker.checkCategoryName(s)) { //신이 추가 : checkCategoryName
+				cerr << "Error: Invalid category name" << endl; 
+				in_category.close(); 
+				return false; 
+			}
 
 			if (category_manager.isDuplicate(s)) {		// 카테고리 내 중복 목록이 있다면
 				cout << "Warning: Duplicate Category" << endl;
