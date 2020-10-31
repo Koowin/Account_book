@@ -15,6 +15,7 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 
 		for (auto s : default_category) {
 			out_category << s << endl;
+			category_manager.init_add(s);
 		}
 
 		cout << "Category.txt is created." << endl << endl;
