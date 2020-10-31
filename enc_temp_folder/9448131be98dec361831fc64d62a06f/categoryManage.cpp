@@ -24,11 +24,10 @@ void CategoryManage::categoryMenu(RecordManage& record_manager) {
 			system("cls");
 			cout << "@ View categories @" << endl;
 			printCategoryList();
-
 			cout << "\nPress any key to continue..." << endl;
 			_getch();
-			flag = true;
-
+			//flag = true;
+			break;
 		}
 		else if (input_string == "2") {
 			addCategory();
