@@ -4,7 +4,7 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 	Conditions cd;
 
 	string input_string;
-	int selected_menu;
+	int selected_menu = 0;
 	bool search_start = false;
 	while (1) {
 		system("cls");
@@ -25,103 +25,103 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 			}
 			try {
 				selected_menu = stoi(input_string);
+				if (input_string.size()!=1 || selected_menu > 5 || selected_menu < 1) {
+					cout << "Please enter a valid value\n> ";
+					continue;
+				}
 				flag = false;
 			}
 			catch (const exception & expn) {
-				cout << "Please enter a valid value." << endl;
+				cout << "Please enter a valid value.\n> ";
 			}
 		}
-
-		if ( selected_menu > 5 || selected_menu < 1) {
-			cout << "Please enter a valid value" << endl;
-		}
-		else {
-			short n;
-			switch (selected_menu) {
-			case 1:
-				//기간 조건 추가
-				n = cd.addPeriodCondition();
-				if (n == -1) {
-					return;
-				}
-				else {
-					search_start = !n;
-				}
-				break;
-			case 2:
-				//수입, 지출 조건 추가
-				n = cd.addIeCondition();
-				if (n == -1) {
-					return;
-				}
-				else {
-					search_start = !n;
-				}
-				break;
-			case 3:
-				//메모 키워드 조건 추가
-				n = cd.addMemoCondition();
-				if (n == -1) {
-					return;
-				}
-				else {
-					search_start = !n;
-				}
-				break;
-			case 4:
-				//카테고리 조건 추가
-				n = cd.addCategoryCondition(category_manager);
-				if (n == -1) {
-					return;
-				}
-				else {
-					search_start = !n;
-				}
-				break;
-			case 5:
-				//조건 초기화
-				n = cd.resetConditions();
-				if (n == -1) {
-					return;
-				}
-				else {
-					search_start = !n;
-				}
-				break;
+		//else {
+		short n;
+		switch (selected_menu) {
+		case 1:
+			//기간 조건 추가
+			n = cd.addPeriodCondition();
+			if (n == -1) {
+				return;
 			}
-			if (search_start) {
-				//조건 맞게 출력 시작
-				vector <int> result = searchRecords(cd, category_manager);
-				//신이 추가: 
-				if (result.size() == 0) {
-					cout << "\n None if the records satisfies the given condition(s)." << endl;
-					cout << "\n Press any key to return to Main Menu.";
-					_getch();
+			else {
+				search_start = !n;
+			}
+			break;
+		case 2:
+			//수입, 지출 조건 추가
+			n = cd.addIeCondition();
+			if (n == -1) {
+				return;
+			}
+			else {
+				search_start = !n;
+			}
+			break;
+		case 3:
+			//메모 키워드 조건 추가
+			n = cd.addMemoCondition();
+			if (n == -1) {
+				return;
+			}
+			else {
+				search_start = !n;
+			}
+			break;
+		case 4:
+			//카테고리 조건 추가
+			n = cd.addCategoryCondition(category_manager);
+			if (n == -1) {
+				return;
+			}
+			else {
+				search_start = !n;
+			}
+			break;
+		case 5:
+			//조건 초기화
+			n = cd.resetConditions();
+			if (n == -1) {
+				return;
+			}
+			else {
+				search_start = !n;
+			}
+			break;
+		}
+		if (search_start) {
+			//조건 맞게 출력 시작
+			vector <int> result = searchRecords(cd, category_manager);
+			//신이 추가: 
+			if (result.size() == 0) {
+				cout << "\n None if the records satisfies the given condition(s)." << endl;
+				cout << "\n Press any key to return to Main Menu.";
+				_getch();
+			}
+			while (1) {
+				//수정 삭제 입력받기
+				cout << "\n@ Manage transaction @" << endl;
+				cout << "1. Edit" << endl;
+				cout << "2. Remove\n" << endl;
+				cout << "Select action (q:return to main menu)\n> ";
+				getline(cin, input_string);
+				if (input_string == "q") {
+					return;
 				}
-				while (1) {
-					//수정 삭제 입력받기
-					cout << "\n@ Manage transaction @" << endl;
-					cout << "1. Edit" << endl;
-					cout << "2. Remove\n" << endl;
-					cout << "Select action (q:return to main menu)\n> ";
-					getline(cin, input_string);
-					if (input_string == "q") {
-						return;
-					}
-					else if (input_string == "1") {
-						modifyRecordList(result, category_manager);
-						return;
-					}
-					else if (input_string == "2") {
-						deleteRecordList(result);
-						return;
-					}
-					else {
-						cout << "Please enter a valid value" << endl;
-					}
+				else if (input_string == "1") {
+					modifyRecordList(result, category_manager);
+					return;
+				}
+				else if (input_string == "2") {
+					deleteRecordList(result);
+					return;
+				}
+				else {
+					cout << "Please enter a valid value" << endl;
 				}
 			}
 		}
+		//}
 	}
 }
 
