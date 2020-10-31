@@ -8,7 +8,7 @@ void RecordManage::printAllRecordList(CategoryManage& category_manager) {
 	printf("--------------------------------------------------------------------------------------------\n");
 
 	for (iter = record_list.begin(); iter != end; iter++) {
-		printf("%04d/%02d/%02d\t%02d:%02d", iter->get_date().tm_year, iter->get_date().tm_mon, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
+		printf("%04d/%02d/%02d\t%02d:%02d", iter->get_date().tm_year+1900, iter->get_date().tm_mon+1, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
 		printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
 		printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
 	}
@@ -96,7 +96,12 @@ bool RecordManage::addRecord(CategoryManage & category_manager) {
 		//정상 입력 시
 		if (!cp.checkAmount(input_string)) {
 			amount = cp.parseAmount(input_string);
-			flag = false;
+			if (amount == 0) {
+				cout << "Invalid amount, please make sure the amount consists of only numbers with or without comma (range : 1 ~ 4,294,967,295)." << endl;
+			}
+			else {
+				flag = false;
+			}
 		}
 		//비정상 입력 시 오류 문구 출력하고 반복
 	}
@@ -139,7 +144,7 @@ bool RecordManage::addRecord(CategoryManage & category_manager) {
 
 	//저장 확인 물어보는 부분
 	cout << "\n@ Add a transaction @" << endl;
-	printf("- Date and Time: %04d/%02d/%02d %02d:%02d\n", date.tm_year, date.tm_mon, date.tm_mday, date.tm_hour, date.tm_min);
+	printf("- Date and Time: %04d/%02d/%02d %02d:%02d\n", date.tm_year+1900, date.tm_mon+1, date.tm_mday, date.tm_hour, date.tm_min);
 	cout << "- Income/Expense: ";
 	if (is_income) {
 		cout << "Income" << endl;

@@ -74,10 +74,6 @@ struct tm CheckerParser::checkParseDate(string input_string) {
 		result.tm_year = -1;
 		cout << "Invalid date and time, please check the value and try again." << endl;
 	}
-	else {
-		result.tm_year += 1900;
-		result.tm_mon += 1;
-	}
 	return result;
 }
 
@@ -225,11 +221,19 @@ bool CheckerParser::checkCategoryName(string input_string) {
 unsigned int CheckerParser::parseAmount(string input_string) {
 	string result;
 	int i;
+	unsigned int return_val;
 	int string_size = input_string.size();
 	for (i = 0; i < string_size; i++) {
 		if (input_string[i] != ',') {
 			result.push_back(input_string[i]);
 		}
 	}
-	return stoul(result);
+	try {
+		return_val = stoul(result);
+	}
+	catch (exception& expn) {
+		cout << "" << endl;
+		return 0;
+	}
+	
 }
