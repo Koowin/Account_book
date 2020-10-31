@@ -14,8 +14,9 @@ void RecordManage::printAllRecordList(CategoryManage& category_manager) {
 		printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
 		printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
 	}
-	cout << "\nPress any key to continue...";
-	_getch();
+	/*cout << "\nPress any key to continue...";
+	_getch();*/
+	system("pause");
 }
 
 void RecordManage::printSelectedRecordList(CategoryManage& category_manager, vector <int> selected_index) {
@@ -51,13 +52,18 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		if (date.tm_year != -1) {
 			flag = false;
 		}
+		else {
+			cout << endl;
+			system("pause");
+		}
 		//비정상 입력 시 오류 문구 출력 후 반복
 	}
 
 	//수입/지출 입력받는 부분
 	flag = true;
 	while (flag) {
-		cout << "\n@ Add a transaction @" << endl;
+		system("cls"); 
+		cout << "@ Add a transaction @" << endl;
 		cout << "1.Income" << endl;
 		cout << "2.Expense" << endl << endl;
 		cout << "Select type of transaction (q:return to main menu)" << endl << "> ";
@@ -80,12 +86,15 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		//비정상 입력 시
 		else {
 			cout << "Please enter a valid value." << endl;
+			cout << endl;
+			system("pause");
 		}
 	}
 
 	//금액 입력 받는 부분
 	flag = true;
 	while (flag) {
+		system("cls");
 		cout << "\n@ Add a transaction @" << endl;
 		cout << "Enter the amount (q: return to main menu)" << endl << "> ";
 		getline(cin, input_string);
@@ -105,11 +114,17 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 			}
 		}
 		//비정상 입력 시 오류 문구 출력하고 반복
+		else {
+			cout << "Please enter a valid value." << endl;
+			cout << endl;
+			system("pause");
+		}
 	}
 
 	//메모 입력 받는 부분
 	flag = true;
 	while (flag) {
+		system("cls");
 		cout << "\n@ Add a transaction @" << endl;
 		cout << "Enter the memo (q: return to main menu)" << endl << "> ";
 		getline(cin, input_string);
@@ -124,11 +139,17 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 			flag = false;
 		}
 		//비정상 입력 시 오류 문구 출력하고 반복
+		else {
+			cout << "Please enter a valid value." << endl;
+			cout << endl;
+			system("pause");
+		}
 	}
 
 	//카테고리 번호 입력 받는 부분
 	flag = true;
 	while (flag) {
+		system("cls");
 		cout << "\n@ Add a transaction @" << endl;
 		category_manager.printCategoryList();
 		cout << "\nSelect a category (q:return to main menu)" << endl << "> ";
