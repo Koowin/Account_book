@@ -127,6 +127,7 @@ bool CheckerParser::checkAmount(string input_string) {
 	if (error) {
 		cout << "Invalid amount, please make sure the amount consists of only numbers with or without comma (range : 1 ~ 4,294,967,295)." << endl;
 	}
+
 	return error;
 }
 
@@ -157,6 +158,17 @@ bool CheckerParser::checkMemo(string input_string) {
 }
 
 bool CheckerParser::checkCategoryNumber(string input_string, int category_number) {
+	int size = input_string.size();
+	if (input_string[0] == '0') {
+		cout << "Please enter a valid value." << endl;
+		return true;
+	}
+	for (int i = 0; i < size; i++) {
+		if (input_string[i] < '0' || input_string[i] > '9') {
+			cout << "Please enter a valid value." << endl;
+			return true;
+		}
+	}
 	int n;
 	try {
 		n = stoi(input_string);
@@ -165,8 +177,8 @@ bool CheckerParser::checkCategoryNumber(string input_string, int category_number
 		cout << "Please enter a valid value." << endl;
 		return true;
 	}
-	if (n > category_number) {
-		cout << "Please enter the number blow " << category_number + 1 << endl;
+	if (n<0 || n>category_number) {
+		cout << "Please enter a valid value." << endl;
 		return true;
 	}
 	return false;
@@ -220,20 +232,24 @@ bool CheckerParser::checkCategoryName(string input_string) {
 
 unsigned int CheckerParser::parseAmount(string input_string) {
 	string result;
-	unsigned int return_val;
 	int i;
+	unsigned int return_val;
 	int string_size = input_string.size();
+	if (input_string[0] == '0') {
+		cout << "Please enter a valid value." << endl;
+		return true;
+	}
 	for (i = 0; i < string_size; i++) {
 		if (input_string[i] != ',') {
 			result.push_back(input_string[i]);
 		}
 	}
-
 	try {
 		return_val = stoul(result);
 	}
-	catch (exception& expn) {
-		cout << "" << endl;
+	catch (exception & expn) {
+		cout << "Invalid amount, please make sure the amount consists of only numbers with or without comma (range : 1 ~ 4,294,967,295)." << endl;
 		return 0;
 	}
+	return return_val;
 }

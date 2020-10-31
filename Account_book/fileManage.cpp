@@ -124,9 +124,17 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 				break;
 			}
 
-			if (!checker.checkAmount(temp[2]))
-				//amount = stoi(temp[2]);		// 금액 설정
-				amount = checker.parseAmount(temp[2]);
+			if (!checker.checkAmount(temp[2])) {	// 금액 설정
+				try {
+					amount = stoi(temp[2]);
+				}
+				catch (exception & expn) {		// 42억... 이상일때
+					cerr << "Invaild Amount" << endl;
+					flag = false;
+					break;
+				}
+			}
+				
 			else {
 				cerr << "Error:Invalid Amount" << endl;
 				flag = false;
