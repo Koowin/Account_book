@@ -48,4 +48,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Account.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+    <Text Include="Category.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

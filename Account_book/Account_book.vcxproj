@@ -152,6 +152,10 @@
   <ItemGroup>
     <ClInclude Include="header.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Account.txt" />
+    <Text Include="Category.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

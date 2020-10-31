@@ -20,6 +20,9 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 		bool flag = true;
 		while (flag) {
 			getline(cin, input_string);
+			if (input_string == "q") {
+				return;
+			}
 			try {
 				selected_menu = stoi(input_string);
 				flag = false;
@@ -29,10 +32,7 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 			}
 		}
 
-		if (input_string == "q") {
-			break;
-		}
-		if (selected_menu > 5 || selected_menu < 1) {
+		if ( selected_menu > 5 || selected_menu < 1) {
 			cout << "Please enter a valid value" << endl;
 		}
 		else {
@@ -92,7 +92,12 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 			if (search_start) {
 				//조건 맞게 출력 시작
 				vector <int> result = searchRecords(cd, category_manager);
-
+				//신이 추가: 
+				if (result.size() == 0) {
+					cout << "\n None if the records satisfies the given condition(s)." << endl;
+					cout << "\n Press any key to return to Main Menu.";
+					_getch();
+				}
 				while (1) {
 					//수정 삭제 입력받기
 					cout << "\n@ Manage transaction @" << endl;

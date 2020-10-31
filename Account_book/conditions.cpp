@@ -16,7 +16,7 @@ short Conditions::addPeriodCondition() {
 	CheckerParser cp;
 	while (1) {
 		cout << "\n@ Search condition : Time period @" << endl;
-		cout << "Enter time period using format \"YYYY/MM/DD hh:mm~YYYY/MM/DD hh:mm\"\n> ";
+		cout << "Enter time period using format \"YYYY/MM/DD hh:mm~YYYY/MM/DD hh:mm\"\n(q:return to main menu)\n> ";
 		getline(cin, input_string);
 		if (input_string == "q") {
 			return -1;
