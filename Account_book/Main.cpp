@@ -15,6 +15,10 @@ int main() {
 		return -1;
 	}
 
+	cout << "\nPress any key to continue...";
+	_getch();
+
+
 	//to do: 파일 읽기 및 데이터 저장 작업
 	while (1) {
 		//메인메뉴 출력부

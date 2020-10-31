@@ -224,6 +224,7 @@ bool CheckerParser::checkCategoryName(string input_string) {
 
 unsigned int CheckerParser::parseAmount(string input_string) {
 	string result;
+	unsigned int return_val;
 	int i;
 	int string_size = input_string.size();
 	for (i = 0; i < string_size; i++) {
@@ -231,5 +232,13 @@ unsigned int CheckerParser::parseAmount(string input_string) {
 			result.push_back(input_string[i]);
 		}
 	}
-	return stoul(result);
+
+	try {
+		return_val = stoul(result);
+	}
+	catch (exception & expn) {
+		cout << "" << endl;
+		return 0;
+	}
+
 }

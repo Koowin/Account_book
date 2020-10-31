@@ -5,6 +5,7 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 	ifstream in_Account("Account.txt");
 	ifstream in_category("Category.txt");
 	CheckerParser checker;
+	bool flag = true;
 
 	/* Category.txt 부문 */
 	if (!in_category.is_open()) {	// 파일이 열리지 않았다면
@@ -28,6 +29,13 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 		while (getline(in_category, s)) {
 			Category c = Category(s);
 
+			if(checker.checkCategoryName(s)) { //신이 추가 : checkCategoryName
+				cerr << "Error: Invalid category name" << endl; 
+				flag = false;
+				break;
+			}
+
+
 			if (category_manager.isDuplicate(s)) {		// 카테고리 내 중복 목록이 있다면
 				cout << "Warning: Duplicate Category" << endl;
 				continue;
@@ -36,8 +44,8 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 
 			if (category_manager.getCategorySize() > 64) {		// 카테고리 개수가 64개 이상일 시 false 반환
 				cerr << "Error: Category size limit " << endl;
-				in_category.close();
-				return false;
+				flag = false;
+				break;
 			}
 		}
 
@@ -65,14 +73,18 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 		/* Account.txt 문자열 입력 */
 		while (getline(in_Account, s)) {
 			if (s == "") {		// 레코드가 개행뿐일 때
-				cout << "NULL string이넹" << endl;
+				cout << "NULL string" << endl;
 				continue;
 			}
 			vector<string> temp;
 
 			//temp[0]: 시간, temp[1]: 수입/지출 temp[2]: 금액, temp[3]: 메모, temp[4]: 카테고리 숫자
 			Tokenize(s, temp, "\t");	// Tab을 기준으로 하여 문자열 분리
-
+			if (temp.size() != 5) {		// 5개로 분리되지 않는다면 종료
+				cerr << "Error: text" << endl;
+				flag = false;
+				break;
+			}
 			/////// 임시 데이터 ////////
 
 			struct tm t;
@@ -86,8 +98,9 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 			//t = setTime(temp[0]); // date 설정
 			t = checker.checkParseDate(temp[0]);
 			if (t.tm_year == t2.tm_year) {
-				cerr << "Error: Date" << endl;
-				return false;
+				cerr << "Error: Invalid Date" << endl;
+				flag = false;
+				break;
 			}
 
 			if (temp[1] == "expense") {		// 수입/지출 설정
@@ -99,29 +112,37 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 			}
 
 			else {
-				cerr << "Error: income/expense" << endl;
-				return false;
+				cerr << "Error: Invalid income/expense" << endl;
+				flag = false;
+				break;
 			}
 
 
 			if (!checker.checkAmount(temp[2]))
-				amount = stoi(temp[2]);		// 금액 설정
+				//amount = stoi(temp[2]);		// 금액 설정
+				amount = checker.parseAmount(temp[2]);
 			else {
-				cerr << "Error:Amount" << endl;
+				cerr << "Error:Invalid Amount" << endl;
+				flag = false;
+				break;
 			}
 
 			if (!checker.checkMemo(temp[3]))
 				memo = temp[3];				// 메모 설정
 
 			else {
-				cerr << "Error: Memo" << endl;
-				return false;
+				cerr << "Error: Invalid Memo" << endl;
+				flag = false;
+				break;
 			}
 
-			if (!checker.checkCategoryNumber(temp[4], category_manager.getCategorySize))
+			if (!checker.checkCategoryNumber(temp[4], category_manager.getCategorySize()))
 				category_number = stoi(temp[4]);	// 카테고리 번호 설정
+
 			else {
-				cerr << "Error: Category NUmber" << endl;
+				cerr << "Error: Invalid Category NUmber" << endl;
+				flag = false;
+				break;
 			}
 
 			Record r = Record(t, isIncome, amount, memo, category_number);		// Record 생성
@@ -129,8 +150,8 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 
 			if (record_manager.getRecordListSize() > 1024) {		// 레코드 개수가 1024개 이상일 시 false 반환
 				cerr << "Error: Record size limit" << endl;
-				in_Account.close();
-				return false;
+				flag = false;
+				break;
 			}
 		}
 	}
@@ -138,7 +159,7 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 	in_category.close();
 	in_Account.close();
 
-	return true;
+	return flag;
 }
 
 bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category_manager) {

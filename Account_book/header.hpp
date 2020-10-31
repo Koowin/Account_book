@@ -12,8 +12,9 @@ class CategoryManage;
 
 class CheckerParser {
 private:
-
+	bool isPrint = true;
 public:
+	//CheckerParser(bool);
 	struct tm checkParseDate(string);
 	bool checkAmount(string);
 	bool checkMemo(string);

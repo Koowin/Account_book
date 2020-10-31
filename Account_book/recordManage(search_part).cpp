@@ -403,7 +403,7 @@ bool RecordManage::deleteRecordList(vector <int> result) {
 	}
 }
 
-short RecordManage::compare(struct tm left, struct tm right) {
+short RecordManage::compare(struct tm& left, struct tm& right) {
 	if (left.tm_year != right.tm_year) {
 		if (left.tm_year < right.tm_year) {
 			return 1;
