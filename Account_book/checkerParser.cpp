@@ -69,10 +69,28 @@ struct tm CheckerParser::checkParseDate(string input_string) {
 	result.tm_min = stoi(min);
 	result.tm_sec = 0;
 	time_t t = mktime(&result);
-	//의미규칙 검사 (그레고리력에 맞지 않은 시간이 들어오거나, 현재 시간보다 크다면)
+	//의미규칙 검사 (현재 시간보다 크다면)
 	if (t == -1 || t > now_time) {
 		result.tm_year = -1;
 		cout << "Invalid date and time, please check the value and try again." << endl;
+		return result;
+	}
+	int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	int year2 = stoi(year);
+	int mon2 = stoi(mon)-1;
+	int day2 = stoi(day);
+	if (((year2 % 4) == 0) && ((year2 % 100) != 0 || (year2%400)==0)) {
+		daysInMonth[1]++;
+	}
+	if (mon2 == -1 || day2 == 0) {
+		result.tm_year = -1;
+		cout << "Invalid date and time, please check the value and try again." << endl;
+		return result;
+	}
+	if (day2 > daysInMonth[mon2]) {
+		result.tm_year = -1;
+		cout << "Invalid date and time, please check the value and try again." << endl;
+		return result;
 	}
 	return result;
 }
@@ -127,6 +145,7 @@ bool CheckerParser::checkAmount(string input_string) {
 	if (error) {
 		cout << "Invalid amount, please make sure the amount consists of only numbers with or without comma (range : 1 ~ 4,294,967,295)." << endl;
 	}
+
 	return error;
 }
 
@@ -157,16 +176,27 @@ bool CheckerParser::checkMemo(string input_string) {
 }
 
 bool CheckerParser::checkCategoryNumber(string input_string, int category_number) {
+	int size = input_string.size();
+	if (input_string[0] == '0') {
+		cout << "Please enter a valid value." << endl;
+		return true;
+	}
+	for (int i = 0; i < size; i++) {
+		if (input_string[i] < '0' || input_string[i] > '9') {
+			cout << "Please enter a valid value." << endl;
+			return true;
+		}
+	}
 	int n;
 	try {
 		n = stoi(input_string);
 	}
-	catch (exception & expn) {
+	catch (exception& expn) {
 		cout << "Please enter a valid value." << endl;
 		return true;
 	}
-	if (n > category_number) {
-		cout << "Please enter the number blow " << category_number + 1 << endl;
+	if (n<0 || n>category_number) {
+		cout << "Please enter a valid value." << endl;
 		return true;
 	}
 	return false;
@@ -196,33 +226,15 @@ bool CheckerParser::checkCategoryName(string input_string) {
 	return error;
 }
 
-//struct tm CheckerParser::parseDate(string m_date) {
-//	struct tm result;
-//	stringstream ss(m_date);
-//	string sub;
-//	vector <string> tokens;
-//	while (getline(ss, sub, ' ')) {
-//		tokens.push_back(sub);
-//	}
-//	ss = stringstream(tokens[0]); // tokens[0] = "yyyy/mm/dd"
-//	vector<int>date;
-//	while (getline(ss, sub, '/')) date.push_back(stoi(sub));
-//	ss = stringstream(tokens[1]); // tokens[1] = "hh:mm"
-//	vector<int>time;
-//	while (getline(ss, sub, ':')) time.push_back(stoi(sub));
-//	result.tm_year = date[0];
-//	result.tm_mon = date[1];
-//	result.tm_mday = date[2];
-//	result.tm_hour = time[0];
-//	result.tm_min = time[1];
-//	return result;
-//}
-
 unsigned int CheckerParser::parseAmount(string input_string) {
 	string result;
 	int i;
 	unsigned int return_val;
 	int string_size = input_string.size();
+	if (input_string[0] == '0') {
+		cout << "Please enter a valid value." << endl;
+		return 0;
+	}
 	for (i = 0; i < string_size; i++) {
 		if (input_string[i] != ',') {
 			result.push_back(input_string[i]);
@@ -232,8 +244,8 @@ unsigned int CheckerParser::parseAmount(string input_string) {
 		return_val = stoul(result);
 	}
 	catch (exception& expn) {
-		cout << "" << endl;
+		cout << "Invalid amount, please make sure the amount consists of only numbers with or without comma (range : 1 ~ 4,294,967,295)." << endl;
 		return 0;
 	}
-	
+	return return_val;
 }
