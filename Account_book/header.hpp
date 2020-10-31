@@ -91,16 +91,32 @@ public:
 	bool modifyRecordList(vector <int>, CategoryManage&);
 	bool deleteRecordList(vector <int>);
 	int getRecordListSize();
+	
+	void init_add(Record);
+	Record getRecord();
 
 	/* search Part */
+
 	void searchMenu(CategoryManage&);
 	vector <int> searchRecords(Conditions&, CategoryManage&);
+
+	//void searchRecord(CategoryManage&);
+	//vector<int> getSearchResult(struct tm*, string*, string*, int*, CategoryManage &);
+	//void printCurrent(struct tm*, string*, string*, int*, CategoryManage &);
+	//int resetFieldMenu();
+	//int* searchCategory(CategoryManage&);
+	//string* searchMemo();
+	//string* searchType();
+	//int compareTime(struct tm, struct tm);
+	//int searchTime(struct tm* (&));
+	//int searchMenu();
+
 
 	// record_list의 처음과 끝 반복자를 반환하는 함수
 	list <Record>::iterator get_first();
 	list <Record>::iterator get_end();
 	//0: 같음 1: 오른쪽이 큼 -1: 왼쪽이 큼
-	short compare(struct tm&, struct tm&);
+	short compare(struct tm, struct tm);
 };
 
 class Category {
@@ -129,6 +145,10 @@ public:
 	bool deleteCategory(RecordManage &);
 	int getCategorySize();
 	string getIndexedCategory(int);
+	
+	bool isDuplicate(string);
+	void init_add(Category);
+	Category getCategory();
 
 	list <Category>::iterator get_first();
 	list <Category>::iterator get_end();
@@ -138,7 +158,9 @@ class FileManage {
 private:
 
 public:
-	bool initFile();
-	bool saveFile();
+	bool initFile(RecordManage&, CategoryManage&);
+	bool saveFile(RecordManage&, CategoryManage&);
 };
 
+void Tokenize(const string&, vector<string>&, const string&);
+struct tm setTime(string);

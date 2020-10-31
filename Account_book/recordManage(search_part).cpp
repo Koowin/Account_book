@@ -16,7 +16,7 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 		cout << "5. Reset conditions (by field)" << endl << endl;
 
 		cout << "Select field (q:return to main menu)\n> ";
-	
+
 		bool flag = true;
 		while (flag) {
 			getline(cin, input_string);
@@ -24,7 +24,7 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 				selected_menu = stoi(input_string);
 				flag = false;
 			}
-			catch (const exception& expn) {
+			catch (const exception & expn) {
 				cout << "Please enter a valid value." << endl;
 			}
 		}
@@ -39,7 +39,7 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 			short n;
 			switch (selected_menu) {
 			case 1:
-				//±â°£ Á¶°Ç Ãß°¡
+				//ê¸°ê°„ ì¡°ê±´ ì¶”ê°€
 				n = cd.addPeriodCondition();
 				if (n == -1) {
 					return;
@@ -49,7 +49,7 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 				}
 				break;
 			case 2:
-				//¼öÀÔ, ÁöÃâ Á¶°Ç Ãß°¡
+				//ìˆ˜ìž…, ì§€ì¶œ ì¡°ê±´ ì¶”ê°€
 				n = cd.addIeCondition();
 				if (n == -1) {
 					return;
@@ -59,7 +59,7 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 				}
 				break;
 			case 3:
-				//¸Þ¸ð Å°¿öµå Á¶°Ç Ãß°¡
+				//ë©”ëª¨ í‚¤ì›Œë“œ ì¡°ê±´ ì¶”ê°€
 				n = cd.addMemoCondition();
 				if (n == -1) {
 					return;
@@ -69,7 +69,7 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 				}
 				break;
 			case 4:
-				//Ä«Å×°í¸® Á¶°Ç Ãß°¡
+				//ì¹´í…Œê³ ë¦¬ ì¡°ê±´ ì¶”ê°€
 				n = cd.addCategoryCondition(category_manager);
 				if (n == -1) {
 					return;
@@ -79,7 +79,7 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 				}
 				break;
 			case 5:
-				//Á¶°Ç ÃÊ±âÈ­
+				//ì¡°ê±´ ì´ˆê¸°í™”
 				n = cd.resetConditions();
 				if (n == -1) {
 					return;
@@ -90,11 +90,11 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 				break;
 			}
 			if (search_start) {
-				//Á¶°Ç ¸Â°Ô Ãâ·Â ½ÃÀÛ
+				//ì¡°ê±´ ë§žê²Œ ì¶œë ¥ ì‹œìž‘
 				vector <int> result = searchRecords(cd, category_manager);
 
 				while (1) {
-					//¼öÁ¤ »èÁ¦ ÀÔ·Â¹Þ±â
+					//ìˆ˜ì • ì‚­ì œ ìž…ë ¥ë°›ê¸°
 					cout << "\n@ Manage transaction @" << endl;
 					cout << "1. Edit" << endl;
 					cout << "2. Remove\n" << endl;
@@ -122,16 +122,16 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 
 vector <int> RecordManage::searchRecords(Conditions& cd, CategoryManage& category_manager) {
 	vector <int> result;
-	// vector result Ã¤¿ì´Â part
+	// vector result ì±„ìš°ëŠ” part
 	list <Record>::iterator iter = record_list.begin();
 	list <Record>::iterator end_of_list = record_list.end();
 	bool check;
 	int i = 0;
 	for (; iter != end_of_list; iter++) {
 		check = true;
-		
+
 		if (cd.on_period) {
-			//±â°£¹üÀ§ ¹ÛÀÌ¸é
+			//ê¸°ê°„ë²”ìœ„ ë°–ì´ë©´
 			struct tm d = iter->get_date();
 			if (compare(d, cd.from) == 1 || compare(cd.to, d) == 1) {
 				check = false;
@@ -152,14 +152,14 @@ vector <int> RecordManage::searchRecords(Conditions& cd, CategoryManage& categor
 				check = false;
 			}
 		}
-		
+
 		if (check) {
 			result.push_back(i);
 		}
 		i++;
 	}
 
-	//Ãâ·Â part
+	//ì¶œë ¥ part
 	int end;
 	end = result.size();
 	iter = record_list.begin();
@@ -168,12 +168,12 @@ vector <int> RecordManage::searchRecords(Conditions& cd, CategoryManage& categor
 	printf("-------------------------------------------------------------------------------------------------\n");
 	if (end > 0) {
 		advance(iter, result[0]);
-		printf("%-04d\t%04d/%02d/%02d\t%02d:%02d", 1, iter->get_date().tm_year, iter->get_date().tm_mon, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
+		printf("%-04d\t%04d/%02d/%02d\t%02d:%02d", 1, iter->get_date().tm_year+1900, iter->get_date().tm_mon+1, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
 		printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
 		printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
 		for (i = 1; i < end; i++) {
 			advance(iter, (result[i] - result[i - 1]));
-			printf("%-04d\t%04d/%02d/%02d\t%02d:%02d", i + 1, iter->get_date().tm_year, iter->get_date().tm_mon, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
+			printf("%-04d\t%04d/%02d/%02d\t%02d:%02d", i + 1, iter->get_date().tm_year+1900,iter->get_date().tm_mon+1, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
 			printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
 			printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
 		}
@@ -181,7 +181,7 @@ vector <int> RecordManage::searchRecords(Conditions& cd, CategoryManage& categor
 	return result;
 }
 
-bool RecordManage::modifyRecordList(vector <int> result, CategoryManage & category_manager) {
+bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& category_manager) {
 	string input_string;
 	int selected;
 	while (1) {
@@ -195,14 +195,14 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage & catego
 		try {
 			selected = stoi(input_string);
 		}
-		catch (exception& expn) {
+		catch (exception & expn) {
 			cout << "Please enter a valid value." << endl;
 		}
 		if (selected < 1 || selected > result.size()) {
 			cout << "Please enter a valid value." << endl;
 		}
 		else {
-			//¼±ÅÃµÈ index·Î ¼öÁ¤ ÀÛ¾÷
+			//ì„ íƒëœ indexë¡œ ìˆ˜ì • ìž‘ì—…
 			list <Record>::iterator iter = record_list.begin();
 			advance(iter, result[selected - 1]);
 			struct tm before_date = iter->get_date();
@@ -219,7 +219,7 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage & catego
 
 			while (1) {
 				cout << "\n@ Edit a transaction @" << endl;
-				cout << "1. Date and Time"<< endl;
+				cout << "1. Date and Time" << endl;
 				cout << "2. Income/Expense" << endl;
 				cout << "3. Amount" << endl;
 				cout << "4. Memo" << endl;
@@ -305,11 +305,11 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage & catego
 					cout << "Please enter a valid value." << endl;
 				}
 			}
-			//¼öÁ¤ È®ÀÎ
+			//ìˆ˜ì • í™•ì¸
 			system("cls");
 			cout << "@ Before modification @" << endl;
 			cout << "- Date and Time: ";
-			printf("%04d/%02d/%02d %02d:%02d\n", before_date.tm_year, before_date.tm_mon, before_date.tm_mday, before_date.tm_hour, before_date.tm_min);
+			printf("%04d/%02d/%02d %02d:%02d\n", before_date.tm_year+1900, before_date.tm_mon+1, before_date.tm_mday, before_date.tm_hour, before_date.tm_min);
 			cout << "- Income/Expense: ";
 			if (before_is_income) {
 				cout << "Income" << endl;
@@ -323,7 +323,7 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage & catego
 
 			cout << "@ After modification @" << endl;
 			cout << "- Date and Time: ";
-			printf("%04d/%02d/%02d %02d:%02d\n", after_date.tm_year, after_date.tm_mon, after_date.tm_mday, after_date.tm_hour, after_date.tm_min);
+			printf("%04d/%02d/%02d %02d:%02d\n", after_date.tm_year+1900, after_date.tm_mon+1, after_date.tm_mday, after_date.tm_hour, after_date.tm_min);
 			cout << "- Income/Expense: ";
 			if (after_is_income) {
 				cout << "Income" << endl;
@@ -340,7 +340,7 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage & catego
 				return true;
 			}
 			else {
-				//ÃÖÁ¾ ¼öÁ¤ ÀÛ¾÷
+				//ìµœì¢… ìˆ˜ì • ìž‘ì—…
 				record_list.erase(iter);
 
 				list <Record>::iterator iter2 = record_list.begin();
@@ -379,14 +379,14 @@ bool RecordManage::deleteRecordList(vector <int> result) {
 		try {
 			selected = stoi(input_string);
 		}
-		catch (exception& expn) {
+		catch (exception & expn) {
 			cout << "Please enter a valid value." << endl;
 		}
 		if (selected < 1 || selected > result.size()) {
 			cout << "Please enter a valid value." << endl;
 		}
 		else {
-			//¼±ÅÃµÈ index·Î »èÁ¦ ÀÛ¾÷
+			//ì„ íƒëœ indexë¡œ ì‚­ì œ ìž‘ì—…
 			cout << "\n@ Delete a transaction @" << endl;
 			cout << "Confirm deletion? (type 'No' to cancel)\n> ";
 			getline(cin, input_string);
@@ -395,7 +395,7 @@ bool RecordManage::deleteRecordList(vector <int> result) {
 			}
 			else {
 				list <Record>::iterator iter = record_list.begin();
-				advance(iter, result[selected-1]);
+				advance(iter, result[selected - 1]);
 				record_list.erase(iter);
 				return false;
 			}
@@ -403,7 +403,7 @@ bool RecordManage::deleteRecordList(vector <int> result) {
 	}
 }
 
-short RecordManage::compare(struct tm& left, struct tm& right) {
+short RecordManage::compare(struct tm left, struct tm right) {
 	if (left.tm_year != right.tm_year) {
 		if (left.tm_year < right.tm_year) {
 			return 1;
@@ -436,7 +436,7 @@ short RecordManage::compare(struct tm& left, struct tm& right) {
 			return -1;
 		}
 	}
-	
+
 	if (left.tm_min < right.tm_min) {
 		return 1;
 	}

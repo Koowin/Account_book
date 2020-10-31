@@ -6,11 +6,20 @@ int main() {
 	string input_string;
 	int menu_selected;
 	bool flag;
+	
+	/* ì¬í˜ ì¶”ê°€ */
+	FileManage file_manager;
+	
+	if (!file_manager.initFile(record_manager, category_manager)) {
+		cerr << "Error: File initialization error" << endl; 
+		return -1;
+	}
 
-	//to do: ÆÄÀÏ ÀĞ±â ¹× µ¥ÀÌÅÍ ÀúÀå ÀÛ¾÷
+	//to do: íŒŒì¼ ì½ê¸° ë° ë°ì´í„° ì €ì¥ ì‘ì—…
 	while (1) {
-		//¸ŞÀÎ¸Ş´º Ãâ·ÂºÎ
-		system("cls");
+		//ë©”ì¸ë©”ë‰´ ì¶œë ¥ë¶€
+		system("pause");
+		system("cls"); //ì‹ ì´ ì¶”ê°€
 		cout << "@ Main menu @" << endl;
 		cout << "1. Add a transaction" << endl;
 		cout << "2. View all transactions" << endl;
@@ -19,11 +28,11 @@ int main() {
 		cout << "5. Quit" << endl << endl;
 		cout << "Select menu" << endl << "> ";
 
-		//¼ıÀÚ¸¸ ÀÔ·Â¹ŞÀ» ¶§ ±îÁö ¹İº¹
+		//ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½Ô·Â¹ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½İºï¿½
 		while (1) {
 			getline(cin, input_string);
 			if (input_string == "1") {
-				//±â·Ï 1°³ Ãß°¡
+				//ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ß°ï¿½
 				if (record_manager.getRecordListSize() > 1023) {
 					cout << "Your number of transactions has exceeded its maximum value (1024 transactions)." << endl;
 					cout << "Please delete some of your transactions to continue." << endl;
@@ -33,19 +42,19 @@ int main() {
 				}
 			}
 			else if (input_string == "2") {
-				//ÀüÃ¼ ¸ñ·Ï Ãâ·Â
+				//ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 				record_manager.printAllRecordList(category_manager);
 			}
 			else if (input_string == "3") {
-				//°Ë»ö,¼öÁ¤,»èÁ¦ ¸Ş´º
+				//ï¿½Ë»ï¿½,ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ ï¿½Ş´ï¿½
 				record_manager.searchMenu(category_manager);
 			}
 			else if (input_string == "4") {
-				//Ä«Å×°í¸® °ü¸® ¸Ş´º
+				//Ä«ï¿½×°ï¿½ ï¿½ï¿½ ï¿½Ş´ï¿½
 				category_manager.categoryMenu(record_manager);
 			}
 			else if (input_string == "5") {
-				//ÀúÀå ÀÛ¾÷
+				//ï¿½ï¿½ï¿½ï¿½ ï¿½Û¾ï¿½
 			}
 			else{
 				cout << "Please enter a valid value." << endl;
