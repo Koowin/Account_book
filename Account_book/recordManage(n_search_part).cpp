@@ -8,12 +8,15 @@ void RecordManage::printAllRecordList(CategoryManage& category_manager) {
 	printf("--------------------------------------------------------------------------------------------\n");
 
 	for (iter = record_list.begin(); iter != end; iter++) {
-		printf("%04d/%02d/%02d\t%02d:%02d", iter->get_date().tm_year + 1900, iter->get_date().tm_mon + 1, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
+
+		printf("%04d/%02d/%02d\t%02d:%02d", iter->get_date().tm_year+1900, iter->get_date().tm_mon+1, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
+
 		printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
 		printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
 	}
-	cout << "\nPress any key to continue...";
-	_getch();
+	/*cout << "\nPress any key to continue...";
+	_getch();*/
+	system("pause");
 }
 
 void RecordManage::printSelectedRecordList(CategoryManage& category_manager, vector <int> selected_index) {
@@ -34,10 +37,12 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 
 
 	//날짜 입력받는 부분
-	while (flag) {
-		system("cls");
-		cout << "@ Add a transaction @" << endl;
-		cout << "Enter the date and time  format:YYYY/MM/DD hh:mm\n(q:return to main menu)" << endl << "> ";
+	while (1) {
+		if (flag) {
+			system("cls");
+			cout << "@ Add a transaction @" << endl;
+		}
+		cout << "\nEnter the date and time  format:YYYY/MM/DD hh:mm\n(q:return to main menu)" << endl << "> ";
 		getline(cin, input_string);
 
 		if (input_string == "q") {
@@ -47,21 +52,19 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		date = cp.checkParseDate(input_string);
 		//정상 입력 시
 		if (date.tm_year != -1) {
+			break;
+		}
+		else {
 			flag = false;
 		}
-
-		/*else {
-			cout << endl;
-			system("pause");
-		}*/
-
 		//비정상 입력 시 오류 문구 출력 후 반복
 	}
 
 	//수입/지출 입력받는 부분
 	flag = true;
 	while (flag) {
-		cout << "\n@ Add a transaction @" << endl;
+		system("cls"); 
+		cout << "@ Add a transaction @" << endl;
 		cout << "1.Income" << endl;
 		cout << "2.Expense" << endl << endl;
 		cout << "Select type of transaction (q:return to main menu)" << endl << "> ";
@@ -84,12 +87,15 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		//비정상 입력 시
 		else {
 			cout << "Please enter a valid value." << endl;
+			cout << endl;
+			system("pause");
 		}
 	}
 
 	//금액 입력 받는 부분
 	flag = true;
 	while (flag) {
+		system("cls");
 		cout << "\n@ Add a transaction @" << endl;
 		cout << "Enter the amount (q: return to main menu)" << endl << "> ";
 		getline(cin, input_string);
@@ -101,14 +107,25 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		//정상 입력 시
 		if (!cp.checkAmount(input_string)) {
 			amount = cp.parseAmount(input_string);
-			flag = false;
+			if (amount == 0) {
+				cout << "Invalid amount, please make sure the amount consists of only numbers with or without comma (range : 1 ~ 4,294,967,295)." << endl;
+			}
+			else {
+				flag = false;
+			}
 		}
 		//비정상 입력 시 오류 문구 출력하고 반복
+		else {
+			cout << "Please enter a valid value." << endl;
+			cout << endl;
+			system("pause");
+		}
 	}
 
 	//메모 입력 받는 부분
 	flag = true;
 	while (flag) {
+		system("cls");
 		cout << "\n@ Add a transaction @" << endl;
 		cout << "Enter the memo (q: return to main menu)" << endl << "> ";
 		getline(cin, input_string);
@@ -123,11 +140,17 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 			flag = false;
 		}
 		//비정상 입력 시 오류 문구 출력하고 반복
+		else {
+			cout << "Please enter a valid value." << endl;
+			cout << endl;
+			system("pause");
+		}
 	}
 
 	//카테고리 번호 입력 받는 부분
 	flag = true;
 	while (flag) {
+		system("cls");
 		cout << "\n@ Add a transaction @" << endl;
 		category_manager.printCategoryList();
 		cout << "\nSelect a category (q:return to main menu)" << endl << "> ";
@@ -144,7 +167,7 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 
 	//저장 확인 물어보는 부분
 	cout << "\n@ Add a transaction @" << endl;
-	printf("- Date and Time: %04d/%02d/%02d %02d:%02d\n", date.tm_year, date.tm_mon, date.tm_mday, date.tm_hour, date.tm_min);
+	printf("- Date and Time: %04d/%02d/%02d %02d:%02d\n", date.tm_year+1900, date.tm_mon+1, date.tm_mday, date.tm_hour, date.tm_min);
 	cout << "- Income/Expense: ";
 	if (is_income) {
 		cout << "Income" << endl;

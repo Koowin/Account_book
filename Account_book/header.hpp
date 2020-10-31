@@ -97,8 +97,21 @@ public:
 	Record getRecord();
 
 	/* search Part */
+
 	void searchMenu(CategoryManage&);
 	vector <int> searchRecords(Conditions&, CategoryManage&);
+
+	//void searchRecord(CategoryManage&);
+	//vector<int> getSearchResult(struct tm*, string*, string*, int*, CategoryManage &);
+	//void printCurrent(struct tm*, string*, string*, int*, CategoryManage &);
+	//int resetFieldMenu();
+	//int* searchCategory(CategoryManage&);
+	//string* searchMemo();
+	//string* searchType();
+	//int compareTime(struct tm, struct tm);
+	//int searchTime(struct tm* (&));
+	//int searchMenu();
+
 
 	// record_list의 처음과 끝 반복자를 반환하는 함수
 	list <Record>::iterator get_first();

@@ -3,16 +3,18 @@
 
 void CategoryManage::categoryMenu(RecordManage& record_manager) {
 	string input_string;
-
+	bool flag = true;
 	while (1) {
-		system("cls");
-		cout << "@ Manage category @" << endl;
-		cout << "1. View categories" << endl;
-		cout << "2. Add new category" << endl;
-		cout << "3. Edit category" << endl;
-		cout << "4. Delete category\n" << endl;
+		if (flag) {
+			system("cls");
+			cout << "@ Manage category @" << endl;
+			cout << "1. View categories" << endl;
+			cout << "2. Add new category" << endl;
+			cout << "3. Edit category" << endl;
+			cout << "4. Delete category\n" << endl;
 
-		cout << "Select menu (q:return to main menu)" << endl << "> ";
+			cout << "Select menu (q:return to main menu)" << endl << "> ";
+		}
 		getline(cin, input_string);
 
 		if (input_string == "q") {
@@ -22,20 +24,30 @@ void CategoryManage::categoryMenu(RecordManage& record_manager) {
 			system("cls");
 			cout << "@ View categories @" << endl;
 			printCategoryList();
+
 			cout << "\nPress any key to continue..." << endl;
 			_getch();
+			flag = true;
+
 		}
 		else if (input_string == "2") {
 			addCategory();
+			//flag = true;
+			break;
 		}
 		else if (input_string == "3") {
 			modifyCategory();
+			//flag = true;
+			break;
 		}
 		else if (input_string == "4") {
 			deleteCategory(record_manager);
+			//flag = true;
+			break;
 		}
 		else {
-			cout << "Please enter a valid value" << endl;
+			cout << "Please enter a valid value\n> ";
+			flag = false;
 		}
 	}
 }
@@ -57,7 +69,7 @@ void CategoryManage::printCategoryList() {
 }
 
 /*  input : list <string> category_table
-*	output : True(Fail), False(Success)
+*	output : True(return to main menu)
 *	새로운 카테고리를 추가하는 함수
 */
 
@@ -72,7 +84,7 @@ bool CategoryManage::addCategory() {
 
 	while (flag) {
 		cout << "Enter new category (q:return to main menu)" << endl << "> ";
-		cin >> input_string;
+		getline(cin, input_string);
 
 		//입력이 'q'인지 검사
 		if (input_string == "q") {
@@ -102,7 +114,7 @@ bool CategoryManage::addCategory() {
 					else {
 						//카테고리 저장확인
 						cout << "Confirm new category? (type 'No' to cancle)" << endl << "> ";
-						cin >> confirm_string;
+						getline(cin, confirm_string);
 						if (confirm_string != "No") {
 							//카테고리 저장
 							category.push_back(Category(input_string));
@@ -137,7 +149,7 @@ bool CategoryManage::modifyCategory() {
 
 	while (flag) {
 		cout << "\nSelect category to edit (q: return to main menu)" << endl << "> ";
-		cin >> input_string;
+		getline(cin, input_string);
 
 		if (input_string == "q") {
 			return true;
@@ -164,7 +176,7 @@ bool CategoryManage::modifyCategory() {
 
 	while (1) {
 		cout << "Enter category modification (q: return to main menu)" << endl << "> ";
-		cin >> input_string;
+		getline(cin, input_string);
 
 		if (input_string == "q") {
 			return true;
@@ -188,9 +200,9 @@ bool CategoryManage::modifyCategory() {
 					cout << "Before modification : " << selector->get_cname() << endl;
 					cout << "After modification : " << input_string << endl;
 					cout << "Confirm modification? (type 'No' to cacel)" << endl << "> ";
-					cin >> confirm_string;
+					getline(cin, confirm_string);
 					if (confirm_string == "No") {
-						return true;
+						return false;
 					}
 					else {
 						selector->set_cname(input_string);

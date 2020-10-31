@@ -16,6 +16,7 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 
 		for (auto s : default_category) {
 			out_category << s << endl;
+			category_manager.init_add(s);
 		}
 
 		cout << "Category.txt is created." << endl << endl;
@@ -27,6 +28,12 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 
 		string s;
 		while (getline(in_category, s)) {
+
+			if (s.empty()) { //신이 추가: 빈 문자열 무시
+				// cout << "Empty line in Category.txt" << endl;
+				continue;
+			}
+
 			Category c = Category(s);
 
 			if(checker.checkCategoryName(s)) { //신이 추가 : checkCategoryName
@@ -34,7 +41,6 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 				flag = false;
 				break;
 			}
-
 
 			if (category_manager.isDuplicate(s)) {		// 카테고리 내 중복 목록이 있다면
 				cout << "Warning: Duplicate Category" << endl;
@@ -50,7 +56,8 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 		}
 
 		if (!category_manager.getCategorySize()) {		// 카테고리 목록이 비어있다면
-			string default_category[] = { "Bills", "Entertainment", "Food", "House Rent", "Transpoertation" };
+			string default_category[] = { "Bills", "Entertainment", "Food", "House Rent", "Transportation" };
+
 			for (auto s : default_category) {
 				category_manager.init_add(s);
 			}
@@ -116,7 +123,6 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 				flag = false;
 				break;
 			}
-
 
 			if (!checker.checkAmount(temp[2]))
 				//amount = stoi(temp[2]);		// 금액 설정

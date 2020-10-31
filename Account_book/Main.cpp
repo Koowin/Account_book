@@ -5,75 +5,70 @@ int main() {
 	class CategoryManage category_manager;
 	string input_string;
 	int menu_selected;
-	bool flag;
+	bool flag = true;
 	
 	/* 재혁 추가 */
 	FileManage file_manager;
 	
 	if (!file_manager.initFile(record_manager, category_manager)) {
-		cerr << "Error: File open error" << endl;
+		cerr << "Error: File initialization error" << endl; 
 		return -1;
 	}
 
 	cout << "\nPress any key to continue...";
 	_getch();
 
-
 	//to do: 파일 읽기 및 데이터 저장 작업
 	while (1) {
 		//메인메뉴 출력부
-		system("cls");
-		cout << "@ Main menu @" << endl;
-		cout << "1. Add a transaction" << endl;
-		cout << "2. View all transactions" << endl;
-		cout << "3. Search/Edit/Delete a transaction" << endl;
-		cout << "4. Manage category" << endl;
-		cout << "5. Quit" << endl << endl;
-		cout << "Select menu" << endl << "> ";
-
-		//숫자만 입력받을 때 까지 반복
-		flag = true;
-		while (flag) {
-			getline(cin,input_string);
-			try {
-				menu_selected = stoi(input_string);
+		while (1) {
+			if (flag) {
+				system("cls"); //신이 추가
+				cout << "@ Main menu @" << endl;
+				cout << "1. Add a transaction" << endl;
+				cout << "2. View all transactions" << endl;
+				cout << "3. Search/Edit/Delete a transaction" << endl;
+				cout << "4. Manage category" << endl;
+				cout << "5. Quit" << endl << endl;
+				cout << "Select menu" << endl << "> ";
+			}
+			getline(cin, input_string);
+			//add record
+			if (input_string == "1") {
+				if (record_manager.getRecordListSize() > 1023) {
+					cout << "Your number of transactions has exceeded its maximum value (1024 transactions)." << endl;
+					cout << "Please delete some of your transactions to continue." << endl;
+					cout << "Press any key to continue...";
+					_getch();
+				}
+				else {
+					record_manager.addRecord(category_manager);
+				}
+				flag = true;
+			}
+			//print all records
+			else if (input_string == "2") {
+				record_manager.printAllRecordList(category_manager);
+				flag = true;
+			}
+			//search menu
+			else if (input_string == "3") {
+				record_manager.searchMenu(category_manager);
+				flag = true;
+			}
+			//category menu
+			else if (input_string == "4") {
+				category_manager.categoryMenu(record_manager);
+				flag = true;
+			}
+			else if (input_string == "5") {
+				//저장 작업
+				return 0;
+			}
+			else{
+				cout << "Please enter a valid value.\n> ";
 				flag = false;
 			}
-			catch (const exception& expn) {
-				cout << "Please enter a valid value." << endl;
-			}
-		}
-
-		switch(menu_selected) {
-		case 1:
-			//기록 1개 추가
-			if (record_manager.getRecordListSize() > 1023) {
-				cout << "Your number of transactions has exceeded its maximum value (1024 transactions)." << endl;
-				cout << "Please delete some of your transactions to continue." << endl;
-			}
-			else {
-				record_manager.addRecord(category_manager);
-			}
-			break;
-		case 2:
-			//전체 목록 출력
-			record_manager.printAllRecordList(category_manager);
-			break;
-		case 3:
-			//검색,수정,삭제 메뉴
-			record_manager.searchMenu(category_manager);
-			break;
-		case 4:
-			//카테고리 관리 메뉴
-			category_manager.categoryMenu(record_manager);
-			break;
-		case 5:
-			//저장 작업
-			
-			return 0;		//프로그램 종료
-		default:
-			cout << "Please enter a valid value." << endl;
-			break;
 		}
 	}
 }

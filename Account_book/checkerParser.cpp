@@ -74,10 +74,6 @@ struct tm CheckerParser::checkParseDate(string input_string) {
 		result.tm_year = -1;
 		cout << "Invalid date and time, please check the value and try again." << endl;
 	}
-	else {
-		//result.tm_year += 1900;
-		//.tm_mon += 1;
-	}
 	return result;
 }
 
@@ -236,9 +232,8 @@ unsigned int CheckerParser::parseAmount(string input_string) {
 	try {
 		return_val = stoul(result);
 	}
-	catch (exception & expn) {
+	catch (exception& expn) {
 		cout << "" << endl;
 		return 0;
 	}
-
 }
