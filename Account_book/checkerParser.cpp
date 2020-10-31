@@ -127,6 +127,7 @@ bool CheckerParser::checkAmount(string input_string) {
 	if (error) {
 		cout << "Invalid amount, please make sure the amount consists of only numbers with or without comma (range : 1 ~ 4,294,967,295)." << endl;
 	}
+
 	return error;
 }
 
@@ -157,16 +158,27 @@ bool CheckerParser::checkMemo(string input_string) {
 }
 
 bool CheckerParser::checkCategoryNumber(string input_string, int category_number) {
+	int size = input_string.size();
+	if (input_string[0] == '0') {
+		cout << "Please enter a valid value." << endl;
+		return true;
+	}
+	for (int i = 0; i < size; i++) {
+		if (input_string[i] < '0' || input_string[i] > '9') {
+			cout << "Please enter a valid value." << endl;
+			return true;
+		}
+	}
 	int n;
 	try {
 		n = stoi(input_string);
 	}
-	catch (exception & expn) {
+	catch (exception& expn) {
 		cout << "Please enter a valid value." << endl;
 		return true;
 	}
-	if (n > category_number) {
-		cout << "Please enter the number blow " << category_number + 1 << endl;
+	if (n<0 || n>category_number) {
+		cout << "Please enter a valid value." << endl;
 		return true;
 	}
 	return false;
@@ -196,33 +208,15 @@ bool CheckerParser::checkCategoryName(string input_string) {
 	return error;
 }
 
-//struct tm CheckerParser::parseDate(string m_date) {
-//	struct tm result;
-//	stringstream ss(m_date);
-//	string sub;
-//	vector <string> tokens;
-//	while (getline(ss, sub, ' ')) {
-//		tokens.push_back(sub);
-//	}
-//	ss = stringstream(tokens[0]); // tokens[0] = "yyyy/mm/dd"
-//	vector<int>date;
-//	while (getline(ss, sub, '/')) date.push_back(stoi(sub));
-//	ss = stringstream(tokens[1]); // tokens[1] = "hh:mm"
-//	vector<int>time;
-//	while (getline(ss, sub, ':')) time.push_back(stoi(sub));
-//	result.tm_year = date[0];
-//	result.tm_mon = date[1];
-//	result.tm_mday = date[2];
-//	result.tm_hour = time[0];
-//	result.tm_min = time[1];
-//	return result;
-//}
-
 unsigned int CheckerParser::parseAmount(string input_string) {
 	string result;
 	int i;
 	unsigned int return_val;
 	int string_size = input_string.size();
+	if (input_string[0] == '0') {
+		cout << "Please enter a valid value." << endl;
+		return 0;
+	}
 	for (i = 0; i < string_size; i++) {
 		if (input_string[i] != ',') {
 			result.push_back(input_string[i]);
@@ -232,8 +226,8 @@ unsigned int CheckerParser::parseAmount(string input_string) {
 		return_val = stoul(result);
 	}
 	catch (exception& expn) {
-		cout << "" << endl;
+		cout << "Invalid amount, please make sure the amount consists of only numbers with or without comma (range : 1 ~ 4,294,967,295)." << endl;
 		return 0;
 	}
-	
+	return return_val;
 }

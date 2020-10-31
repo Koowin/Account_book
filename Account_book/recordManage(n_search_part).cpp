@@ -88,16 +88,17 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		else {
 			cout << "Please enter a valid value." << endl;
 			cout << endl;
-			system("pause");
 		}
 	}
 
 	//금액 입력 받는 부분
 	flag = true;
-	while (flag) {
-		system("cls");
-		cout << "\n@ Add a transaction @" << endl;
-		cout << "Enter the amount (q: return to main menu)" << endl << "> ";
+	while (1) {
+		if (flag) {
+			system("cls");
+			cout << "@ Add a transaction @" << endl;
+		}
+		cout << "\nEnter the amount (q: return to main menu)" << endl << "> ";
 		getline(cin, input_string);
 
 		if (input_string == "q") {
@@ -109,16 +110,16 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 			amount = cp.parseAmount(input_string);
 			if (amount == 0) {
 				cout << "Invalid amount, please make sure the amount consists of only numbers with or without comma (range : 1 ~ 4,294,967,295)." << endl;
+				flag = false;
 			}
 			else {
-				flag = false;
+				break;
 			}
 		}
 		//비정상 입력 시 오류 문구 출력하고 반복
 		else {
 			cout << "Please enter a valid value." << endl;
-			cout << endl;
-			system("pause");
+			flag = false;
 		}
 	}
 
@@ -149,10 +150,12 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 
 	//카테고리 번호 입력 받는 부분
 	flag = true;
-	while (flag) {
-		system("cls");
-		cout << "\n@ Add a transaction @" << endl;
-		category_manager.printCategoryList();
+	while (1) {
+		if (flag) {
+			system("cls");
+			cout << "\n@ Add a transaction @" << endl;
+			category_manager.printCategoryList();
+		}
 		cout << "\nSelect a category (q:return to main menu)" << endl << "> ";
 		getline(cin, input_string);
 
@@ -161,6 +164,9 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		}
 		if (!cp.checkCategoryNumber(input_string, category_manager.getCategorySize())) {
 			category_number = stoi(input_string);
+			break;
+		}
+		else {
 			flag = false;
 		}
 	}
