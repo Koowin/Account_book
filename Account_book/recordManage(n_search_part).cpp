@@ -109,7 +109,6 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		if (!cp.checkAmount(input_string)) {
 			amount = cp.parseAmount(input_string);
 			if (amount == 0) {
-				cout << "Invalid amount, please make sure the amount consists of only numbers with or without comma (range : 1 ~ 4,294,967,295)." << endl;
 				flag = false;
 			}
 			else {
