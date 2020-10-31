@@ -65,7 +65,7 @@ int main() {
 			break;
 		case 5:
 			//저장 작업
-			
+			file_manager.saveFile(record_manager, category_manager); //신이 넣어봄
 			return 0;		//프로그램 종료
 		default:
 			cout << "Please enter a valid value." << endl;

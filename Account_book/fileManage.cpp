@@ -43,7 +43,7 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 		}
 
 		if (!category_manager.getCategorySize()) {		// 카테고리 목록이 비어있다면
-			string default_category[] = { "Bills", "Entertainment", "Food", "House Rent", "Transpoertation" };
+			string default_category[] = { "Bills", "Entertainment", "Food", "House Rent", "Transportation" };
 			for (auto s : default_category) {
 				category_manager.init_add(s);
 			}
@@ -109,6 +109,7 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 				amount = stoi(temp[2]);		// 금액 설정
 			else {
 				cerr << "Error:Amount" << endl;
+				return false;
 			}
 
 			if (!checker.checkMemo(temp[3]))
@@ -119,10 +120,11 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 				return false;
 			}
 
-			if (!checker.checkCategoryNumber(temp[4], category_manager.getCategorySize))
+			if (!checker.checkCategoryNumber(temp[4], category_manager.getCategorySize()))
 				category_number = stoi(temp[4]);	// 카테고리 번호 설정
 			else {
 				cerr << "Error: Category NUmber" << endl;
+				return false;
 			}
 
 			Record r = Record(t, isIncome, amount, memo, category_number);		// Record 생성
