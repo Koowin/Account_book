@@ -57,10 +57,6 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		else {
 			flag = false;
 		}
-		else {
-			cout << endl;
-			system("pause");
-		}
 		//비정상 입력 시 오류 문구 출력 후 반복
 	}
 
