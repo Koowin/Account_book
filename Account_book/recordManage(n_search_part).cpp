@@ -37,10 +37,12 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 
 
 	//날짜 입력받는 부분
-	while (flag) {
-		system("cls");
-		cout << "@ Add a transaction @" << endl;
-		cout << "Enter the date and time  format:YYYY/MM/DD hh:mm\n(q:return to main menu)" << endl << "> ";
+	while (1) {
+		if (flag) {
+			system("cls");
+			cout << "@ Add a transaction @" << endl;
+		}
+		cout << "\nEnter the date and time  format:YYYY/MM/DD hh:mm\n(q:return to main menu)" << endl << "> ";
 		getline(cin, input_string);
 
 		if (input_string == "q") {
@@ -50,6 +52,9 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		date = cp.checkParseDate(input_string);
 		//정상 입력 시
 		if (date.tm_year != -1) {
+			break;
+		}
+		else {
 			flag = false;
 		}
 		else {
