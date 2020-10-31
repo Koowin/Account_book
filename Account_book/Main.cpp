@@ -21,7 +21,7 @@ int main() {
 		//메인메뉴 출력부
 		while (1) {
 			if (flag) {
-				system("cls"); //신이 추가
+				system("cls"); 
 				cout << "@ Main menu @" << endl;
 				cout << "1. Add a transaction" << endl;
 				cout << "2. View all transactions" << endl;
@@ -33,7 +33,7 @@ int main() {
 			getline(cin, input_string);
 			//add record
 			if (input_string == "1") {
-				if (record_manager.getRecordListSize() > 1023) {
+				if (record_manager.getRecordListSize() > 1024) { //신이 : 1023 >> 1024
 					cout << "Your number of transactions has exceeded its maximum value (1024 transactions)." << endl;
 					cout << "Please delete some of your transactions to continue." << endl;
 					cout << "Press any key to continue...";
@@ -61,6 +61,7 @@ int main() {
 			}
 			else if (input_string == "5") {
 				//저장 작업
+				file_manager.saveFile(record_manager, category_manager);
 				return 0;
 			}
 			else{
