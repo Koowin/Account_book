@@ -5,7 +5,7 @@ int main() {
 	class CategoryManage category_manager;
 	string input_string;
 	int menu_selected;
-	bool flag;
+	bool flag = true;
 	
 	/* 재혁 추가 */
 	FileManage file_manager;
@@ -14,50 +14,58 @@ int main() {
 		cerr << "Error: File initialization error" << endl; 
 		return -1;
 	}
-
+	cout << "\nPress any key to continue...";
+	_getch();
 	//to do: 파일 읽기 및 데이터 저장 작업
 	while (1) {
 		//메인메뉴 출력부
-		system("pause");
-		system("cls"); //신이 추가
-		cout << "@ Main menu @" << endl;
-		cout << "1. Add a transaction" << endl;
-		cout << "2. View all transactions" << endl;
-		cout << "3. Search/Edit/Delete a transaction" << endl;
-		cout << "4. Manage category" << endl;
-		cout << "5. Quit" << endl << endl;
-		cout << "Select menu" << endl << "> ";
-
-		//���ڸ� �Է¹�� �� ���� �ݺ�
 		while (1) {
+			if (flag) {
+				system("cls"); //신이 추가
+				cout << "@ Main menu @" << endl;
+				cout << "1. Add a transaction" << endl;
+				cout << "2. View all transactions" << endl;
+				cout << "3. Search/Edit/Delete a transaction" << endl;
+				cout << "4. Manage category" << endl;
+				cout << "5. Quit" << endl << endl;
+				cout << "Select menu" << endl << "> ";
+			}
 			getline(cin, input_string);
+			//add record
 			if (input_string == "1") {
-				//��� 1�� �߰�
 				if (record_manager.getRecordListSize() > 1023) {
 					cout << "Your number of transactions has exceeded its maximum value (1024 transactions)." << endl;
 					cout << "Please delete some of your transactions to continue." << endl;
+					cout << "Press any key to continue...";
+					_getch();
 				}
 				else {
 					record_manager.addRecord(category_manager);
 				}
+				flag = true;
 			}
+			//print all records
 			else if (input_string == "2") {
-				//��ü ��� ���
 				record_manager.printAllRecordList(category_manager);
+				flag = true;
 			}
+			//search menu
 			else if (input_string == "3") {
-				//�˻�,���,��� �޴�
 				record_manager.searchMenu(category_manager);
+				flag = true;
 			}
+			//category menu
 			else if (input_string == "4") {
-				//ī�װ� �� �޴�
 				category_manager.categoryMenu(record_manager);
+				flag = true;
 			}
 			else if (input_string == "5") {
-				//���� �۾�
+				//저장 작업
+				return 0;
 			}
 			else{
-				cout << "Please enter a valid value." << endl;
+				cout << "Please enter a valid value.\n> ";
+				flag = false;
 			}
 		}
 	}

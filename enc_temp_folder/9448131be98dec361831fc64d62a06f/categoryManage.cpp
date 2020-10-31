@@ -26,7 +26,8 @@ void CategoryManage::categoryMenu(RecordManage& record_manager) {
 			printCategoryList();
 			cout << "\nPress any key to continue..." << endl;
 			_getch();
-			flag = true;
+			//flag = true;
+			break;
 		}
 		else if (input_string == "2") {
 			addCategory();
