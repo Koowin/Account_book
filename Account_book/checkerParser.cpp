@@ -69,10 +69,28 @@ struct tm CheckerParser::checkParseDate(string input_string) {
 	result.tm_min = stoi(min);
 	result.tm_sec = 0;
 	time_t t = mktime(&result);
-	//의미규칙 검사 (그레고리력에 맞지 않은 시간이 들어오거나, 현재 시간보다 크다면)
+	//의미규칙 검사 (현재 시간보다 크다면)
 	if (t == -1 || t > now_time) {
 		result.tm_year = -1;
 		cout << "Invalid date and time, please check the value and try again." << endl;
+		return result;
+	}
+	int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	int year2 = stoi(year);
+	int mon2 = stoi(mon)-1;
+	int day2 = stoi(day);
+	if (((year2 % 4) == 0) && ((year2 % 100) != 0 || (year2%400)==0)) {
+		daysInMonth[1]++;
+	}
+	if (mon2 == -1 || day2 == 0) {
+		result.tm_year = -1;
+		cout << "Invalid date and time, please check the value and try again." << endl;
+		return result;
+	}
+	if (day2 > daysInMonth[mon2]) {
+		result.tm_year = -1;
+		cout << "Invalid date and time, please check the value and try again." << endl;
+		return result;
 	}
 	return result;
 }
