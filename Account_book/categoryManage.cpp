@@ -3,34 +3,51 @@
 
 void CategoryManage::categoryMenu(RecordManage& record_manager) {
 	string input_string;
-
+	bool flag = true;
 	while (1) {
-		cout << "@ Manage category @" << endl;
-		cout << "1. View categories" << endl;
-		cout << "2. Add new category" << endl;
-		cout << "3. Edit category" << endl;
-		cout << "4. Delete category\n" << endl;
+		if (flag) {
+			system("cls");
+			cout << "@ Manage category @" << endl;
+			cout << "1. View categories" << endl;
+			cout << "2. Add new category" << endl;
+			cout << "3. Edit category" << endl;
+			cout << "4. Delete category\n" << endl;
 
-		cout << "Select menu (q:return to main menu)" << endl << "> ";
-		cin >> input_string;
+			cout << "Select menu (q:return to main menu)" << endl << "> ";
+		}
+		getline(cin, input_string);
 
 		if (input_string == "q") {
 			break;
 		}
 		else if (input_string == "1") {
+			system("cls");
+			cout << "@ View categories @" << endl;
 			printCategoryList();
+
+			cout << "\nPress any key to continue..." << endl;
+			_getch();
+			flag = true;
+
 		}
 		else if (input_string == "2") {
 			addCategory();
+			//flag = true;
+			break;
 		}
 		else if (input_string == "3") {
 			modifyCategory();
+			//flag = true;
+			break;
 		}
 		else if (input_string == "4") {
 			deleteCategory(record_manager);
+			//flag = true;
+			break;
 		}
 		else {
-			cout << "Please enter a valid value" << endl;
+			cout << "Please enter a valid value\n> ";
+			flag = false;
 		}
 	}
 }
@@ -38,25 +55,22 @@ void CategoryManage::categoryMenu(RecordManage& record_manager) {
 
 /*  input : list <string> category_table
 *	output : void
-*	mainÇÔ¼ö¿¡¼­ category_tableÀ» ¹Ş¾Æ¼­ ¸ğµç Ä«Å×°í¸® ¸ñ·ÏÀ» Ãâ·ÂÇÏ´Â ÇÔ¼ö
+*	mainí•¨ìˆ˜ì—ì„œ category_tableì„ ë°›ì•„ì„œ ëª¨ë“  ì¹´í…Œê³ ë¦¬ ëª©ë¡ì„ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
 */
 void CategoryManage::printCategoryList() {
 	int i=1;
 	list <Category>::iterator iter;
 	list <Category>::iterator end_of_list = category.end();
 
-	cout << "@ View categories @" << endl;
 	for (iter = category.begin(); iter != end_of_list; iter++) {
 		cout << i << ". " << iter->get_cname() << endl;
 		i++;
 	}
-	cout << "\nPress any key to continue..." << endl;
-	_getch();
 }
 
 /*  input : list <string> category_table
-*	output : True(Fail), False(Success)
-*	»õ·Î¿î Ä«Å×°í¸®¸¦ Ãß°¡ÇÏ´Â ÇÔ¼ö
+*	output : True(return to main menu)
+*	ìƒˆë¡œìš´ ì¹´í…Œê³ ë¦¬ë¥¼ ì¶”ê°€í•˜ëŠ” í•¨ìˆ˜
 */
 
 bool CategoryManage::addCategory() {
@@ -65,27 +79,49 @@ bool CategoryManage::addCategory() {
 	string confirm_string;
 	CheckerParser cp;
 
+	system("cls");
 	cout << "@ Add new category @" << endl;
 
 	while (flag) {
 		cout << "Enter new category (q:return to main menu)" << endl << "> ";
-		cin >> input_string;
+		getline(cin, input_string);
 
-		//ÀÔ·ÂÀÌ 'q'ÀÎÁö °Ë»ç
+		//ì…ë ¥ì´ 'q'ì¸ì§€ ê²€ì‚¬
 		if (input_string == "q") {
 			return true;
 		}
 		else {
-			//Ä«Å×°í¸® ¹®ÀÚ¿­ ±æÀÌ °Ë»ç
-			if (!cp.checkCategoryName(input_string)) {
-				//Ä«Å×°í¸® ÀúÀåÈ®ÀÎ
-				cout << "Confirm new category? (type 'No' to cancle)" << endl << "> ";
-				cin >> confirm_string;
-				if (confirm_string != "No") {
-					//Ä«Å×°í¸® ÀúÀå
-					category.push_back(Category(input_string));
+			if (category.size() >= 64) {
+				cout << "Your number of categories has exceeded its maximum value (64 categories)." << endl;
+				cout << "Please delete some of your categories to continue." << endl;
+			}
+			else {
+				//ì¹´í…Œê³ ë¦¬ ë¬¸ìì—´ ë¬¸ë²• ê²€ì‚¬
+				if (!cp.checkCategoryName(input_string)) {
+					//ì¤‘ë³µ ê²€ì‚¬
+					list <Category>::iterator iter;
+					list <Category>::iterator end_of_list = category.end();
+					bool duplicate = false;
+					for (iter = category.begin(); iter != end_of_list; iter++) {
+						if (input_string == iter->get_cname()) {
+							duplicate = true;
+							break;
+						}
+					}
+					if (duplicate) {
+						cout << "Duplicate category, please enter a new one." << endl;
+					}
+					else {
+						//ì¹´í…Œê³ ë¦¬ ì €ì¥í™•ì¸
+						cout << "Confirm new category? (type 'No' to cancle)" << endl << "> ";
+						getline(cin, confirm_string);
+						if (confirm_string != "No") {
+							//ì¹´í…Œê³ ë¦¬ ì €ì¥
+							category.push_back(Category(input_string));
+						}
+						flag = false;
+					}
 				}
-				flag = false;
 			}
 		}
 	}
@@ -99,13 +135,13 @@ bool CategoryManage::modifyCategory() {
 	string confirm_string;
 	CheckerParser cp;
 
+	system("cls");
 	cout << "@ Edit category @" << endl;
 	int i = 1;
 	list <Category>::iterator iter;
 	list <Category>::iterator end_of_list = category.end();
 
-	//Ä«Å×°í¸® Ãâ·ÂºÎ
-	cout << "@ View categories @" << endl;
+	//ì¹´í…Œê³ ë¦¬ ì¶œë ¥ë¶€
 	for (iter = category.begin(); iter != end_of_list; iter++) {
 		cout << i << ". " << iter->get_cname() << endl;
 		i++;
@@ -113,19 +149,19 @@ bool CategoryManage::modifyCategory() {
 
 	while (flag) {
 		cout << "\nSelect category to edit (q: return to main menu)" << endl << "> ";
-		cin >> input_string;
+		getline(cin, input_string);
 
 		if (input_string == "q") {
 			return true;
 		}
-		//¼ıÀÚ ÀÌ¿ÜÀÇ ÀÔ·Â ¿¹¿ÜÃ³¸®
+		//ìˆ«ì ì´ì™¸ì˜ ì…ë ¥ ì˜ˆì™¸ì²˜ë¦¬
 		try {
 			selected_num = stoi(input_string);
 		}
 		catch (const exception& expn) {
 			cout << "Input only number" << endl;
 		}
-		//0 ~ table size ÀÌ¿ÜÀÇ ÀÔ·Â ¿¹¿Ü Ã³¸®
+		//0 ~ table size ì´ì™¸ì˜ ì…ë ¥ ì˜ˆì™¸ ì²˜ë¦¬
 		if (selected_num > category.size() || selected_num < 1) {
 			cout << "Number must be over 0 and under " << category.size() + 1 << endl;
 		}
@@ -140,7 +176,7 @@ bool CategoryManage::modifyCategory() {
 
 	while (1) {
 		cout << "Enter category modification (q: return to main menu)" << endl << "> ";
-		cin >> input_string;
+		getline(cin, input_string);
 
 		if (input_string == "q") {
 			return true;
@@ -148,17 +184,30 @@ bool CategoryManage::modifyCategory() {
 		else {
 			//input_string check
 			if (!cp.checkCategoryName(input_string)) {
-				//¼öÁ¤ È®ÀÎ
-				cout << "Before modification : " << selector->get_cname() << endl;
-				cout << "After modification : " << input_string << endl;
-				cout << "Confirm modification? (type 'No' to cacel)" << endl << "> ";
-				cin >> confirm_string;
-				if (confirm_string == "No") {
-					return true;
+				bool duplicate = false;
+				iter = category.begin();
+				for (; iter != end_of_list; iter++) {
+					if (input_string == iter->get_cname()) {
+						duplicate = true;
+						break;
+					}
+				}
+				if (duplicate) {
+					cout << "Duplicate category, please enter a new one." << endl;
 				}
 				else {
-					selector->set_cname(input_string);
-					return false;
+					//ìˆ˜ì • í™•ì¸
+					cout << "Before modification : " << selector->get_cname() << endl;
+					cout << "After modification : " << input_string << endl;
+					cout << "Confirm modification? (type 'No' to cacel)" << endl << "> ";
+					getline(cin, confirm_string);
+					if (confirm_string == "No") {
+						return false;
+					}
+					else {
+						selector->set_cname(input_string);
+						return false;
+					}
 				}
 			}
 		}
@@ -172,6 +221,7 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 	string input_string;
 	int selected_num;
 
+	system("cls");
 	cout << "@ Delete category @" << endl;
 	int i = 1;
 	list <Category>::iterator iter;
@@ -189,7 +239,7 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 		if (input_string == "q") {
 			return true;
 		}
-		//¼ıÀÚ ÀÌ¿ÜÀÇ ÀÔ·Â ¿¹¿ÜÃ³¸®
+		//ìˆ«ì ì´ì™¸ì˜ ì…ë ¥ ì˜ˆì™¸ì²˜ë¦¬
 		try {
 			selected_num = stoi(input_string);
 		}
@@ -197,16 +247,20 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 			cout << "Input only number" << endl;
 		}
 
-		//0 ~ table size ÀÌ¿ÜÀÇ ÀÔ·Â ¿¹¿Ü Ã³¸®
+		//0 ~ table size ì´ì™¸ì˜ ì…ë ¥ ì˜ˆì™¸ ì²˜ë¦¬
 		list <Record>::iterator record_iter;
 		list <Record>::iterator end_of_record_list = record_manager.get_end();
-
+		
+		//ì˜ˆì™¸ì²˜ë¦¬: ì¹´í…Œê³ ë¦¬ ê°œìˆ˜ê°€ 1ê°œë©´ ì‚­ì œ ì•ˆë˜ê²Œ
+		if (category.size() < 2) {
+			cout << "There must be at least one category. Category is not deleted." << endl;
+			return true;
+		}
 		if (selected_num > category.size() || selected_num < 1) {
 			cout << "Number must be over 0 and under " << category.size() + 1 << endl;
 		}
 		else {
-			//to do ¿¹¿ÜÃ³¸®: ÇØ´ç Ä«Å×°í¸® ¹øÈ£°¡ Á¸ÀçÇÏ´Â ±â·ÏÀÌ ÀÖÀ¸¸é »èÁ¦ ¾ÈµÇ°Ô
-
+			//ì˜ˆì™¸ì²˜ë¦¬: í•´ë‹¹ ì¹´í…Œê³ ë¦¬ ë²ˆí˜¸ê°€ ì¡´ì¬í•˜ëŠ” ê¸°ë¡ì´ ìˆìœ¼ë©´ ì‚­ì œ ì•ˆë˜ê²Œ
 			selected_num--;
 
 			for (record_iter = record_manager.get_first(); record_iter != end_of_record_list; record_iter++) {
@@ -215,30 +269,31 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 					break;
 				}
 			}
-			//duplicate_checker == true¸é °ãÄ¡´Â ±â·Ï Á¸Àç
+			//duplicate_checker == trueë©´ ê²¹ì¹˜ëŠ” ê¸°ë¡ ì¡´ì¬
 			if (duplicate_checker) {
 				cout << "Some record have that category number. " << endl;
+				flag = false;
 			}
 			else {
 				flag = false;
 			}
 		}
 		
-		//»èÁ¦ È®ÀÎ
+		//ì‚­ì œ í™•ì¸
 		cout << "Confirm deletion? (type 'No' to cancel)" << endl << "> ";
 		cin >> input_string;
 		if (input_string == "No") {
 			return true;
 		}
 		else {
-			//¸ğµç ±â·Ïµé Ä«Å×°í¸® ¹øÈ£ ÇÏ³ª¾¿ ÁÙÀÌ±â (¼±ÅÃÇÑ °Í º¸´Ù Å©´Ù¸é)
+			//ëª¨ë“  ê¸°ë¡ë“¤ ì¹´í…Œê³ ë¦¬ ë²ˆí˜¸ í•˜ë‚˜ì”© ì¤„ì´ê¸° (ì„ íƒí•œ ê²ƒ ë³´ë‹¤ í¬ë‹¤ë©´)
 			for (record_iter = record_manager.get_first(); record_iter != end_of_record_list; record_iter++) {
 				int category_num = record_iter->get_category_number();
 				if (category_num > selected_num+1) {
 					record_iter->set_category_number(category_num-1);
 				}
 			}
-			//»èÁ¦ ÀÛ¾÷
+			//ì‚­ì œ ì‘ì—…
 			iter = category.begin();
 			advance(iter, selected_num);
 			category.erase(iter);
@@ -247,6 +302,43 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 	}
 }
 
+string CategoryManage::getIndexedCategory(int index) {
+	list <Category>::iterator iter = category.begin();
+	advance(iter, index-1);
+	return iter->get_cname();
+}
+
 int CategoryManage::getCategorySize() {
 	return category.size();
+}
+
+list <Category>::iterator CategoryManage::get_first() {
+	list <Category>::iterator iter = category.begin();
+	return iter;
+}
+list <Category>::iterator CategoryManage::get_end() {
+	list <Category>::iterator iter = category.end();
+	return iter;
+}
+
+bool CategoryManage::isDuplicate(string s) {
+	list<Category>::iterator iter = category.begin();
+	for (; iter != category.end();) {
+		string temp = (*iter).get_cname();
+		if (temp == s) {
+			return true;
+		}
+		iter++;
+	}
+	return false;
+}
+
+void CategoryManage::init_add(Category c) {
+	category.push_back(c);
+}
+
+Category CategoryManage::getCategory() {
+	Category c = category.front();
+	category.pop_front();
+	return c;
 }

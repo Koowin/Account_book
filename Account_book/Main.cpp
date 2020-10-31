@@ -5,185 +5,69 @@ int main() {
 	class CategoryManage category_manager;
 	string input_string;
 	int menu_selected;
-	bool flag;
-
-	//to do: ÆÄÀÏ ÀĞ±â ¹× µ¥ÀÌÅÍ ÀúÀå ÀÛ¾÷
-
+	bool flag = true;
+	
+	/* ì¬í˜ ì¶”ê°€ */
+	FileManage file_manager;
+	
+	if (!file_manager.initFile(record_manager, category_manager)) {
+		cerr << "Error: File initialization error" << endl; 
+		return -1;
+	}
+	cout << "\nPress any key to continue...";
+	_getch();
+	//to do: íŒŒì¼ ì½ê¸° ë° ë°ì´í„° ì €ì¥ ì‘ì—…
 	while (1) {
-		//to do: ¸ŞÀÎ¸Ş´º Ãâ·ÂºÎ
-		cout << "¸ŞÀÎ¸Ş´º" << endl;
-		
-
-		//¼ıÀÚ¸¸ ÀÔ·Â¹ŞÀ» ¶§ ±îÁö ¹İº¹
-		flag = true;
-		while (flag) {
-			cin >> input_string;
-			try {
-				menu_selected = stoi(input_string);
+		//ë©”ì¸ë©”ë‰´ ì¶œë ¥ë¶€
+		while (1) {
+			if (flag) {
+				system("cls"); 
+				cout << "@ Main menu @" << endl;
+				cout << "1. Add a transaction" << endl;
+				cout << "2. View all transactions" << endl;
+				cout << "3. Search/Edit/Delete a transaction" << endl;
+				cout << "4. Manage category" << endl;
+				cout << "5. Quit" << endl << endl;
+				cout << "Select menu" << endl << "> ";
+			}
+			getline(cin, input_string);
+			//add record
+			if (input_string == "1") {
+				if (record_manager.getRecordListSize() > 1024) { //ì‹ ì´ : 1023 >> 1024
+					cout << "Your number of transactions has exceeded its maximum value (1024 transactions)." << endl;
+					cout << "Please delete some of your transactions to continue." << endl;
+					cout << "Press any key to continue...";
+					_getch();
+				}
+				else {
+					record_manager.addRecord(category_manager);
+				}
+				flag = true;
+			}
+			//print all records
+			else if (input_string == "2") {
+				record_manager.printAllRecordList(category_manager);
+				flag = true;
+			}
+			//search menu
+			else if (input_string == "3") {
+				record_manager.searchMenu(category_manager);
+				flag = true;
+			}
+			//category menu
+			else if (input_string == "4") {
+				category_manager.categoryMenu(record_manager);
+				flag = true;
+			}
+			else if (input_string == "5") {
+				//ì €ì¥ ì‘ì—…
+				file_manager.saveFile(record_manager, category_manager);
+				return 0;
+			}
+			else{
+				cout << "Please enter a valid value.\n> ";
 				flag = false;
 			}
-			catch (const exception& expn) {
-				cout << "¼ıÀÚ¸¸ ÀÔ·ÂÇØ ÁÖ¼¼¿ä" << endl;
-			}
 		}
-
-		switch(menu_selected) {
-		case 1:
-			//±â·Ï 1°³ Ãß°¡
-			record_manager.addRecord(category_manager.getCategorySize());
-			break;
-		case 2:
-			//ÀüÃ¼ ¸ñ·Ï Ãâ·Â
-			record_manager.printAllRecordList(category_manager);
-			break;
-		case 3:
-			//°Ë»ö,¼öÁ¤,»èÁ¦ ¸Ş´º
-			record_manager.searchRecords(category_manager);
-			break;
-		case 4:
-			//Ä«Å×°í¸® °ü¸® ¸Ş´º
-			category_manager.categoryMenu(record_manager);
-			break;
-		case 5:
-			//ÀúÀå ÀÛ¾÷
-			
-			return 0;		//ÇÁ·Î±×·¥ Á¾·á
-		default:
-			cout << "1~5»çÀÌÀÇ ¼ıÀÚ¸¸ ÀÔ·ÂÇØÁÖ¼¼¿ä." << endl;
-			break;
-		}
-	}
-}
-
-
-
-
-
-
-bool RecordManage::addRecord(int category_size) {
-	class CheckerParser cp;
-	string input_string;
-	bool flag = true;
-
-	struct tm date;
-	bool is_income;
-	unsigned int amount;
-	string memo;
-	int category_number;
-	
-
-	//³¯Â¥ ÀÔ·Â¹Ş´Â ºÎºĞ
-	while(flag){
-		cout << "³¯Â¥ ÀÔ·Â" << endl;
-		cin >> input_string;
-
-		if (input_string == "q") {
-			return true;
-		}
-		//Á¤»ó ÀÔ·Â ½Ã
-		if (!cp.checkDate(input_string)) {
-			date = cp.parseDate(input_string);
-			flag = false;
-		}
-		//ºñÁ¤»ó ÀÔ·Â ½Ã ¿À·ù ¹®±¸ Ãâ·Â ÈÄ ¹İº¹
-	}
-
-
-	//¼öÀÔ/ÁöÃâ ÀÔ·Â¹Ş´Â ºÎºĞ
-	flag = true;
-	while (flag) {
-		cout << "¼öÀÔ/ÁöÃâ" << endl;
-		cin >> input_string;
-
-		if (input_string == "q") {
-			return true;
-		}
-		//Á¤»ó ÀÔ·Â ½Ã
-		else if (input_string == "1" || input_string == "2") {
-			if (input_string == "1") {
-				is_income = true;
-			}
-			else {
-				is_income = false;
-			}
-			flag == false;
-		}
-		//ºñÁ¤»ó ÀÔ·Â ½Ã
-		else {
-			//to do : ¿À·ù ¹®±¸ ¿µ¾î·Î ¹Ù²Ù±â
-			cout << "¿À·ù ¹®±¸ Ãâ·Â" << endl;
-		}
-	}
-
-	//±İ¾× ÀÔ·Â ¹Ş´Â ºÎºĞ
-	flag = true;
-	while (flag) {
-		cout << "±İ¾× ÀÔ·Â" << endl;
-		cin >> input_string;
-
-		if (input_string == "q") {
-			return true;
-		}
-		
-		//Á¤»ó ÀÔ·Â ½Ã
-		if (!cp.checkAmount(input_string)) {
-			amount = cp.parseAmount(input_string);
-			flag = false;
-		}
-		//ºñÁ¤»ó ÀÔ·Â ½Ã ¿À·ù ¹®±¸ Ãâ·ÂÇÏ°í ¹İº¹
-	}
-
-	//¸Ş¸ğ ÀÔ·Â ¹Ş´Â ºÎºĞ
-	flag = true;
-	while (flag) {
-		cout << "¸Ş¸ğ ÀÔ·Â" << endl;
-		cin >> input_string;
-
-		if (input_string == "q") {
-			return true;
-		}
-
-		//Á¤»ó ÀÔ·Â ½Ã
-		if (!cp.checkMemo(input_string)) {
-			memo = input_string;
-		}
-		//ºñÁ¤»ó ÀÔ·Â ½Ã ¿À·ù ¹®±¸ Ãâ·ÂÇÏ°í ¹İº¹
-	}
-
-	//Ä«Å×°í¸® ¹øÈ£ ÀÔ·Â ¹Ş´Â ºÎºĞ
-	flag = true;
-	while (flag) {
-		cout << "Ä«Å×°í¸® ¹øÈ£ ÀÔ·Â" << endl;
-		cin >> input_string;
-
-		if (input_string == "q") {
-			return true;
-		}
-		try {
-			category_number = stoi(input_string);
-		}
-		catch (const exception& expn) {
-			cout << "¼ıÀÚ¸¸ ÀÔ·ÂÇØÁÖ¼¼¿ä" << endl;
-		}
-
-		if (category_number > 0 && category_number <= category_size) {
-			flag = false;
-		}
-		else {
-			cout << "1 ºÎÅÍ " << category_size << " »çÀÌÀÇ ¼ıÀÚ¸¸ ÀÔ·ÂÇØÁÖ¼¼¿ä" << endl;
-		}
-	}
-	
-	//ÀúÀå È®ÀÎ ¹°¾îº¸´Â ºÎºĞ
-	cout << "ÀúÀåÇÏ½Ã°Ú½À´Ï±î? (Ãë¼Ò: No)" << endl;
-	cin >> input_string;
-
-	if (input_string == "No") {
-		return true;
-	}
-	else {
-		//to do : index Ã£¾Æ¼­ ³Ö±â È¤Àº ³Ö°í Á¤·ÄÇÏ±â
-		record_list.push_back(Record(date, is_income, amount, memo, category_number));
-		return false;
 	}
 }

@@ -1,102 +1,230 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "header.hpp"
 
-void Category::printAll() {
-	list<string>::iterator iter = category.begin();
-	for (; iter != category.end();) {
-		cout << *iter << endl;
-		iter++;
-	}
-}
-
-Category::Category() {
-
-}
-
-Category::Category(ifstream& in) {
-	string s;
-	
-	while (getline(in,s)) {
-		list<string>::iterator iter = category.begin();
-		for (; iter != category.end();) {
-			if (*iter == s) {
-				cout << "Ä«Å×°í¸® ¸ñ·Ï¿¡ Áßº¹µÊ" << endl;		// ¼öÁ¤ ¿¹Á¤
-				iter = category.erase(iter);
-				continue;
-			}
-			iter++;
-		}
-
-		category.push_back(s);
-	}
-}
-
-void initFiles(void) {
-	vector<Record> v;
-
+bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category_manager) {
 	ifstream in_Account("Account.txt");
 	ifstream in_category("Category.txt");
+	CheckerParser checker;
 
-	if (!in_category.is_open()) {	// ÆÄÀÏÀÌ ¿­¸®Áö ¾Ê¾Ò´Ù¸é
-		cerr << "Warning: Category.txt not open" << endl;	// °æ°í¹®±¸ Ãâ·Â
+	/* Category.txt ë¶€ë¬¸ */
+	if (!in_category.is_open()) {	// íŒŒì¼ì´ ì—´ë¦¬ì§€ ì•Šì•˜ë‹¤ë©´
+		cerr << "Warning: Category.txt not open" << endl;	// ê²½ê³ ë¬¸êµ¬ ì¶œë ¥
+		ofstream out_category("Category.txt");	// ì¶œë ¥ ìŠ¤íŠ¸ë¦¼
 
-		ofstream out_category("Category.txt");	// Ãâ·Â ½ºÆ®¸²
-
-		string default_category[] = { "Bills", "Entertainment", "Food", "House Rent", "Transpoertation"};	// ¿¹¾àµÈ Å°¿öµå Ãâ·Â
+		string default_category[] = { "Bills", "Entertainment", "Food", "House Rent", "Transportation" };	// ì˜ˆì•½ëœ í‚¤ì›Œë“œ ì¶œë ¥
 
 		for (auto s : default_category) {
 			out_category << s << endl;
+			category_manager.init_add(s);
 		}
-		
+
 		cout << "Category.txt is created." << endl << endl;
+		out_category.close();
 	}
-	
+
 	else {
-		cout << "Category.txt is opened normally." << endl << endl;	// Á¤»óÀûÀ¸·Î open
-		Category c = Category(in_category);
-		//c.printAll();
+		cout << "Category.txt is opened normally." << endl << endl;	// ì •ìƒì ìœ¼ë¡œ open
+
+		string s;
+		while (getline(in_category, s)) {
+
+			if (s.empty()) { //ì‹ ì´ ì¶”ê°€: ë¹ˆ ë¬¸ìì—´ ë¬´ì‹œ
+				// cout << "Empty line in Category.txt" << endl;
+				continue;
+			}
+
+			Category c = Category(s);
+
+			if(checker.checkCategoryName(s)) { //ì‹ ì´ ì¶”ê°€ : checkCategoryName
+				cerr << "Error: Invalid category name" << endl; 
+				in_category.close(); 
+				return false; 
+			}
+
+			if (category_manager.isDuplicate(s)) {		// ì¹´í…Œê³ ë¦¬ ë‚´ ì¤‘ë³µ ëª©ë¡ì´ ìˆë‹¤ë©´
+				cout << "Warning: Duplicate Category" << endl;
+				continue;
+			}
+			category_manager.init_add(c);
+
+			if (category_manager.getCategorySize() > 64) {		// ì¹´í…Œê³ ë¦¬ ê°œìˆ˜ê°€ 64ê°œ ì´ìƒì¼ ì‹œ false ë°˜í™˜
+				cerr << "Error: Category size limit " << endl;
+				in_category.close();
+				return false;
+			}
+		}
+
+		if (!category_manager.getCategorySize()) {		// ì¹´í…Œê³ ë¦¬ ëª©ë¡ì´ ë¹„ì–´ìˆë‹¤ë©´
+			string default_category[] = { "Bills", "Entertainment", "Food", "House Rent", "Transportation" };
+			for (auto s : default_category) {
+				category_manager.init_add(s);
+			}
+		}
 	}
 
 
+	/* Account.txt ë¶€ë¬¸ */
 	if (!in_Account.is_open()) {
 		cerr << "Warning: Account.txt not open" << endl;
 
 		ofstream out_Account("Account.txt");
+		out_Account.close();
 	}
-	else {
-		string s;
+	else {	// ì •ìƒì ìœ¼ë¡œ openì‹œ
+		cout << "Account.txt is opened normally." << endl << endl;
 
-		/* Account.txt ¹®ÀÚ¿­ ÀÔ·Â */
+
+		string s;
+		/* Account.txt ë¬¸ìì—´ ì…ë ¥ */
 		while (getline(in_Account, s)) {
+			if (s == "") {		// ë ˆì½”ë“œê°€ ê°œí–‰ë¿ì¼ ë•Œ
+				cout << "NULL stringì´ë„¹" << endl;
+				continue;
+			}
 			vector<string> temp;
 
-			//temp[0]: ½Ã°£, temp[1]: ¼öÀÔ/ÁöÃâ temp[2]: ±İ¾×, temp[3]: ¸Ş¸ğ, temp[4]: Ä«Å×°í¸® ¼ıÀÚ
-			Tokenize(s, temp, "\t");	// TabÀ» ±âÁØÀ¸·Î ÇÏ¿© ¹®ÀÚ¿­ ºĞ¸®
+			//temp[0]: ì‹œê°„, temp[1]: ìˆ˜ì…/ì§€ì¶œ temp[2]: ê¸ˆì•¡, temp[3]: ë©”ëª¨, temp[4]: ì¹´í…Œê³ ë¦¬ ìˆ«ì
+			Tokenize(s, temp, "\t");	// Tabì„ ê¸°ì¤€ìœ¼ë¡œ í•˜ì—¬ ë¬¸ìì—´ ë¶„ë¦¬
 
-			Record r;		// ÀÓ½Ã r ¼³Á¤
+			/////// ì„ì‹œ ë°ì´í„° ////////
 
-			setTime(r, temp[0]); // date ¼³Á¤
+			struct tm t;
+			struct tm t2;
+			t2.tm_year = -1;
+			bool isIncome;
+			unsigned int amount;
+			string memo;
+			short category_number;
 
-			if (temp[1] == "expense") {		// ¼öÀÔ/ÁöÃâ ¼³Á¤
-				r.is_income = false;
+			//t = setTime(temp[0]); // date ì„¤ì •
+			t = checker.checkParseDate(temp[0]);
+			if (t.tm_year == t2.tm_year) {
+				cerr << "Error: Date" << endl;
+				return false;
+			}
+
+			if (temp[1] == "expense") {		// ìˆ˜ì…/ì§€ì¶œ ì„¤ì •
+				isIncome = false;
 			}
 
 			else if (temp[1] == "income") {
-				r.is_income = true;
+				isIncome = true;
 			}
 
-			r.amount = stoi(temp[2]);		// ±İ¾× ¼³Á¤
-			r.memo = temp[3];				// ¸Ş¸ğ ¼³Á¤
-			r.category_number = stoi(temp[4]);	// Ä«Å×°í¸® ¹øÈ£ ¼³Á¤
+			else {
+				cerr << "Error: income/expense" << endl;
+				return false;
+			}
 
-			v.push_back(r);		//v¿¡ »ğÀÔ	( »ğÀÔ ¼ø¼­ È¸ÀÇ ÀÌÈÄ °áÁ¤ )
+
+			if (!checker.checkAmount(temp[2]))
+				amount = stoi(temp[2]);		// ê¸ˆì•¡ ì„¤ì •
+			else {
+				cerr << "Error:Amount" << endl;
+				return false;
+			}
+
+			if (!checker.checkMemo(temp[3]))
+				memo = temp[3];				// ë©”ëª¨ ì„¤ì •
+
+			else {
+				cerr << "Error: Memo" << endl;
+				return false;
+			}
+
+			if (!checker.checkCategoryNumber(temp[4], category_manager.getCategorySize()))
+				category_number = stoi(temp[4]);	// ì¹´í…Œê³ ë¦¬ ë²ˆí˜¸ ì„¤ì •
+			else {
+				cerr << "Error: Category NUmber" << endl;
+				return false;
+			}
+
+			Record r = Record(t, isIncome, amount, memo, category_number);		// Record ìƒì„±
+			record_manager.init_add(r);		// RecordManage listì— ì¶”ê°€
+
+			if (record_manager.getRecordListSize() > 1024) {		// ë ˆì½”ë“œ ê°œìˆ˜ê°€ 1024ê°œ ì´ìƒì¼ ì‹œ false ë°˜í™˜
+				cerr << "Error: Record size limit" << endl;
+				in_Account.close();
+				return false;
+			}
 		}
 	}
+
 	in_category.close();
 	in_Account.close();
+
+	return true;
 }
 
-void setTime(Record& r, string tm) {
+bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category_manager) {
+	/* Record ì €ì¥ */
+	FILE* fp = fopen("Account.txt", "w");		// íŒŒì¼ ì´ˆê¸°í™”
+	fclose(fp);
+
+	ofstream out_Account("Account.txt");
+
+	while (record_manager.getRecordListSize()) {		// list sizeê°€ 0ì´ ë ë•Œê¹Œì§€
+		string s = "";
+		string income = "income";
+		string expense = "expense";
+		Record r = record_manager.getRecord();		// 1ê°œ record ê°€ì ¸ì˜´
+		struct tm tm = r.get_date();		// ì‹œê°„ ì…ë ¥
+		if (tm.tm_min != 0)
+			s += to_string((tm.tm_year) + 1900) + "/" +
+			to_string((tm.tm_mon) + 1) + "/" +
+			to_string(tm.tm_mday) + " " +
+			to_string(tm.tm_hour) + ":" +
+			to_string(tm.tm_min) + "\t";
+
+		else
+			s += to_string((tm.tm_year) + 1900) + "/" +
+			to_string((tm.tm_mon) + 1) + "/" +
+			to_string(tm.tm_mday) + " " +
+			to_string(tm.tm_hour) + ":" +
+			to_string(tm.tm_min) + '0' + "\t";
+
+		bool isIncome = r.get_isincome();	// ìˆ˜ì…/ì§€ì¶œ ì…ë ¥
+		if (isIncome == true) {
+			s += income + "\t";
+		}
+		else {
+			s += expense + "\t";
+		}
+
+		unsigned int amount = r.get_amount();	// ê¸ˆì•¡ ì…ë ¥
+		s += std::to_string(amount) + '\t';
+
+		string memo = r.get_memo();		// ë©”ëª¨ ì…ë ¥
+		s += memo + '\t';
+
+		int category_num = r.get_category_number();	// ì¹´í…Œê³ ë¦¬ ìˆ«ì ì…ë ¥
+		s += std::to_string(category_num);
+		out_Account << s << endl;
+	}
+
+	fp = fopen("Category.txt", "w");
+	fclose(fp);
+
+	ofstream out_Category("Category.txt");
+
+	while (category_manager.getCategorySize()) {
+		string s = "";
+		Category c = category_manager.getCategory();
+		s += c.get_cname();
+
+		out_Category << s << endl;
+	}
+
+	cout << "done" << endl << endl;
+
+	out_Account.close();
+	out_Category.close();
+
+	return true;
+}
+
+struct tm setTime(string tm) {
+	struct tm tm1, tm2;
 	struct tm* lt;
 	time_t t1;
 
@@ -110,45 +238,24 @@ void setTime(Record& r, string tm) {
 	Tokenize(temp1[0], temp2, "/");	// temp2[0]: YYYY, temp2[1]: MM, temp2[2]: DD
 	Tokenize(temp1[1], temp3, ":");	// temp3[0]: HH, temp3[1]: MM
 
-	r.date.tm_year = stoi(temp2[0])-1900;		// ¿¬ ¼³Á¤
-	r.date.tm_mon = stoi(temp2[1]) - 1;		// ¿ù ¼³Á¤
-	r.date.tm_mday = stoi(temp2[2]);		// ÀÏ ¼³Á¤
-	r.date.tm_hour = stoi(temp3[0]);		// ½Ã ¼³Á¤
-	r.date.tm_min = stoi(temp3[1]);			// ºĞ ¼³Á¤
-	r.date.tm_sec = 0;
+	tm1.tm_year = stoi(temp2[0]) - 1900;		// ì—° ì„¤ì •
+	tm1.tm_mon = stoi(temp2[1]) - 1;		// ì›” ì„¤ì •
+	tm1.tm_mday = stoi(temp2[2]);		// ì¼ ì„¤ì •
+	tm1.tm_hour = stoi(temp3[0]);		// ì‹œ ì„¤ì •
+	tm1.tm_min = stoi(temp3[1]);			// ë¶„ ì„¤ì •
+	tm1.tm_sec = 0;
 
-	time_t t2 = mktime(&(r.date));
+	tm2 = tm1;
+	time_t t2 = mktime(&(tm1));
 
-	if (t2 > t1) {
-		cout << "Warning: Time ~~~. Current time: " << asctime(lt) << endl;
+	if (t2 > t1) {		// ì‹œê°„ ì¡°ê±´ ìœ„ë°°í•œë‹¤ë©´?
+		cout << "Warning: Time " << asctime(lt) << endl;
 	}
+
+	return tm2;
 }
 
-bool saveFiles(list<Record> l, Category c) {
-	ifstream in_Account("Account.txt");
-
-	if (!in_Account.is_open()) {
-		ofstream out_Account("Account.txt");
-
-		vector<string> s;
-		list<Record>::iterator iter = l.begin();
-		for (; iter != l.end(); ) {
-			string temp =
-				std::to_string((*iter).date.tm_year + 1900) + "/" +
-				std::to_string((*iter).date.tm_mon + 1) + "/" +
-				std::to_string((*iter).date.tm_mday) + "\t" +
-				"income" + "\t" +
-				std::to_string((*iter).amount) + "\t" +
-				(*iter).memo + "\t" +
-				"1" + "\n";
-
-			iter++;
-		}
-		
-	}
-}
-
-void Tokenize(const string& str, vector<string>& tokens, const string& delimiters) {		//1¹ø ÆÄ¶ó¹ÌÅÍ ¹®ÀÚ¿­À» 3¹øÂ° ÆÄ¶ó¹ÌÅÍ¿¡ µé¾î¿Â ¹®ÀÚ·Î ÂÉ°³¾î 2¹ø º¤ÅÍ¿¡ ÀúÀå
+void Tokenize(const string& str, vector<string>& tokens, const string& delimiters) {		//1ë²ˆ íŒŒë¼ë¯¸í„° ë¬¸ìì—´ì„ 3ë²ˆì§¸ íŒŒë¼ë¯¸í„°ì— ë“¤ì–´ì˜¨ ë¬¸ìë¡œ ìª¼ê°œì–´ 2ë²ˆ ë²¡í„°ì— ì €ì¥
 	string::size_type lastPos = str.find_first_not_of(delimiters, 0);
 	string::size_type pos = str.find_first_of(delimiters, lastPos);
 
