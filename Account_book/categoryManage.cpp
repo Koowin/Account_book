@@ -112,7 +112,7 @@ bool CategoryManage::addCategory(RecordManage& record_manager) {
 					}
 					else {
 						//카테고리 저장확인
-						cout << "Confirm new category? (type 'No' to cancle)" << endl << "> ";
+						cout << "Confirm new category? (type 'No' to cancel)" << endl << "> ";
 						getline(cin, confirm_string);
 						if (confirm_string != "No") {
 							//카테고리 저장
@@ -328,13 +328,13 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 					//모든 기록들 카테고리 번호 하나씩 줄이기 (선택한 것 보다 크다면)
 					for (record_iter = record_manager.get_first(); record_iter != end_of_record_list; record_iter++) {
 						int category_num = record_iter->get_category_number();
-						if (category_num > selected_num + 1) {
+						if (category_num > selected_num) {
 							record_iter->set_category_number(category_num - 1);
 						}
 					}
 					//삭제 작업
 					iter = category.begin();
-					advance(iter, selected_num);
+					advance(iter, selected_num-1);
 					category.erase(iter);
 					FileManage file_manager;
 					file_manager.saveFile(record_manager, *this);
