@@ -42,8 +42,8 @@ int main() {
 				}
 				else {
 					record_manager.addRecord(category_manager);
+					flag = true;
 				}
-				flag = true;
 			}
 			//print all records
 			else if (input_string == "2") {
