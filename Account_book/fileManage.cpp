@@ -30,21 +30,21 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 		while (getline(in_category, s)) {
 
 			if (s.empty()) { //신이 추가: 빈 문자열 무시
-				cout << "Warning: Empty line in Category.txt" << endl;
+				// cout << "Empty line in Category.txt" << endl;
 				continue;
 			}
 
 			Category c = Category(s);
 
-			if (checker.checkCategoryName(s)) { //신이 추가 : checkCategoryName
-				cerr << "Error: Invalid category name" << endl;
+			if(checker.checkCategoryName(s)) { //신이 추가 : checkCategoryName
+				cerr << "Error: Invalid category name" << endl; 
 
 				flag = false;
 				break;
 			}
 
 			if (category_manager.isDuplicate(s)) {		// 카테고리 내 중복 목록이 있다면
-				cout << "Error: Duplicate Category" << endl;
+				cout << "Warning: Duplicate Category" << endl;
 				continue;
 			}
 			category_manager.init_add(c);
@@ -71,7 +71,6 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 		cerr << "Warning: Account.txt not open" << endl;
 
 		ofstream out_Account("Account.txt");
-		cout << "Account.txt is created." << endl << endl;
 		out_Account.close();
 		cout << "Account.txt is created." << endl;
 	}
@@ -83,9 +82,7 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 		/* Account.txt 문자열 입력 */
 		while (getline(in_Account, s)) {
 			if (s == "") {		// 레코드가 개행뿐일 때
-
 				cout << "NULL string" << endl;
-
 				continue;
 			}
 			vector<string> temp;
@@ -131,10 +128,10 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 
 			if (!checker.checkAmount(temp[2])) {	// 금액 설정
 				try {
-					amount = stoi(temp[2]);
+					amount = stoul(temp[2]);
 				}
-				catch (exception& expn) {		// 42억... 이상일때
-					cerr << "Invaild Amount" << endl;
+				catch (exception & expn) {		// 42억... 이상일때
+					cerr << "Error: Invaild Amount (overflow)" << endl;
 					flag = false;
 					break;
 				}
@@ -162,7 +159,6 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 				cerr << "Error: Invalid Category NUmber" << endl;
 				flag = false;
 				break;
-
 			}
 
 			Record r = Record(t, isIncome, amount, memo, category_number);		// Record 생성
@@ -195,19 +191,30 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 		string expense = "expense";
 		Record r = record_manager.getRecord();		// 1개 record 가져옴
 		struct tm tm = r.get_date();		// 시간 입력
-		if (tm.tm_min != 0)
+		if (tm.tm_mday >= 0 && tm.tm_mday < 10)
 			s += to_string((tm.tm_year) + 1900) + "/" +
 			to_string((tm.tm_mon) + 1) + "/" +
-			to_string(tm.tm_mday) + " " +
-			to_string(tm.tm_hour) + ":" +
-			to_string(tm.tm_min) + "\t";
+			+"0" + to_string(tm.tm_mday) + " ";
+		
 
 		else
 			s += to_string((tm.tm_year) + 1900) + "/" +
 			to_string((tm.tm_mon) + 1) + "/" +
+			to_string(tm.tm_mday) + " ";
+			
+
+		if (tm.tm_min >= 0 && tm.tm_min < 10)
+			s += to_string(tm.tm_hour) + ":" +
+			"0" + to_string(tm.tm_min) + "\t";
+
+		else
+			s += to_string(tm.tm_hour) + ":" +
+			to_string(tm.tm_min) + "\t";
+			/*s += to_string((tm.tm_year) + 1900) + "/" +
+			to_string((tm.tm_mon) + 1) + "/" +
 			to_string(tm.tm_mday) + " " +
 			to_string(tm.tm_hour) + ":" +
-			to_string(tm.tm_min) + '0' + "\t";
+			to_string(tm.tm_min) + '0' + "\t";*/
 
 		bool isIncome = r.get_isincome();	// 수입/지출 입력
 		if (isIncome == true) {
