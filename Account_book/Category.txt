@@ -1,5 +1,4 @@
-Bills
-Entertainment
-Food
-Test
-test
+3
+5
+7
+a

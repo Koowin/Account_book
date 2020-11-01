@@ -263,7 +263,10 @@ bool CheckerParser::checkCategoryName(string input_string) {
 	int string_size = input_string.size();
 	bool error = false;
 	if (string_size > 20 || string_size == 0) {
-		error = true;
+		if (isPrint) {
+			cout << "Please enter valid category name." << endl;
+		}
+		return true;
 	}
 	for (i = 0; i < string_size; i++) {
 		if (input_string[i] < 32 || input_string[i] > 126) {
