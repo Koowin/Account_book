@@ -12,7 +12,7 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 		cerr << "Warning: Category.txt not open" << endl;	// 경고문구 출력
 		ofstream out_category("Category.txt");	// 출력 스트림
 
-		string default_category[] = { "Bills", "Entertainment", "Food", "House Rent", "Transpoertation" };	// 예약된 키워드 출력
+		string default_category[] = { "Bills", "Entertainment", "Food", "House Rent", "Transportation" };	// 예약된 키워드 출력
 
 		for (auto s : default_category) {
 			out_category << s << endl;
