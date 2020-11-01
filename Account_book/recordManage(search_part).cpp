@@ -17,87 +17,84 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 
 		cout << "Select field (q:return to main menu)\n> ";
 
-		bool flag = true;
-		while (flag) {
+		while (1) {
 			getline(cin, input_string);
 			if (input_string == "q") {
 				return;
 			}
-			try {
-				selected_menu = stoi(input_string);
-				if (input_string.size()!=1 || selected_menu > 5 || selected_menu < 1) {
-					cout << "Please enter a valid value\n> ";
-					continue;
+			else if (input_string == "1") {
+				system("cls");
+				//기간 조건 추가
+				short n = cd.addPeriodCondition();
+				if (n == -1) {
+					return;
 				}
-				flag = false;
+				else {
+					search_start = !n;
+					break;
+				}
 			}
-			catch (const exception & expn) {
-				cout << "Please enter a valid value.\n> ";
+			else if (input_string == "2") {
+				system("cls");
+				//수입, 지출 조건 추가
+				short n = cd.addIeCondition();
+				if (n == -1) {
+					return;
+				}
+				else {
+					search_start = !n;
+					break;
+				}
+			}
+			else if (input_string == "3") {
+				system("cls");
+				//메모 키워드 조건 추가
+				short n = cd.addMemoCondition();
+				if (n == -1) {
+					return;
+				}
+				else {
+					search_start = !n;
+					break;
+				}
+			}
+			else if (input_string == "4") {
+				system("cls");
+				//카테고리 조건 추가
+				short n = cd.addCategoryCondition(category_manager);
+				if (n == -1) {
+					return;
+				}
+				else {
+					search_start = !n;
+					break;
+				}
+			}
+			else if (input_string == "5") {
+				system("cls");
+				//조건 초기화
+				short n = cd.resetConditions();
+				if (n == -1) {
+					return;
+				}
+				else {
+					search_start = !n;
+					break;
+				}
+			}
+			else {
+				cout << "Please enter a valid value\n> ";
 			}
 		}
-		//else {
-		short n;
-		switch (selected_menu) {
-		case 1:
-			//기간 조건 추가
-			n = cd.addPeriodCondition();
-			if (n == -1) {
-				return;
-			}
-			else {
-				search_start = !n;
-			}
-			break;
-		case 2:
-			//수입, 지출 조건 추가
-			n = cd.addIeCondition();
-			if (n == -1) {
-				return;
-			}
-			else {
-				search_start = !n;
-			}
-			break;
-		case 3:
-			//메모 키워드 조건 추가
-			n = cd.addMemoCondition();
-			if (n == -1) {
-				return;
-			}
-			else {
-				search_start = !n;
-			}
-			break;
-		case 4:
-			//카테고리 조건 추가
-			n = cd.addCategoryCondition(category_manager);
-			if (n == -1) {
-				return;
-			}
-			else {
-				search_start = !n;
-			}
-			break;
-		case 5:
-			//조건 초기화
-			n = cd.resetConditions();
-			if (n == -1) {
-				return;
-			}
-			else {
-				search_start = !n;
-			}
-			break;
-		}
+		
 		if (search_start) {
 			//조건 맞게 출력 시작
 			vector <int> result = searchRecords(cd, category_manager);
 			//신이 추가: 
 			if (result.size() == 0) {
 				cout << "\nNone if the records satisfies the given condition(s)." << endl;
-				cout << "\nEnter any string to continue...\n";
-				string a;
-				getline(cin, a);
+				cout << "\nPress any key to continue...\n";
+				_getch();
 				return;
 			}
 			while (1) {
@@ -247,7 +244,7 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 					while (1) {
 						cout << "\n@ Edit Date and Time @" << endl;
 						cout << "Before modification: ";
-						printf("%04d/%02d/%02d %02d:%02d\n", before_date.tm_year, before_date.tm_mon, before_date.tm_mday, before_date.tm_hour, before_date.tm_min);
+						printf("%04d/%02d/%02d %02d:%02d\n", before_date.tm_year+1900, before_date.tm_mon+1, before_date.tm_mday, before_date.tm_hour, before_date.tm_min);
 						cout << "Enter date and time after modification (q:return to main menu)\n> ";
 						getline(cin, input_string);
 						if (input_string == "q") {
@@ -274,7 +271,7 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 							return true;
 						}
 						if (!cp.checkAmount(input_string)) {
-							after_memo = cp.parseAmount(input_string);
+							after_amount = cp.parseAmount(input_string);
 							break;
 						}
 					}
@@ -370,7 +367,7 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 					record_list.push_back(Record(after_date, after_is_income, after_amount, after_memo, after_category_number));
 				}
 				else {
-					record_list.push_back(Record(after_date, after_is_income, after_amount, after_memo, after_category_number));
+					record_list.insert(iter2, Record(after_date, after_is_income, after_amount, after_memo, after_category_number));
 				}
 				FileManage file_manager;
 				file_manager.saveFile(*this, category_manager);
@@ -390,17 +387,11 @@ bool RecordManage::deleteRecordList(vector <int> result, CategoryManage &categor
 		if (input_string == "q") {
 			return true;
 		}
-		selected = -1;
-		try {
+		
+		CheckerParser cp;
+		if (!cp.checkCategoryNumber(input_string, record_list.size())) {
 			selected = stoi(input_string);
-		}
-		catch (exception & expn) {
-			cout << "Please enter a valid value." << endl;
-		}
-		if (selected < 1 || selected > result.size()) {
-			cout << "Please enter a valid value." << endl;
-		}
-		else {
+
 			//선택된 index로 삭제 작업
 			cout << "\n@ Delete a transaction @" << endl;
 			cout << "Confirm deletion? (type 'No' to cancel)\n> ";

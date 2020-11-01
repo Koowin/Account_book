@@ -14,9 +14,9 @@ int main() {
 		cerr << "Error: File initialization error" << endl; 
 		return -1;
 	}
-	cout << "\nEnter any string to continue...\n";
-	string a;
-	getline(cin, a);
+	cout << "\nPress any key to continue...\n";
+	_getch();
+
 	//to do: 파일 읽기 및 데이터 저장 작업
 	while (1) {
 		//메인메뉴 출력부
@@ -37,8 +37,8 @@ int main() {
 				if (record_manager.getRecordListSize() > 1023) {
 					cout << "Your number of transactions has exceeded its maximum value (1024 transactions)." << endl;
 					cout << "Please delete some of your transactions to continue." << endl;
-					cout << "\nEnter any string to continue...\n";
-					getline(cin, a);
+					cout << "Select menu" << endl << "> ";
+					flag = false;
 				}
 				else {
 					record_manager.addRecord(category_manager);
