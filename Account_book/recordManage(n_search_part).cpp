@@ -177,7 +177,8 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 	}
 
 	//저장 확인 물어보는 부분
-	cout << "\n@ Add a transaction @" << endl;
+	system("cls");
+	cout << "@ Add a transaction @" << endl;
 	printf("- Date and Time: %04d/%02d/%02d %02d:%02d\n", date.tm_year+1900, date.tm_mon+1, date.tm_mday, date.tm_hour, date.tm_min);
 	cout << "- Income/Expense: ";
 	if (is_income) {

@@ -12,7 +12,7 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 		cerr << "Warning: Category.txt not open" << endl;	// 경고문구 출력
 		ofstream out_category("Category.txt");	// 출력 스트림
 
-		string default_category[] = { "Bills", "Entertainment", "Food", "House Rent", "Transportation" };	// 예약된 키워드 출력
+		string default_category[] = { "Bills", "Entertainment", "Food", "House Rent", "Transpoertation" };	// 예약된 키워드 출력
 
 		for (auto s : default_category) {
 			out_category << s << endl;
@@ -36,8 +36,8 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 
 			Category c = Category(s);
 
-			if(checker.checkCategoryName(s)) { //신이 추가 : checkCategoryName
-				cerr << "Error: Invalid category name" << endl; 
+			if (checker.checkCategoryName(s)) { //신이 추가 : checkCategoryName
+				cerr << "Error: Invalid category name" << endl;
 
 				flag = false;
 				break;
@@ -129,10 +129,13 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 			if (!checker.checkAmount(temp[2])) {	// 금액 설정
 				try {
 					amount = stoul(temp[2]);
+					if (amount <= 0) {
+						cerr << "Error: Invaild Amount " << endl;
+						flag = false;
+						break;
+					}
 				}
-
 				catch (exception& expn) {		// 42억... 이상일때
-
 					cerr << "Error: Invaild Amount (overflow)" << endl;
 					flag = false;
 					break;
@@ -203,8 +206,6 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 		if (tm.tm_mday >= 0 && tm.tm_mday < 10)
 			s += "0" + to_string(tm.tm_mday) + " ";
 
-
-
 		else
 			s += to_string(tm.tm_mday) + " ";
 
@@ -212,8 +213,6 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 			s += "0" + to_string(tm.tm_hour) + ":";
 		else
 			s += to_string(tm.tm_hour) + ":";
-
-
 
 		if (tm.tm_min >= 0 && tm.tm_min < 10)
 			s += "0" + to_string(tm.tm_min) + "\t";
@@ -225,7 +224,6 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 		to_string(tm.tm_mday) + " " +
 		to_string(tm.tm_hour) + ":" +
 		to_string(tm.tm_min) + '0' + "\t";*/
-
 
 		bool isIncome = r.get_isincome();	// 수입/지출 입력
 		if (isIncome == true) {
