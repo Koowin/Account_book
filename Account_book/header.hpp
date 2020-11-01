@@ -92,7 +92,7 @@ public:
 	void printSelectedRecordList(CategoryManage&, vector <int>);
 	bool addRecord(CategoryManage &);
 	bool modifyRecordList(vector <int>, CategoryManage&);
-	bool deleteRecordList(vector <int>);
+	bool deleteRecordList(vector <int>, CategoryManage&);
 	int getRecordListSize();
 	
 	void init_add(Record);
@@ -143,8 +143,8 @@ private:
 public:
 	void categoryMenu(RecordManage &);
 	void printCategoryList();
-	bool addCategory();
-	bool modifyCategory();
+	bool addCategory(RecordManage&);
+	bool modifyCategory(RecordManage&);
 	bool deleteCategory(RecordManage &);
 	int getCategorySize();
 	string getIndexedCategory(int);

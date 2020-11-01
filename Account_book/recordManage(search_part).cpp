@@ -94,10 +94,11 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 			vector <int> result = searchRecords(cd, category_manager);
 			//신이 추가: 
 			if (result.size() == 0) {
-				cout << "\n None if the records satisfies the given condition(s)." << endl;
+				cout << "\nNone if the records satisfies the given condition(s)." << endl;
 				cout << "\nEnter any string to continue...\n";
 				string a;
 				getline(cin, a);
+				return;
 			}
 			while (1) {
 				//수정 삭제 입력받기
@@ -114,7 +115,7 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 					return;
 				}
 				else if (input_string == "2") {
-					deleteRecordList(result);
+					deleteRecordList(result, category_manager);
 					return;
 				}
 				else {
@@ -371,13 +372,15 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 				else {
 					record_list.push_back(Record(after_date, after_is_income, after_amount, after_memo, after_category_number));
 				}
+				FileManage file_manager;
+				file_manager.saveFile(*this, category_manager);
 				return false;
 			}
 		}
 	}
 }
 
-bool RecordManage::deleteRecordList(vector <int> result) {
+bool RecordManage::deleteRecordList(vector <int> result, CategoryManage &category_manager) {
 	string input_string;
 	int selected;
 	while (1) {
@@ -409,6 +412,8 @@ bool RecordManage::deleteRecordList(vector <int> result) {
 				list <Record>::iterator iter = record_list.begin();
 				advance(iter, result[selected - 1]);
 				record_list.erase(iter);
+				FileManage file_manager;
+				file_manager.saveFile(*this, category_manager);
 				return false;
 			}
 		}

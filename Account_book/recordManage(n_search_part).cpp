@@ -219,7 +219,9 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		else {
 			record_list.insert(iter, Record(date, is_income, amount, memo, category_number));
 		}
-
+		FileManage file_manager;
+		file_manager.saveFile(*this, category_manager);
+		
 		return false;
 	}
 }

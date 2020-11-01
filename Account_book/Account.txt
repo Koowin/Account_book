@@ -1,1 +1,4 @@
+2009/01/01 00:00	income	432	est	4
+2010/01/01 00:00	income	123	test2	2
+2020/01/01 00:00	income	123	234	1
 2020/10/12 12:12	expense	20000	buffet with fam	3
