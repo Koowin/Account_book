@@ -1,3 +1,5 @@
-3
-5
-7
+Bills
+Entertainment
+Food
+House Rent
+Transportation

@@ -185,10 +185,15 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category_manager) {
 	/* Record 저장 */
 	FILE* fp = fopen("Account.txt", "w");		// 파일 초기화
-	fclose(fp);
+	if (fp == NULL) {
+		cerr << "Failed to open Amount.txt. Transaction is not added" << endl;
+	}
+	else {
+		fclose(fp);
+	}
 
 	ofstream out_Account("Account.txt");
-	
+
 	list <Record>::iterator iter = record_manager.get_first();
 	list <Record>::iterator end = record_manager.get_end();
 
@@ -196,7 +201,7 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 		string s = "";
 		string income = "income";
 		string expense = "expense";
-		
+
 		struct tm tm = iter->get_date();		// 시간 입력
 		if (tm.tm_mon >= 0 && tm.tm_mon < 9)
 			s += to_string((tm.tm_year) + 1900) + "/" +
@@ -248,7 +253,12 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 	}
 
 	fp = fopen("Category.txt", "w");
-	fclose(fp);
+	if (fp == NULL) {
+		cerr << "Failed to open Category.txt." << endl;
+	}
+	else {
+		fclose(fp);
+	}
 
 	ofstream out_Category("Category.txt");
 
@@ -256,7 +266,7 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 	list <Category>::iterator end2 = category_manager.get_end();
 	while (iter2 != end2) {
 		string s = iter2->get_cname();
-		
+
 		out_Category << s << endl;
 		iter2++;
 	}
