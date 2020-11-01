@@ -194,7 +194,7 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 	cout << "- Amount: " << amount << endl;
 	cout << "- Memo: " << memo << endl;
 	cout << "- Category: " << category_manager.getIndexedCategory(category_number) << endl;
-	cout << "\nConfirm new transaction? (type 'No' to cancel)\n> ";
+	cout << "\nConfirm new transaction? (type 'No' to cancle)\n> ";
 	getline(cin, input_string);
 
 	if (input_string == "No") {
