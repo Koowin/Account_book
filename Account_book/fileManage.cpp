@@ -36,8 +36,8 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 
 			Category c = Category(s);
 
-			if (checker.checkCategoryName(s)) { //신이 추가 : checkCategoryName
-				cerr << "Error: Invalid category name" << endl;
+			if(checker.checkCategoryName(s)) { //신이 추가 : checkCategoryName
+				cerr << "Error: Invalid category name" << endl; 
 
 				flag = false;
 				break;
@@ -130,7 +130,9 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 				try {
 					amount = stoul(temp[2]);
 				}
+
 				catch (exception& expn) {		// 42억... 이상일때
+
 					cerr << "Error: Invaild Amount (overflow)" << endl;
 					flag = false;
 					break;
@@ -197,10 +199,14 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 			+"0" + to_string(tm.tm_mday) + " ";
 
 
+
+
 		else
 			s += to_string((tm.tm_year) + 1900) + "/" +
 			to_string((tm.tm_mon) + 1) + "/" +
 			to_string(tm.tm_mday) + " ";
+
+
 
 
 		if (tm.tm_min >= 0 && tm.tm_min < 10)
@@ -215,6 +221,7 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 		to_string(tm.tm_mday) + " " +
 		to_string(tm.tm_hour) + ":" +
 		to_string(tm.tm_min) + '0' + "\t";*/
+
 
 		bool isIncome = r.get_isincome();	// 수입/지출 입력
 		if (isIncome == true) {
