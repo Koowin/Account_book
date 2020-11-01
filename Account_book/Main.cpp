@@ -63,6 +63,7 @@ int main() {
 			}
 			else if (input_string == "5") {
 				//저장 작업
+				file_manager.saveFile(record_manager,category_manager);
 				return 0;
 			}
 			else{
