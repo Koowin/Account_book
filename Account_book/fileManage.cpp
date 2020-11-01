@@ -4,7 +4,7 @@
 bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category_manager) {
 	ifstream in_Account("Account.txt");
 	ifstream in_category("Category.txt");
-	CheckerParser checker;
+	CheckerParser checker(false);
 	bool flag = true;
 
 	/* Category.txt 부문 */
@@ -38,6 +38,7 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 
 			if(checker.checkCategoryName(s)) { //신이 추가 : checkCategoryName
 				cerr << "Error: Invalid category name" << endl; 
+
 				flag = false;
 				break;
 			}
@@ -71,6 +72,7 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 
 		ofstream out_Account("Account.txt");
 		out_Account.close();
+		cout << "Account.txt is created." << endl;
 	}
 	else {	// 정상적으로 open시
 		cout << "Account.txt is opened normally." << endl << endl;
@@ -134,7 +136,6 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 					break;
 				}
 			}
-				
 			else {
 				cerr << "Error:Invalid Amount" << endl;
 				flag = false;
@@ -154,6 +155,7 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 				category_number = stoi(temp[4]);	// 카테고리 번호 설정
 
 			else {
+
 				cerr << "Error: Invalid Category NUmber" << endl;
 				flag = false;
 				break;
