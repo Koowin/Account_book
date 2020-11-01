@@ -14,9 +14,9 @@ void RecordManage::printAllRecordList(CategoryManage& category_manager) {
 		printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
 		printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
 	}
-	/*cout << "\nPress any key to continue...";
-	_getch();*/
-	system("pause");
+	cout << "\nEnter any string to continue...\n";
+	string a;
+	getline(cin, a);
 }
 
 void RecordManage::printSelectedRecordList(CategoryManage& category_manager, vector <int> selected_index) {

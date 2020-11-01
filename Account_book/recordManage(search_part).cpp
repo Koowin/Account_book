@@ -95,8 +95,9 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 			//신이 추가: 
 			if (result.size() == 0) {
 				cout << "\n None if the records satisfies the given condition(s)." << endl;
-				cout << "\n Press any key to return to Main Menu.";
-				_getch();
+				cout << "\nEnter any string to continue...\n";
+				string a;
+				getline(cin, a);
 			}
 			while (1) {
 				//수정 삭제 입력받기
