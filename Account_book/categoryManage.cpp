@@ -296,6 +296,7 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 		//예외처리: 카테고리 개수가 1개면 삭제 안되게
 		if (category.size() < 2) {
 			cout << "There must be at least one category. Category is not deleted." << endl;
+			Sleep(1000);
 			return true;
 		}
 		if (selected_num > category.size() || selected_num < 1) {
@@ -303,7 +304,6 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 		}
 		else {
 			//예외처리: 해당 카테고리 번호가 존재하는 기록이 있으면 삭제 안되게
-			selected_num--;
 
 			for (record_iter = record_manager.get_first(); record_iter != end_of_record_list; record_iter++) {
 				if (record_iter->get_category_number() == selected_num) {
