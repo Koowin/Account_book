@@ -209,7 +209,7 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 		}
 		selected = -1;
 		CheckerParser cp;
-		if (!cp.checkCategoryNumber(input_string, record_list.size())) {
+		if (!cp.checkCategoryNumber(input_string, result.size())) {
 			selected = stoi(input_string);
 
 			//선택된 index로 수정 작업
@@ -389,7 +389,7 @@ bool RecordManage::deleteRecordList(vector <int> result, CategoryManage &categor
 		}
 		
 		CheckerParser cp;
-		if (!cp.checkCategoryNumber(input_string, record_list.size())) {
+		if (!cp.checkCategoryNumber(input_string, result.size())) {
 			selected = stoi(input_string);
 
 			//선택된 index로 삭제 작업

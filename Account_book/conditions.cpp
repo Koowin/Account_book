@@ -14,15 +14,19 @@ Conditions::Conditions() {
 short Conditions::addPeriodCondition() {
 	string input_string;
 	CheckerParser cp;
+	bool flag = true;
 	while (1) {
-		cout << "@ Search condition : Time period @" << endl;
-		cout << "Enter time period using format \"YYYY/MM/DD hh:mm~YYYY/MM/DD hh:mm\"\n(q:return to main menu)\n> ";
+		if (flag) {
+			cout << "@ Search condition : Time period @" << endl;
+		}
+			cout << "Enter time period using format \"YYYY/MM/DD hh:mm~YYYY/MM/DD hh:mm\"\n(q:return to main menu)\n> ";
 		getline(cin, input_string);
 		if (input_string == "q") {
 			return -1;
 		}
 		if (input_string.size() != 33 || input_string[16] != '~') {
 			cout << "Invalid date and time." << endl;
+			flag = false;
 		}
 		else {
 			int i;
@@ -40,6 +44,7 @@ short Conditions::addPeriodCondition() {
 			if (from.tm_year != -1 && to.tm_year != -1) {
 				if (compare(to, from)) {
 					cout << "Right date must be larger than left date." << endl;
+					flag = false;
 				}
 				else {
 					on_period = true;
@@ -53,9 +58,12 @@ short Conditions::addPeriodCondition() {
 }
 short Conditions::addIeCondition() {
 	string input_string;
+	bool flag = true;
 	while (1) {
-		cout << "@ Search condition : Income/Expense @" << endl;
-		cout << "1. Income\n2. Expense\n\n";
+		if (flag) {
+			cout << "@ Search condition : Income/Expense @" << endl;
+			cout << "1. Income\n2. Expense\n\n";
+		}
 		cout << "Select type of transaction (q: return to main menu)\n> ";
 		getline(cin, input_string);
 		if (input_string == "q") {
@@ -73,6 +81,7 @@ short Conditions::addIeCondition() {
 		}
 		else {
 			cout << "Please enter a valid value" << endl;
+			flag = false;
 		}
 	}
 	return printCurrentConditions();
@@ -80,9 +89,12 @@ short Conditions::addIeCondition() {
 short Conditions::addMemoCondition() {
 	string input_string;
 	CheckerParser cp;
+	bool flag = true;
 	while (1) {
-		cout << "@ Search condition : Memo @" << endl;
-		cout << "Search transactions that contain the text...(q: return to main menu)\n> ";
+		if (flag) {
+			cout << "@ Search condition : Memo @" << endl;
+		}
+			cout << "Search transactions that contain the text...(q: return to main menu)\n> ";
 		getline(cin, input_string);
 		if (input_string == "q") {
 			return -1;
@@ -92,15 +104,21 @@ short Conditions::addMemoCondition() {
 			keyword = input_string;
 			break;
 		}
+		else {
+			flag = false;
+		}
 	}
 	return printCurrentConditions();
 }
 short Conditions::addCategoryCondition(CategoryManage& category_manager) {
 	string input_string;
 	CheckerParser cp;
+	bool flag = true;
 	while (1) {
-		cout << "@ Search condition : Category @" << endl;
-		category_manager.printCategoryList();
+		if (flag) {
+			cout << "@ Search condition : Category @" << endl;
+			category_manager.printCategoryList();
+		}
 		cout << "\nSelect a category (q: return to main menu)\n> ";
 		getline(cin, input_string);
 		if (input_string == "q") {
@@ -111,6 +129,9 @@ short Conditions::addCategoryCondition(CategoryManage& category_manager) {
 			category_name = category_manager.getIndexedCategory(category_number);
 			on_category = true;
 			break;
+		}
+		else {
+			flag = false;
 		}
 	}
 	return printCurrentConditions();
