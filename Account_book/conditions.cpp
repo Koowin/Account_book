@@ -140,12 +140,15 @@ short Conditions::addCategoryCondition(CategoryManage& category_manager) {
 short Conditions::resetConditions() {
 	string input_string;
 	CheckerParser cp;
+	bool flag = true;
 	while (1) {
-		cout << "@ Search condition : Reset field @" << endl;
-		cout << "1. Date and Time" << endl;
-		cout << "2. Income/Expense" << endl;
-		cout << "3. Memo" << endl;
-		cout << "4. Category" << endl;
+		if (flag) {
+			cout << "@ Search condition : Reset field @" << endl;
+			cout << "1. Date and Time" << endl;
+			cout << "2. Income/Expense" << endl;
+			cout << "3. Memo" << endl;
+			cout << "4. Category" << endl;
+		}
 		cout << "\nSelect field to reset (q: return to main menu)\n> ";
 		getline(cin, input_string);
 		if (input_string == "q") {
@@ -169,6 +172,7 @@ short Conditions::resetConditions() {
 		}
 		else {
 			cout << "Please enter a valid value" << endl;
+			flag = false;
 		}
 	}
 	return printCurrentConditions();
