@@ -373,7 +373,7 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 			cout << "- Amount: " << after_amount << endl;
 			cout << "- Memo: " << after_memo << endl;
 			cout << "- Category: " << category_manager.getIndexedCategory(after_category_number) << endl << endl;
-			cout << "Confirm modification? (type 'No' to cancle)\n> ";
+			cout << "Confirm modification? (type 'No' to cancel)\n> ";
 			getline(cin, input_string);
 			if (input_string == "No") {
 				return true;

@@ -6,3 +6,4 @@ x64/
 *.opendb
 .vs/Account_book/v16/.suo
 *.db-wal
+*.txt
