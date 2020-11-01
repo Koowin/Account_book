@@ -351,7 +351,7 @@ string CategoryManage::getIndexedCategory(int index) {
 	return iter->get_cname();
 }
 
-int CategoryManage::getcategoriesize() {
+int CategoryManage::getCategorySize() {
 	return category.size();
 }
 

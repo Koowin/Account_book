@@ -146,7 +146,7 @@ public:
 	bool addCategory(RecordManage&);
 	bool modifyCategory(RecordManage&);
 	bool deleteCategory(RecordManage &);
-	int getcategoriesize();
+	int getCategorySize();
 	string getIndexedCategory(int);
 	
 	bool isDuplicate(string);

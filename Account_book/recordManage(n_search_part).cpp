@@ -171,7 +171,7 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		if (input_string == "q") {
 			return true;
 		}
-		if (!cp.checkCategoryNumber(input_string, category_manager.getcategoriesize())) {
+		if (!cp.checkCategoryNumber(input_string, category_manager.getCategorySize())) {
 			category_number = stoi(input_string);
 			break;
 		}

@@ -106,7 +106,7 @@ short Conditions::addCategoryCondition(CategoryManage& category_manager) {
 		if (input_string == "q") {
 			return -1;
 		}
-		if (!cp.checkCategoryNumber(input_string, category_manager.getcategoriesize())) {
+		if (!cp.checkCategoryNumber(input_string, category_manager.getCategorySize())) {
 			category_number = stoi(input_string);
 			category_name = category_manager.getIndexedCategory(category_number);
 			on_category = true;

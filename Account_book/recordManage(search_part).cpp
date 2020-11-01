@@ -310,7 +310,7 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 						if (input_string == "q") {
 							return true;
 						}
-						if (!cp.checkCategoryNumber(input_string, category_manager.getcategoriesize())) {
+						if (!cp.checkCategoryNumber(input_string, category_manager.getCategorySize())) {
 							after_category_number = stoi(input_string);
 							break;
 						}
