@@ -224,12 +224,7 @@ bool CheckerParser::checkMemo(string input_string) {
 
 bool CheckerParser::checkCategoryNumber(string input_string, int category_number) {
 	int size = input_string.size();
-	if (input_string[0] == '0') {
-		if (isPrint) {
-			cout << "Please enter a valid value." << endl;
-		}
-		return true;
-	}
+	
 	for (int i = 0; i < size; i++) {
 		if (input_string[i] < '0' || input_string[i] > '9') {
 			if (isPrint) {
