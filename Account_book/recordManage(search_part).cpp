@@ -6,15 +6,17 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 	string input_string;
 	int selected_menu = 0;
 	bool search_start = false;
+	bool flag = true;
 	while (1) {
-		system("cls");
-		cout << "@ Search a transaction @" << endl;
-		cout << "1. Date and Time" << endl;
-		cout << "2. Income/Expense" << endl;
-		cout << "3. Memo" << endl;
-		cout << "4. Category " << endl;
-		cout << "5. Reset conditions (by field)" << endl << endl;
-
+		if (flag) {
+			system("cls");
+			cout << "@ Search a transaction @" << endl;
+			cout << "1. Date and Time" << endl;
+			cout << "2. Income/Expense" << endl;
+			cout << "3. Memo" << endl;
+			cout << "4. Category " << endl;
+			cout << "5. Reset conditions (by field)" << endl << endl;
+		}
 		cout << "Select field (q:return to main menu)\n> ";
 
 		while (1) {
@@ -97,11 +99,15 @@ void RecordManage::searchMenu(CategoryManage& category_manager) {
 				_getch();
 				return;
 			}
+			bool flag2 = true;
 			while (1) {
 				//수정 삭제 입력받기
-				cout << "\n@ Manage transaction @" << endl;
-				cout << "1. Edit" << endl;
-				cout << "2. Remove\n" << endl;
+				if (flag2) {
+					cout << "\n@ Manage transaction @" << endl;
+					cout << "1. Edit" << endl;
+					cout << "2. Remove\n" << endl;
+					flag2 = false;
+				}
 				cout << "Select action (q:return to main menu)\n> ";
 				getline(cin, input_string);
 				if (input_string == "q") {
@@ -227,13 +233,17 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 			int after_category_number = before_category_number;
 			CheckerParser cp;
 
+			bool flag = true;
 			while (1) {
-				cout << "\n@ Edit a transaction @" << endl;
-				cout << "1. Date and Time" << endl;
-				cout << "2. Income/Expense" << endl;
-				cout << "3. Amount" << endl;
-				cout << "4. Memo" << endl;
-				cout << "5. Category\n" << endl;
+				if (flag) {
+					system("cls");
+					cout << "@ Edit a transaction @" << endl;
+					cout << "1. Date and Time" << endl;
+					cout << "2. Income/Expense" << endl;
+					cout << "3. Amount" << endl;
+					cout << "4. Memo" << endl;
+					cout << "5. Category\n" << endl;
+				}
 				cout << "Select field to edit (q: return to main menu)\n> ";
 				getline(cin, input_string);
 
@@ -241,10 +251,14 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 					return true;
 				}
 				else if (input_string == "1") {
-					while (1) {
-						cout << "\n@ Edit Date and Time @" << endl;
-						cout << "Before modification: ";
-						printf("%04d/%02d/%02d %02d:%02d\n", before_date.tm_year+1900, before_date.tm_mon+1, before_date.tm_mday, before_date.tm_hour, before_date.tm_min);
+					bool flag2 = true;
+					while (1) {			
+						if (flag2) {
+							cout << "\n@ Edit Date and Time @" << endl;
+							cout << "Before modification: ";
+							printf("%04d/%02d/%02d %02d:%02d\n", before_date.tm_year + 1900, before_date.tm_mon + 1, before_date.tm_mday, before_date.tm_hour, before_date.tm_min);
+							flag2 = false;
+						}
 						cout << "Enter date and time after modification (q:return to main menu)\n> ";
 						getline(cin, input_string);
 						if (input_string == "q") {
@@ -262,9 +276,13 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 					break;
 				}
 				else if (input_string == "3") {
+					bool flag2 = true;
 					while (1) {
-						cout << "\n@ Edit Amount @" << endl;
-						cout << "Before modification: " << before_amount << endl;
+						if (flag2) {
+							cout << "\n@ Edit Amount @" << endl;
+							cout << "Before modification: " << before_amount << endl;
+							flag2 = false;
+						}
 						cout << "Enter amount after modification (q:return to main menu)\n> ";
 						getline(cin, input_string);
 						if (input_string == "q") {
@@ -272,15 +290,21 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 						}
 						if (!cp.checkAmount(input_string)) {
 							after_amount = cp.parseAmount(input_string);
-							break;
+							if (after_amount != 0) {
+								break;
+							}
 						}
 					}
 					break;
 				}
 				else if (input_string == "4") {
+					bool flag2 = true;
 					while (1) {
-						cout << "\n@ Edit Memo @" << endl;
-						cout << "Before modification: " << before_memo << endl;
+						if (flag2) {
+							cout << "\n@ Edit Memo @" << endl;
+							cout << "Before modification: " << before_memo << endl;
+							flag2 = false;
+						}
 						cout << "Enter memo after modification (q:return to main menu)\n> ";
 						getline(cin, input_string);
 						if (input_string == "q") {
@@ -294,11 +318,15 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 					break;
 				}
 				else if (input_string == "5") {
+					bool flag2 = true;
 					while (1) {
-						cout << "\n@ Edit Category @" << endl;
-						cout << "Before modification: " << category_manager.getIndexedCategory(before_category_number) << endl;
-						cout << "\nAll categories:" << endl;
-						category_manager.printCategoryList();
+						if (flag2) {
+							cout << "\n@ Edit Category @" << endl;
+							cout << "Before modification: " << category_manager.getIndexedCategory(before_category_number) << endl;
+							cout << "\nAll categories:" << endl;
+							category_manager.printCategoryList();
+							flag2 = false;
+						}
 						cout << "\nSelect category after modification (q:return to main menu)\n> ";
 						getline(cin, input_string);
 						if (input_string == "q") {
@@ -313,6 +341,7 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 				}
 				else {
 					cout << "Please enter a valid value." << endl;
+					flag = false;
 				}
 			}
 			//수정 확인

@@ -142,6 +142,10 @@ bool CheckerParser::checkAmount(string input_string) {
 	int i;
 	vector <int> comma_location;
 	int string_size = input_string.size();
+	if (input_string[0] == '0') {
+		cout << "Please enter a valid value." << endl;
+		return true;
+	}
 
 	for (i = 0; i < string_size; i++) {
 		if (input_string[i] == ',') {
@@ -292,10 +296,7 @@ unsigned int CheckerParser::parseAmount(string input_string) {
 	int i;
 	unsigned int return_val;
 	int string_size = input_string.size();
-	if (input_string[0] == '0') {
-		cout << "Please enter a valid value." << endl;
-		return 0;
-	}
+	
 	for (i = 0; i < string_size; i++) {
 		if (input_string[i] != ',') {
 			result.push_back(input_string[i]);
