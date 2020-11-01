@@ -184,7 +184,13 @@ vector <int> RecordManage::searchRecords(Conditions& cd, CategoryManage& categor
 		for (i = 1; i < end; i++) {
 			advance(iter, (result[i] - result[i - 1]));
 			printf("%-04d\t%04d/%02d/%02d\t%02d:%02d", i + 1, iter->get_date().tm_year+1900,iter->get_date().tm_mon+1, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
-			printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
+			if (iter->get_isincome()) {
+				printf("\tincome");
+			}
+			else {
+				printf("\texpense");
+			}
+			printf("\t%-10u\t%-20s\t", iter->get_amount(), (iter->get_memo()).c_str());
 			printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
 		}
 	}

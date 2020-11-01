@@ -1,5 +1,5 @@
 #include "header.hpp"
-
+#include <windows.h>
 
 void CategoryManage::categoryMenu(RecordManage& record_manager) {
 	string input_string;
@@ -31,8 +31,7 @@ void CategoryManage::categoryMenu(RecordManage& record_manager) {
 
 		}
 		else if (input_string == "2") {
-			addCategory(record_manager);
-			//flag = true;
+			flag = addCategory(record_manager);
 			break;
 		}
 		else if (input_string == "3") {
@@ -41,8 +40,7 @@ void CategoryManage::categoryMenu(RecordManage& record_manager) {
 			break;
 		}
 		else if (input_string == "4") {
-			deleteCategory(record_manager);
-			//flag = true;
+			flag = deleteCategory(record_manager);
 			break;
 		}
 		else {
@@ -88,12 +86,13 @@ bool CategoryManage::addCategory(RecordManage& record_manager) {
 
 		//입력이 'q'인지 검사
 		if (input_string == "q") {
-			return true;
+			return false;
 		}
 		else {
 			if (category.size() >= 64) {
 				cout << "Your number of categories has exceeded its maximum value (64 categories)." << endl;
 				cout << "Please delete some of your categories to continue." << endl;
+				return true;
 			}
 			else {
 				//카테고리 문자열 문법 검사
@@ -117,7 +116,15 @@ bool CategoryManage::addCategory(RecordManage& record_manager) {
 						getline(cin, confirm_string);
 						if (confirm_string != "No") {
 							//카테고리 저장
-							category.push_back(Category(input_string));
+							list <Category>::iterator iter = category.begin();
+							list <Category>::iterator end = category.end();
+
+							for (; iter != end; iter++) {
+								if (input_string.compare(iter->get_cname()) < 0) {
+									break;
+								}
+							}
+							category.insert(iter, Category(input_string));
 							FileManage file_manager;
 							file_manager.saveFile(record_manager, *this);
 						}
@@ -200,7 +207,45 @@ bool CategoryManage::modifyCategory(RecordManage& record_manager) {
 						return false;
 					}
 					else {
-						selector->set_cname(input_string);
+						//수정 작업
+						category.erase(selector);
+						list <Category>::iterator iter2 = category.begin();
+						list <Category>::iterator end = category.end();
+						int before, after=1;
+						before = selected_num;
+
+						for (; iter2 != end; iter2++) {
+							if (input_string.compare(iter2->get_cname()) < 0) {
+								break;
+							}
+							after++;
+						}
+						category.insert(iter2, Category(input_string));
+
+						//Records category number 수정부분
+						list <Record>::iterator r_iter = record_manager.get_first();
+						list <Record>::iterator r_end = record_manager.get_end();
+						if (before != after) {
+							for (; r_iter != r_end; r_iter++) {
+								int now = r_iter->get_category_number();
+								if (now == before) {
+									r_iter->set_category_number(after);
+								}
+								else {
+									if (before < after) {
+										if (before < now && now <= after) {
+											r_iter->set_category_number(now - 1);
+										}
+									}
+									else {
+										if (after <= now && now < before) {
+											r_iter->set_category_number(now + 1);
+										}
+									}
+								}
+							}
+						}
+
 						FileManage file_manager;
 						file_manager.saveFile(record_manager, *this);
 						return false;
@@ -234,7 +279,7 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 		getline(cin, input_string);
 
 		if (input_string == "q") {
-			return true;
+			return false;
 		}
 		//숫자 이외의 입력 예외처리
 		if (!cp.checkCategoryNumber(input_string, category.size())) {
@@ -269,14 +314,15 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 			//duplicate_checker == true면 겹치는 기록 존재
 			if (duplicate_checker) {
 				cout << "Some record have that category number. " << endl;
-				flag = false;
+				Sleep(1000);
+				return true;
 			}
 			else {
 				//삭제 확인
 				cout << "Confirm deletion? (type 'No' to cancel)" << endl << "> ";
 				getline(cin, input_string);
 				if (input_string == "No") {
-					return true;
+					return false;
 				}
 				else {
 					//모든 기록들 카테고리 번호 하나씩 줄이기 (선택한 것 보다 크다면)
