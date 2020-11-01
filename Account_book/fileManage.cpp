@@ -49,14 +49,14 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 			}
 			category_manager.init_add(c);
 
-			if (category_manager.getCategorySize() > 64) {		// 카테고리 개수가 64개 이상일 시 false 반환
+			if (category_manager.getcategoriesize() > 64) {		// 카테고리 개수가 64개 이상일 시 false 반환
 				cerr << "Error: Category size limit " << endl;
 				flag = false;
 				break;
 			}
 		}
 
-		if (!category_manager.getCategorySize()) {		// 카테고리 목록이 비어있다면
+		if (!category_manager.getcategoriesize()) {		// 카테고리 목록이 비어있다면
 			string default_category[] = { "Bills", "Entertainment", "Food", "House Rent", "Transportation" };
 
 			for (auto s : default_category) {
@@ -155,7 +155,7 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 				break;
 			}
 
-			if (!checker.checkCategoryNumber(temp[4], category_manager.getCategorySize()))
+			if (!checker.checkCategoryNumber(temp[4], category_manager.getcategoriesize()))
 				category_number = stoi(temp[4]);	// 카테고리 번호 설정
 
 			else {
