@@ -4,14 +4,19 @@ void RecordManage::printAllRecordList(CategoryManage& category_manager) {
 	list <Record>::iterator iter;
 	list <Record>::iterator end = record_list.end();
 	system("cls");
-	printf("Date\t\tTime\tIn\tAmount\t\tMemo\t\t\tCategory\n");
+	printf("Date\t\tTime\tType\tAmount\t\tMemo\t\t\tCategory\n");
 	printf("--------------------------------------------------------------------------------------------\n");
 
 	for (iter = record_list.begin(); iter != end; iter++) {
 
 		printf("%04d/%02d/%02d\t%02d:%02d", iter->get_date().tm_year+1900, iter->get_date().tm_mon+1, iter->get_date().tm_mday, iter->get_date().tm_hour, iter->get_date().tm_min);
-
-		printf("\t%d\t%-10u\t%-20s\t", iter->get_isincome(), iter->get_amount(), (iter->get_memo()).c_str());
+		if (iter->get_isincome()) {
+			printf("\tincome");
+		}
+		else {
+			printf("\texpense");
+		}
+		printf("\t%-10u\t%-20s\t", iter->get_amount(), (iter->get_memo()).c_str());
 		printf("%-20s\n", (category_manager.getIndexedCategory(iter->get_category_number())).c_str());
 	}
 	cout << "\nEnter any string to continue...\n";
