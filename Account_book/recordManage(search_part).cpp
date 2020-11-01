@@ -208,16 +208,10 @@ bool RecordManage::modifyRecordList(vector <int> result, CategoryManage& categor
 			return true;
 		}
 		selected = -1;
-		try {
+		CheckerParser cp;
+		if (!cp.checkCategoryNumber(input_string, record_list.size())) {
 			selected = stoi(input_string);
-		}
-		catch (exception & expn) {
-			cout << "Please enter a valid value." << endl;
-		}
-		if (selected < 1 || selected > result.size()) {
-			cout << "Please enter a valid value." << endl;
-		}
-		else {
+
 			//선택된 index로 수정 작업
 			list <Record>::iterator iter = record_list.begin();
 			advance(iter, result[selected - 1]);
