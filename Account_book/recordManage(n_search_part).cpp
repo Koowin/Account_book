@@ -125,6 +125,7 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 			cout << "Please enter a valid value." << endl;
 			flag = false;
 		}*/
+		flag = false;
 	}
 
 	//메모 입력 받는 부분
