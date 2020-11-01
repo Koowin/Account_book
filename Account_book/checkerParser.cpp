@@ -5,7 +5,6 @@ CheckerParser::CheckerParser(bool f) {
 }
 
 CheckerParser::CheckerParser() {
-
 }
 
 bool CheckerParser::is_Print() {
@@ -93,6 +92,8 @@ struct tm CheckerParser::checkParseDate(string input_string) {
 	int year2 = stoi(year);
 	int mon2 = stoi(mon)-1;
 	int day2 = stoi(day);
+	int hour2 = stoi(hour);
+	int min2 = stoi(min);
 	if (((year2 % 4) == 0) && ((year2 % 100) != 0 || (year2%400)==0)) {
 		daysInMonth[1]++;
 	}
@@ -106,6 +107,12 @@ struct tm CheckerParser::checkParseDate(string input_string) {
 		cout << "Invalid date and time, please check the value and try again." << endl;
 		return result;
 	}
+	if (hour2 > 23 || hour2 < 0 || min2 < 0 || min2 > 59) {
+		result.tm_year = -1;
+		cout << "Invalid date and time, please check the value and try again." << endl;
+		return result;
+	}
+
 	return result;
 }
 

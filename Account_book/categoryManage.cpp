@@ -25,8 +25,9 @@ void CategoryManage::categoryMenu(RecordManage& record_manager) {
 			cout << "@ View categories @" << endl;
 			printCategoryList();
 
-			cout << "\nPress any key to continue..." << endl;
-			_getch();
+			cout << "\nEnter any string to continue...\n";
+			string a;
+			getline(cin, a);
 			flag = true;
 
 		}
