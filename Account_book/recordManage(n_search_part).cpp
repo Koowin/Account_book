@@ -121,10 +121,10 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 			}
 		}
 		//비정상 입력 시 오류 문구 출력하고 반복
-		else {
+		/*else {
 			cout << "Please enter a valid value." << endl;
 			flag = false;
-		}
+		}*/
 	}
 
 	//메모 입력 받는 부분
