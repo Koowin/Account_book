@@ -424,7 +424,9 @@ bool RecordManage::deleteRecordList(vector <int> result, CategoryManage &categor
 			//선택된 index로 삭제 작업
 			cout << "\n@ Delete a transaction @" << endl;
 			cout << "Confirm deletion? (type 'No' to cancel)\n> ";
+
 			getline(cin, input_string);
+
 			if (input_string == "No") {
 				return true;
 			}
