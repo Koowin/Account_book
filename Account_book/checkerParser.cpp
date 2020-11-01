@@ -5,6 +5,7 @@ CheckerParser::CheckerParser(bool f) {
 }
 
 CheckerParser::CheckerParser() {
+	isPrint = true;
 }
 
 bool CheckerParser::is_Print() {
@@ -25,33 +26,43 @@ struct tm CheckerParser::checkParseDate(string input_string) {
 	int i;
 	int string_size = input_string.size();
 	if (string_size != 16) {
-		cout << "Invalid time format, please enter the date and time using the format \"YYYY/MM/DD hh:mm\"." << endl;
+		if (isPrint) {
+			cout << "Invalid time format, please enter the date and time using the format \"YYYY/MM/DD hh:mm\"." << endl;
+		}
 		return result;
 	}
 	for (i = 0; i < string_size; i++) {
 		if (i == 4 || i == 7 || i == 10 || i == 13) {
 			if (i == 10) {
 				if (input_string[i] != ' ') {
-					cout << "Invalid time format, please enter the date and time using the format \"YYYY/MM/DD hh:mm\"." << endl;
+					if (isPrint) {
+						cout << "Invalid time format, please enter the date and time using the format \"YYYY/MM/DD hh:mm\"." << endl;
+					}
 					return result;
 				}
 			}
 			else if (i == 13) {
 				if (input_string[i] != ':') {
-					cout << "Invalid time format, please enter the date and time using the format \"YYYY/MM/DD hh:mm\"." << endl;
+					if (isPrint) {
+						cout << "Invalid time format, please enter the date and time using the format \"YYYY/MM/DD hh:mm\"." << endl;
+					}
 					return result;
 				}
 			}
 			else {
 				if (input_string[i] != '/') {
-					cout << "Invalid time format, please enter the date and time using the format \"YYYY/MM/DD hh:mm\"." << endl;
+					if (isPrint) {
+						cout << "Invalid time format, please enter the date and time using the format \"YYYY/MM/DD hh:mm\"." << endl;
+					}
 					return result;
 				}
 			}
 		}
 		else {
 			if (input_string[i] < 48 || input_string[i] > 57) {
-				cout << "Invalid time format, please enter the date and time using the format \"YYYY/MM/DD hh:mm\"." << endl;
+				if (isPrint) {
+					cout << "Invalid time format, please enter the date and time using the format \"YYYY/MM/DD hh:mm\"." << endl;
+				}
 				return result;
 			}
 		}
@@ -85,7 +96,9 @@ struct tm CheckerParser::checkParseDate(string input_string) {
 	//의미규칙 검사 (현재 시간보다 크다면)
 	if (t == -1 || t > now_time) {
 		result.tm_year = -1;
-		cout << "Invalid date and time, please check the value and try again." << endl;
+		if (isPrint) {
+			cout << "Invalid date and time, please check the value and try again." << endl;
+		}
 		return result;
 	}
 	int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -99,17 +112,23 @@ struct tm CheckerParser::checkParseDate(string input_string) {
 	}
 	if (mon2 == -1 || day2 == 0) {
 		result.tm_year = -1;
-		cout << "Invalid date and time, please check the value and try again." << endl;
+		if (isPrint) {
+			cout << "Invalid date and time, please check the value and try again." << endl;
+		}
 		return result;
 	}
 	if (day2 > daysInMonth[mon2]) {
 		result.tm_year = -1;
-		cout << "Invalid date and time, please check the value and try again." << endl;
+		if (isPrint) {
+			cout << "Invalid date and time, please check the value and try again." << endl;
+		}
 		return result;
 	}
 	if (hour2 > 23 || hour2 < 0 || min2 < 0 || min2 > 59) {
 		result.tm_year = -1;
-		cout << "Invalid date and time, please check the value and try again." << endl;
+		if (isPrint) {
+			cout << "Invalid date and time, please check the value and try again." << endl;
+		}
 		return result;
 	}
 
@@ -164,7 +183,9 @@ bool CheckerParser::checkAmount(string input_string) {
 		}
 	}
 	if (error) {
-		cout << "Invalid amount, please make sure the amount consists of only numbers with or without comma (range : 1 ~ 4,294,967,295)." << endl;
+		if (isPrint) {
+			cout << "Invalid amount, please make sure the amount consists of only numbers with or without comma (range : 1 ~ 4,294,967,295)." << endl;
+		}
 	}
 
 	return error;
@@ -178,7 +199,10 @@ bool CheckerParser::checkMemo(string input_string) {
 	int string_size = input_string.size();
 	bool error = false;
 	if (string_size > 20 || string_size == 0) {
-		error = true;
+		if (isPrint) {
+			cout << "Please enter valid memo name." << endl;
+		}
+		return true;
 	}
 	for (i = 0; i < string_size; i++) {
 		if (input_string[i] < 32 || input_string[i] > 126) {
@@ -191,7 +215,9 @@ bool CheckerParser::checkMemo(string input_string) {
 	}
 
 	if (error) {
-		cout << "Please enter valid memo name." << endl;
+		if (isPrint) {
+			cout << "Please enter valid memo name." << endl;
+		}
 	}
 	return error;
 }
@@ -199,12 +225,16 @@ bool CheckerParser::checkMemo(string input_string) {
 bool CheckerParser::checkCategoryNumber(string input_string, int category_number) {
 	int size = input_string.size();
 	if (input_string[0] == '0') {
-		cout << "Please enter a valid value." << endl;
+		if (isPrint) {
+			cout << "Please enter a valid value." << endl;
+		}
 		return true;
 	}
 	for (int i = 0; i < size; i++) {
 		if (input_string[i] < '0' || input_string[i] > '9') {
-			cout << "Please enter a valid value." << endl;
+			if (isPrint) {
+				cout << "Please enter a valid value." << endl;
+			}
 			return true;
 		}
 	}
@@ -213,11 +243,15 @@ bool CheckerParser::checkCategoryNumber(string input_string, int category_number
 		n = stoi(input_string);
 	}
 	catch (exception& expn) {
-		cout << "Please enter a valid value." << endl;
+		if (isPrint) {
+			cout << "Please enter a valid value." << endl;
+		}
 		return true;
 	}
 	if (n<0 || n>category_number) {
-		cout << "Please enter a valid value." << endl;
+		if (isPrint) {
+			cout << "Please enter a valid value." << endl;
+		}
 		return true;
 	}
 	return false;
@@ -242,7 +276,9 @@ bool CheckerParser::checkCategoryName(string input_string) {
 	}
 
 	if (error) {
-		cout << "Please enter valid category name." << endl;
+		if (isPrint) {
+			cout << "Please enter valid category name." << endl;
+		}
 	}
 	return error;
 }

@@ -193,29 +193,33 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 		string expense = "expense";
 		Record r = record_manager.getRecord();		// 1개 record 가져옴
 		struct tm tm = r.get_date();		// 시간 입력
-		if (tm.tm_mday >= 0 && tm.tm_mday < 10)
+		if (tm.tm_mon >= 0 && tm.tm_mon < 9)
 			s += to_string((tm.tm_year) + 1900) + "/" +
-			to_string((tm.tm_mon) + 1) + "/" +
-			+"0" + to_string(tm.tm_mday) + " ";
+			"0" + to_string((tm.tm_mon) + 1) + "/";
+		else
+			s += to_string((tm.tm_year) + 1900) + "/" +
+			to_string((tm.tm_mon) + 1) + "/";
 
+		if (tm.tm_mday >= 0 && tm.tm_mday < 10)
+			s += "0" + to_string(tm.tm_mday) + " ";
 
 
 
 		else
-			s += to_string((tm.tm_year) + 1900) + "/" +
-			to_string((tm.tm_mon) + 1) + "/" +
-			to_string(tm.tm_mday) + " ";
+			s += to_string(tm.tm_mday) + " ";
 
+		if (tm.tm_hour >= 0 && tm.tm_hour < 10)
+			s += "0" + to_string(tm.tm_hour) + ":";
+		else
+			s += to_string(tm.tm_hour) + ":";
 
 
 
 		if (tm.tm_min >= 0 && tm.tm_min < 10)
-			s += to_string(tm.tm_hour) + ":" +
-			"0" + to_string(tm.tm_min) + "\t";
+			s += "0" + to_string(tm.tm_min) + "\t";
 
 		else
-			s += to_string(tm.tm_hour) + ":" +
-			to_string(tm.tm_min) + "\t";
+			s += to_string(tm.tm_min) + "\t";
 		/*s += to_string((tm.tm_year) + 1900) + "/" +
 		to_string((tm.tm_mon) + 1) + "/" +
 		to_string(tm.tm_mday) + " " +

@@ -218,7 +218,7 @@ bool CategoryManage::modifyCategory() {
 bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 	bool flag = true;
 	bool duplicate_checker = false;
-
+	CheckerParser cp;
 	string input_string;
 	int selected_num;
 
@@ -235,17 +235,17 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 
 	while (flag) {
 		cout << "\nSelect category to delete (q: return to main menu)" << endl << "> ";
-		cin >> input_string;
+		getline(cin, input_string);
 
 		if (input_string == "q") {
 			return true;
 		}
 		//숫자 이외의 입력 예외처리
-		try {
+		if (!cp.checkCategoryNumber(input_string, category.size())) {
 			selected_num = stoi(input_string);
 		}
-		catch (const exception& expn) {
-			cout << "Input only number" << endl;
+		else {
+			continue;
 		}
 
 		//0 ~ table size 이외의 입력 예외 처리
