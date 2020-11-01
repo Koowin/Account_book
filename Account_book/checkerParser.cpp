@@ -1,5 +1,19 @@
 #include "header.hpp"
 
+CheckerParser::CheckerParser(bool f) {
+	isPrint = f;
+}
+
+CheckerParser::CheckerParser() {
+
+}
+
+bool CheckerParser::is_Print() {
+	if (isPrint) {
+		return true;
+	}
+	else  false;
+}
 
 /* checkparse 동시에 하는 함수.
 * 오류 발생 시 tm_year값이 -1 */
