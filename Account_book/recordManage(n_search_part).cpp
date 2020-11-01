@@ -62,11 +62,13 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 
 	//수입/지출 입력받는 부분
 	flag = true;
-	while (flag) {
-		system("cls"); 
-		cout << "@ Add a transaction @" << endl;
-		cout << "1.Income" << endl;
-		cout << "2.Expense" << endl << endl;
+	while (1) {
+		if (flag) {
+			system("cls");
+			cout << "@ Add a transaction @" << endl;
+			cout << "1.Income" << endl;
+			cout << "2.Expense" << endl << endl;
+		}
 		cout << "Select type of transaction (q:return to main menu)" << endl << "> ";
 
 		getline(cin, input_string);
@@ -78,9 +80,11 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		else if (input_string == "1" || input_string == "2") {
 			if (input_string == "1") {
 				is_income = true;
+				break;
 			}
 			else {
 				is_income = false;
+				break;
 			}
 			flag = false;
 		}
@@ -88,6 +92,7 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		else {
 			cout << "Please enter a valid value." << endl;
 			cout << endl;
+			flag = false;
 		}
 	}
 
