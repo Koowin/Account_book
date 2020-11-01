@@ -129,10 +129,12 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 
 	//메모 입력 받는 부분
 	flag = true;
-	while (flag) {
-		system("cls");
-		cout << "\n@ Add a transaction @" << endl;
-		cout << "Enter the memo (q: return to main menu)" << endl << "> ";
+	while (1) {
+		if (flag) {
+			system("cls");
+			cout << "@ Add a transaction @" << endl;
+		}
+		cout << "\nEnter the memo (q: return to main menu)" << endl << "> ";
 		getline(cin, input_string);
 
 		if (input_string == "q") {
@@ -142,14 +144,12 @@ bool RecordManage::addRecord(CategoryManage& category_manager) {
 		//정상 입력 시
 		if (!cp.checkMemo(input_string)) {
 			memo = input_string;
+			break;
+		}
+		else {
 			flag = false;
 		}
 		//비정상 입력 시 오류 문구 출력하고 반복
-		else {
-			cout << "Please enter a valid value." << endl;
-			cout << endl;
-			system("pause");
-		}
 	}
 
 	//카테고리 번호 입력 받는 부분

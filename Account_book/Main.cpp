@@ -34,7 +34,7 @@ int main() {
 			getline(cin, input_string);
 			//add record
 			if (input_string == "1") {
-				if (record_manager.getRecordListSize() > 1024) { //신이 : 1023 >> 1024
+				if (record_manager.getRecordListSize() > 1023) {
 					cout << "Your number of transactions has exceeded its maximum value (1024 transactions)." << endl;
 					cout << "Please delete some of your transactions to continue." << endl;
 					cout << "\nEnter any string to continue...\n";
