@@ -25,9 +25,8 @@ void CategoryManage::categoryMenu(RecordManage& record_manager) {
 			cout << "@ View categories @" << endl;
 			printCategoryList();
 
-			cout << "\nEnter any string to continue...\n";
-			string a;
-			getline(cin, a);
+			cout << "\nPress any key to continue...\n";
+			_getch();
 			flag = true;
 
 		}
@@ -166,10 +165,11 @@ bool CategoryManage::modifyCategory(RecordManage& record_manager) {
 
 	list<Category>::iterator selector = category.begin();
 	advance(selector, selected_num-1);
-	cout << "\nCategory selected: " << selector->get_cname() << endl;
+	system("cls");
+	cout << "Category selected: " << selector->get_cname() << endl;
 
 	while (1) {
-		cout << "Enter category modification (q: return to main menu)" << endl << "> ";
+		cout << "\nEnter category modification (q: return to main menu)" << endl << "> ";
 		getline(cin, input_string);
 
 		if (input_string == "q") {
@@ -191,6 +191,7 @@ bool CategoryManage::modifyCategory(RecordManage& record_manager) {
 				}
 				else {
 					//수정 확인
+					system("cls");
 					cout << "Before modification : " << selector->get_cname() << endl;
 					cout << "After modification : " << input_string << endl;
 					cout << "Confirm modification? (type 'No' to cancel)" << endl << "> ";
@@ -271,31 +272,29 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 				flag = false;
 			}
 			else {
-				flag = false;
-			}
-		}
-		
-		//삭제 확인
-		cout << "Confirm deletion? (type 'No' to cancel)" << endl << "> ";
-		getline(cin, input_string);
-		if (input_string == "No") {
-			return true;
-		}
-		else {
-			//모든 기록들 카테고리 번호 하나씩 줄이기 (선택한 것 보다 크다면)
-			for (record_iter = record_manager.get_first(); record_iter != end_of_record_list; record_iter++) {
-				int category_num = record_iter->get_category_number();
-				if (category_num > selected_num+1) {
-					record_iter->set_category_number(category_num-1);
+				//삭제 확인
+				cout << "Confirm deletion? (type 'No' to cancel)" << endl << "> ";
+				getline(cin, input_string);
+				if (input_string == "No") {
+					return true;
+				}
+				else {
+					//모든 기록들 카테고리 번호 하나씩 줄이기 (선택한 것 보다 크다면)
+					for (record_iter = record_manager.get_first(); record_iter != end_of_record_list; record_iter++) {
+						int category_num = record_iter->get_category_number();
+						if (category_num > selected_num + 1) {
+							record_iter->set_category_number(category_num - 1);
+						}
+					}
+					//삭제 작업
+					iter = category.begin();
+					advance(iter, selected_num);
+					category.erase(iter);
+					FileManage file_manager;
+					file_manager.saveFile(record_manager, *this);
+					return false;
 				}
 			}
-			//삭제 작업
-			iter = category.begin();
-			advance(iter, selected_num);
-			category.erase(iter);
-			FileManage file_manager;
-			file_manager.saveFile(record_manager, *this);
-			return false;
 		}
 	}
 }

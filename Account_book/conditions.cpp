@@ -15,7 +15,7 @@ short Conditions::addPeriodCondition() {
 	string input_string;
 	CheckerParser cp;
 	while (1) {
-		cout << "\n@ Search condition : Time period @" << endl;
+		cout << "@ Search condition : Time period @" << endl;
 		cout << "Enter time period using format \"YYYY/MM/DD hh:mm~YYYY/MM/DD hh:mm\"\n(q:return to main menu)\n> ";
 		getline(cin, input_string);
 		if (input_string == "q") {
@@ -54,7 +54,7 @@ short Conditions::addPeriodCondition() {
 short Conditions::addIeCondition() {
 	string input_string;
 	while (1) {
-		cout << "\n@ Search condition : Income/Expense @" << endl;
+		cout << "@ Search condition : Income/Expense @" << endl;
 		cout << "1. Income\n2. Expense\n\n";
 		cout << "Select type of transaction (q: return to main menu)\n> ";
 		getline(cin, input_string);
@@ -81,7 +81,7 @@ short Conditions::addMemoCondition() {
 	string input_string;
 	CheckerParser cp;
 	while (1) {
-		cout << "\n@ Search condition : Memo @" << endl;
+		cout << "@ Search condition : Memo @" << endl;
 		cout << "Search transactions that contain the text...(q: return to main menu)\n> ";
 		getline(cin, input_string);
 		if (input_string == "q") {
@@ -99,7 +99,7 @@ short Conditions::addCategoryCondition(CategoryManage& category_manager) {
 	string input_string;
 	CheckerParser cp;
 	while (1) {
-		cout << "\n@ Search condition : Category @" << endl;
+		cout << "@ Search condition : Category @" << endl;
 		category_manager.printCategoryList();
 		cout << "\nSelect a category (q: return to main menu)\n> ";
 		getline(cin, input_string);
@@ -120,7 +120,7 @@ short Conditions::resetConditions() {
 	string input_string;
 	CheckerParser cp;
 	while (1) {
-		cout << "\n@ Search condition : Reset field @" << endl;
+		cout << "@ Search condition : Reset field @" << endl;
 		cout << "1. Date and Time" << endl;
 		cout << "2. Income/Expense" << endl;
 		cout << "3. Memo" << endl;
