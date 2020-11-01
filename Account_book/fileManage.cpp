@@ -82,7 +82,6 @@ bool FileManage::initFile(RecordManage& record_manager, CategoryManage& category
 		/* Account.txt 문자열 입력 */
 		while (getline(in_Account, s)) {
 			if (s == "") {		// 레코드가 개행뿐일 때
-				cout << "NULL string" << endl;
 				continue;
 			}
 			vector<string> temp;
@@ -189,13 +188,16 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 	fclose(fp);
 
 	ofstream out_Account("Account.txt");
+	
+	list <Record>::iterator iter = record_manager.get_first();
+	list <Record>::iterator end = record_manager.get_end();
 
-	while (record_manager.getRecordListSize()) {		// list size가 0이 될때까지
+	while (iter != end) {		// list size가 0이 될때까지
 		string s = "";
 		string income = "income";
 		string expense = "expense";
-		Record r = record_manager.getRecord();		// 1개 record 가져옴
-		struct tm tm = r.get_date();		// 시간 입력
+		
+		struct tm tm = iter->get_date();		// 시간 입력
 		if (tm.tm_mon >= 0 && tm.tm_mon < 9)
 			s += to_string((tm.tm_year) + 1900) + "/" +
 			"0" + to_string((tm.tm_mon) + 1) + "/";
@@ -225,7 +227,7 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 		to_string(tm.tm_hour) + ":" +
 		to_string(tm.tm_min) + '0' + "\t";*/
 
-		bool isIncome = r.get_isincome();	// 수입/지출 입력
+		bool isIncome = iter->get_isincome();	// 수입/지출 입력
 		if (isIncome == true) {
 			s += income + "\t";
 		}
@@ -233,15 +235,16 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 			s += expense + "\t";
 		}
 
-		unsigned int amount = r.get_amount();	// 금액 입력
+		unsigned int amount = iter->get_amount();	// 금액 입력
 		s += std::to_string(amount) + '\t';
 
-		string memo = r.get_memo();		// 메모 입력
+		string memo = iter->get_memo();		// 메모 입력
 		s += memo + '\t';
 
-		int category_num = r.get_category_number();	// 카테고리 숫자 입력
+		int category_num = iter->get_category_number();	// 카테고리 숫자 입력
 		s += std::to_string(category_num);
 		out_Account << s << endl;
+		iter++;
 	}
 
 	fp = fopen("Category.txt", "w");
@@ -249,12 +252,13 @@ bool FileManage::saveFile(RecordManage& record_manager, CategoryManage& category
 
 	ofstream out_Category("Category.txt");
 
-	while (category_manager.getCategorySize()) {
-		string s = "";
-		Category c = category_manager.getCategory();
-		s += c.get_cname();
-
+	list <Category>::iterator iter2 = category_manager.get_first();
+	list <Category>::iterator end2 = category_manager.get_end();
+	while (iter2 != end2) {
+		string s = iter2->get_cname();
+		
 		out_Category << s << endl;
+		iter2++;
 	}
 
 	cout << "done" << endl << endl;

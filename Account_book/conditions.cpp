@@ -38,12 +38,12 @@ short Conditions::addPeriodCondition() {
 			to = cp.checkParseDate(t);
 
 			if (from.tm_year != -1 && to.tm_year != -1) {
-				if (compare(from, to)) {
-					on_period = true;
-					break;
+				if (compare(to, from)) {
+					cout << "Right date must be larger than left date." << endl;
 				}
 				else {
-					cout << "Right date must be larger than left date." << endl;
+					on_period = true;
+					break;
 				}
 			}
 		}
@@ -109,6 +109,7 @@ short Conditions::addCategoryCondition(CategoryManage& category_manager) {
 		if (!cp.checkCategoryNumber(input_string, category_manager.getCategorySize())) {
 			category_number = stoi(input_string);
 			category_name = category_manager.getIndexedCategory(category_number);
+			on_category = true;
 			break;
 		}
 	}
@@ -154,7 +155,8 @@ short Conditions::resetConditions() {
 
 short Conditions::printCurrentConditions() {
 	string input_string;
-	cout << "\n@ Current condition @" << endl;
+	system("cls");
+	cout << "@ Current condition @" << endl;
 
 	if (on_period) {
 		cout << "Time period: ";

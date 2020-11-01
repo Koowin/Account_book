@@ -32,12 +32,12 @@ void CategoryManage::categoryMenu(RecordManage& record_manager) {
 
 		}
 		else if (input_string == "2") {
-			addCategory();
+			addCategory(record_manager);
 			//flag = true;
 			break;
 		}
 		else if (input_string == "3") {
-			modifyCategory();
+			modifyCategory(record_manager);
 			//flag = true;
 			break;
 		}
@@ -74,7 +74,7 @@ void CategoryManage::printCategoryList() {
 *	새로운 카테고리를 추가하는 함수
 */
 
-bool CategoryManage::addCategory() {
+bool CategoryManage::addCategory(RecordManage& record_manager) {
 	bool flag=true;
 	string input_string;
 	string confirm_string;
@@ -119,6 +119,8 @@ bool CategoryManage::addCategory() {
 						if (confirm_string != "No") {
 							//카테고리 저장
 							category.push_back(Category(input_string));
+							FileManage file_manager;
+							file_manager.saveFile(record_manager, *this);
 						}
 						flag = false;
 					}
@@ -129,7 +131,7 @@ bool CategoryManage::addCategory() {
 	return false;
 }
 
-bool CategoryManage::modifyCategory() {
+bool CategoryManage::modifyCategory(RecordManage& record_manager) {
 	bool flag = true;
 	int selected_num;
 	string input_string;
@@ -156,17 +158,8 @@ bool CategoryManage::modifyCategory() {
 			return true;
 		}
 		//숫자 이외의 입력 예외처리
-		try {
+		if (!cp.checkCategoryNumber(input_string, category.size())) {
 			selected_num = stoi(input_string);
-		}
-		catch (const exception& expn) {
-			cout << "Input only number" << endl;
-		}
-		//0 ~ table size 이외의 입력 예외 처리
-		if (selected_num > category.size() || selected_num < 1) {
-			cout << "Number must be over 0 and under " << category.size() + 1 << endl;
-		}
-		else {
 			flag = false;
 		}
 	}
@@ -200,13 +193,15 @@ bool CategoryManage::modifyCategory() {
 					//수정 확인
 					cout << "Before modification : " << selector->get_cname() << endl;
 					cout << "After modification : " << input_string << endl;
-					cout << "Confirm modification? (type 'No' to cacel)" << endl << "> ";
+					cout << "Confirm modification? (type 'No' to cancel)" << endl << "> ";
 					getline(cin, confirm_string);
 					if (confirm_string == "No") {
 						return false;
 					}
 					else {
 						selector->set_cname(input_string);
+						FileManage file_manager;
+						file_manager.saveFile(record_manager, *this);
 						return false;
 					}
 				}
@@ -282,7 +277,7 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 		
 		//삭제 확인
 		cout << "Confirm deletion? (type 'No' to cancel)" << endl << "> ";
-		cin >> input_string;
+		getline(cin, input_string);
 		if (input_string == "No") {
 			return true;
 		}
@@ -298,6 +293,8 @@ bool CategoryManage::deleteCategory(RecordManage & record_manager) {
 			iter = category.begin();
 			advance(iter, selected_num);
 			category.erase(iter);
+			FileManage file_manager;
+			file_manager.saveFile(record_manager, *this);
 			return false;
 		}
 	}
