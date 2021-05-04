@@ -3,7 +3,7 @@
 git bash, gui 등 여러 도구가 있지만 이 문서에서는 깃허브 데스크탑으로 설명드리겠습니다.
 
 1. Github desktop 설치
-[설치 링크] (https://desktop.github.com/)
+[설치 링크](https://desktop.github.com/)
 
 2. Clone repository
 ![1](https://user-images.githubusercontent.com/56014482/116988118-e6e55700-ad0a-11eb-8372-31c2c4c2db8c.png)
