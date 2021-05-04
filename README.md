@@ -10,6 +10,8 @@
 
 next-> next-> 그림과 같이 4개 체크, next -> ...
 
+
+
 # 학생 라이선스 발급
 
 1. [학생 라이선스 발급 링크](https://www.jetbrains.com/community/education/#students)
